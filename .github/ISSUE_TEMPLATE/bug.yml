@@ -1,0 +1,51 @@
+name: Bug 🐞
+description: Report a bug 
+labels: [Bug] 
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! ☺️
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What is expected?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What is actually happening?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: NodeJS Version
+      description: Run "node --version" in terminal for node version
+      placeholder: v16.14.0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Package manager name & version
+      placeholder: yarn 11.6.2
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Browser name & version
+      placeholder: Chrome Version 98.0.4758.102
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Device on which you tested
+      placeholder: Ubuntu 21.10 64-bit
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Any additional comments?
