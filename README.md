@@ -8,7 +8,7 @@
 
 <h1 align="center">
    <a href="{ts_product_page_url}" target="_blank" align="center">
-      {template_name}
+      {template_name_titlized}
    </a>
 </h1>
 
