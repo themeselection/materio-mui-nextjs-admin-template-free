@@ -27,7 +27,7 @@
    </a>
 </p>
 
-<kbd>[![Materio - Vuetify VueJS Free Admin Template Demo Screenshot]({product_url})]({ts_product_page_url})</kbd>
+<kbd>[![Materio - Vuetify VueJS Free Admin Template Demo Screenshot]({product_image_url})]({ts_product_page_url})</kbd>
 
 ## Introduction 🚀
 
