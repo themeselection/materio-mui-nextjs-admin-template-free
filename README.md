@@ -69,20 +69,20 @@ Check out our live [Documentation]({live_docs_link})
 
 Contribution are always welcome and recommended! Here is how:
 
-- Fork the repository ([here is the guide](https://docs.github.com/en/get-started/quickstart/fork-a-repo)).
-- Clone to your machine `git clone https://github.com/YOUR_USERNAME/REPO_URL` Make your changes
-- Create a pull request
+* Fork the repository ([here is the guide](https://docs.github.com/en/get-started/quickstart/fork-a-repo)).
+* Clone to your machine `git clone https://github.com/YOUR_USERNAME/REPO_URL` Make your changes
+* Create a pull request
 
 ### Contribution Requirements 🧰
 
-- When you contribute, you agree to give a non-exclusive license to ThemeSelection to use that contribution in any context as we (ThemeSelection) see appropriate.
-- If you use content provided by another party, it must be appropriately licensed using an open source license.
-- Contributions are only accepted through Github pull requests.
-- Finally, contributed code must work in all supported browsers (see above for browser support).
+* When you contribute, you agree to give a non-exclusive license to ThemeSelection to use that contribution in any context as we (ThemeSelection) see appropriate.
+* If you use content provided by another party, it must be appropriately licensed using an open source license.
+* Contributions are only accepted through Github pull requests.
+* Finally, contributed code must work in all supported browsers (see above for browser support).
 
 ## Creators 😇
 
-- [ThemeSelection](https://themeselection.com)
+* [ThemeSelection](https://themeselection.com)
 
 ## Changelog 📆
 
@@ -100,11 +100,11 @@ If you want to [Download Free Admin Templates](https://themeselection.com/produc
 
 ## Other variants
 
-- [Vue variant]({free_vue_version_themeselection_link})
+* [Vue variant]({free_vue_version_themeselection_link})
 <!-- Add others here -->
 
 ## Useful Links 🎁
 
-- [Freebies](https://themeselection.com/products/category/download-free-admin-templates/)
-- [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/)
-- [Bootstrap 5 CheatSheet](https://bootstrap-cheatsheet.themeselection.com/)
+* [Freebies](https://themeselection.com/products/category/download-free-admin-templates/)
+* [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/)
+* [Bootstrap 5 CheatSheet](https://bootstrap-cheatsheet.themeselection.com/)
