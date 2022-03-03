@@ -65,6 +65,39 @@ Check out our live [Documentation]({live_docs_link})
 
 {note_and_list_of_supported_browsers}
 
+## Contributing 🦸
+
+Contribution are always welcome and recommended! Here is how:
+
+- Fork the repository ([here is the guide](https://docs.github.com/en/get-started/quickstart/fork-a-repo)).
+- Clone to your machine `git clone https://github.com/YOUR_USERNAME/REPO_URL` Make your changes
+- Create a pull request
+
+### Contribution Requirements 🧰
+
+- When you contribute, you agree to give a non-exclusive license to ThemeSelection to use that contribution in any context as we (ThemeSelection) see appropriate.
+- If you use content provided by another party, it must be appropriately licensed using an open source license.
+- Contributions are only accepted through Github pull requests.
+- Finally, contributed code must work in all supported browsers (see above for browser support).
+
+## Creators 😇
+
+- [ThemeSelection](https://themeselection.com)
+
+## Changelog 📆
+
+Please refer to the [CHANGELOG](CHANGELOG.md) file. We will add a detailed release notes to each new release.
+
+## NOTE 🏷️
+
+**We request you to keep ThemeSelection credit link in the footer section.**
+
+## Looking For Premium Admin Templates ?? 👀
+
+**[ThemeSelection](https://themeselection.com/)** provides Selected high quality, modern design, professional and easy-to-use Free and Premium [Bootstrap Admin Templates](https://themeselection.com/products/category/bootstrap-admin-templates/), [VueJS Admin Templates](https://themeselection.com/products/category/vuejs-admin-templates/), [Laravel Admin Templates](https://themeselection.com/products/category/laravel-admin-templates/), HTML Themes, and [Free UI Kits](https://themeselection.com/products/category/free-ui-kits/) to create your applications faster!.
+
+If you want to [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/) like Materio then do visit [ThemeSelection](https://themeselection.com/).
+
 ## Other variants
 
 - [Vue variant]({free_vue_version_link})
