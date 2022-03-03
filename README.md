@@ -100,7 +100,7 @@ If you want to [Download Free Admin Templates](https://themeselection.com/produc
 
 ## Other variants
 
-- [Vue variant]({free_vue_version_link})
+- [Vue variant]({free_vue_version_themeselection_link})
 <!-- Add others here -->
 
 ## Useful Links 🎁
