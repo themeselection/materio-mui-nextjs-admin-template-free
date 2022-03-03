@@ -48,7 +48,7 @@
 | {template_single_word_name} Free Version        | {template_single_word_name} Premium Version       |
 | ----------------------------------------------- | :------------------------------------------------ |
 | [Demo]({direct_demo_url__NOT_PRODUCT_PAGE_URL}) | [Demo]({product_landing_page_url})                |
-| [Download]({ts_product_page_url})               | [Purchase]({ts_product_page_url})                 |
+| [Download]({ts_product_page_url})               | [Purchase]({ts_premium_product_page_url})                 |
 | Single vertical menu                            | Vertical (+ vertical collapsed) & Horizontal menu |
 
 ## Documentation 📜
