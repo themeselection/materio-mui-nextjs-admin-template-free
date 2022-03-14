@@ -1,0 +1,37 @@
+name: Bug 🐞
+description: Report a bug 
+labels: [Bug] 
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! ☺️
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What is expected?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What is actually happening?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional data
+      value: |
+        <!-- If technical bug
+        NodeJS Version:
+        Package manager(npm|yarn|pnpm): 
+        Browser name & version:
+        System:
+        -->
+        
+        <!-- If design file bug
+        Technology(figma|sketch):
+        -->
