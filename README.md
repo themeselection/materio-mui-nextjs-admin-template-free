@@ -171,8 +171,8 @@ If you want to [Download Free Admin Templates](https://themeselection.com/produc
 
 ## Other variants
 
-- [Materio - Vuetify VueJS Free Admin Template](https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free)
-- [Materio - Vuetify VueJS Laravel Free Admin Template](https://github.com/themeselection/materio-vuetify-vuejs-laravel-admin-template-free)
+- [Materio - Vuetify VueJS Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-admin-template/)
+- [Materio - Vuetify VueJS Laravel Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-laravel-admin-template/)
 
 ## Credits 🙏
 
