@@ -1,7 +1,7 @@
 <p align="center"></p>
 
 <p align="center">
-   <a href="{ts_product_page_url}" target="_blank">
+   <a href="https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/" target="_blank">
       <img src="https://user-images.githubusercontent.com/64475785/158384184-1fe44a59-6b68-40f5-b860-d14c51f0ce5d.svg" alt="materio-logo" width="60px" height="auto">
    </a>
 </p>
