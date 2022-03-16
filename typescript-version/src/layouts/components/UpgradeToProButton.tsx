@@ -19,16 +19,7 @@ const BuyNowButton = () => {
   const [referenceElement, setReferenceElement] = useState(null)
 
   const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
-    placement: 'top-end',
-    modifiers: [
-      {
-        name: 'offset',
-        enabled: true,
-        options: {
-          offset: [0, -10]
-        }
-      }
-    ]
+    placement: 'top-end'
   })
 
   const handleOpen = () => {
@@ -71,7 +62,7 @@ const BuyNowButton = () => {
           {...attributes.popper}
           onMouseEnter={handleOpen}
           onMouseLeave={handleClose}
-          sx={{ pb: 6, minWidth: theme => (theme.breakpoints.down('sm') ? 400 : 300) }}
+          sx={{ pb: 4, minWidth: theme => (theme.breakpoints.down('sm') ? 400 : 300) }}
         >
           <Paper elevation={9} sx={{ borderRadius: 1, overflow: 'hidden' }}>
             <a
