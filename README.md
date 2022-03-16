@@ -173,6 +173,7 @@ If you want to [Download Free Admin Templates](https://themeselection.com/produc
 
 - [Materio - Vuetify VueJS Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-admin-template/)
 - [Materio - Vuetify VueJS Laravel Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-laravel-admin-template/)
+- [Materio - Figma Admin Dashboard UI Kit](https://themeselection.com/products/materio-figma-admin-dashboard-ui-kit/)
 
 ## Credits 🙏
 
