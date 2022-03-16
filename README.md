@@ -93,17 +93,17 @@ yarn dev
 
 ## What's in Premium Version 💎
 
-| Materio Free Version        | Materio Premium Version       |
-| ----------------------------------------------- | :------------------------------------------------ |
+| Materio Free Version | Materio Premium Version |
+| :------------------- | :---------------------- |
 | [Demo](https://demos.themeselection.com/materio-mui-react-nextjs-admin-template-free/) | [Demo](https://demos.themeselection.com/materio-mui-react-nextjs-admin-template/landing/)                |
-| [Download](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/)               | [Purchase](https://themeselection.com/products/materio-mui-react-nextjs-admin-template/)                 |
-| Simple vertical menu                            | Vertical (+ vertical collapsed) menu & Horizontal menu |
+| [Download](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/) | [Purchase](https://themeselection.com/products/materio-mui-react-nextjs-admin-template/) |
+| Simple vertical menu | Vertical (+ vertical collapsed) menu & Horizontal menu |
 | Default skin | Default, bordered & semi dark skins |
 | 1 Simple Dashboard | 3 Niche Dashboards |
-| - | Multiple applications like Email, Chat, Calendar, Invoice, Users List, Users View, Roles and Permission etc. |
+| - | Multiple applications like Email, Chat, Calendar, Invoice, User List, User View and Roles & Permission |
 | Simple from layouts | Form elements, advance form layouts, form validation & form wizard |
 | Basic Cards | Basic, Advance, Statistics, Analytics, Gamifications and Actions Cards |
-| 3 Extended Components | 15 Extended Components |
+| 3 Custom Components | 15 Custom Components |
 | - | Quick Search - Quickly navigate between pages (with hotkey support) |
 | Basic tables | Advanced tables + Data Grid Tables |
 | 1 Chart Library | 3 Chart Libraries |
