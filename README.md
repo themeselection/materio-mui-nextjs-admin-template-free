@@ -7,7 +7,7 @@
 </p>
 
 <h1 align="center">
-   <a href="https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/" target="_blank" align="center">
+   <a href="https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/" target="_blank" align="center">
       Materio - Free MUI React NextJS Admin Template
    </a>
 </h1>
@@ -34,13 +34,13 @@
    </a>
 </p>
 
-<kbd>[![Materio - Free MUI React NextJS Admin Template Demo Screenshot](https://user-images.githubusercontent.com/64475785/158384546-57879619-2d6d-4df6-8dc3-b4e53a536d50.png)](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/)</kbd>
+<kbd>[![Materio - Free MUI React NextJS Admin Template Demo Screenshot](https://user-images.githubusercontent.com/64475785/158384546-57879619-2d6d-4df6-8dc3-b4e53a536d50.png)](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/)</kbd>
 
 ## Introduction 🚀
 
-If you’re a developer looking for most Powerful & comprehensive [**Free MUI React NextJS Admin Dashboard Template**](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/) built for developers, rich with features, and highly customizable, look no further than Materio. We’ve followed the highest industry standards to bring you the very best admin template that is not only easy to use but highly scalable. Offering ultimate convenience and flexibility, you’ll be able to build whatever application you want with very little hassle.
+If you’re a developer looking for most Powerful & comprehensive [**Free MUI React NextJS Admin Dashboard Template**](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/) built for developers, rich with features, and highly customizable, look no further than Materio. We’ve followed the highest industry standards to bring you the very best admin template that is not only easy to use but highly scalable. Offering ultimate convenience and flexibility, you’ll be able to build whatever application you want with very little hassle.
 
-Build premium quality applications with ease. Use our one of the most innovative [React admin templates](https://themeselection.com/products/category/react-admin-templates/) to create eye-catching, high-quality WebApps. Your apps will be completely responsive, ensuring they’ll look stunning and function flawlessly on desktops, tablets, and mobile devices.
+Build premium quality applications with ease. Use our one of the most innovative [React admin templates](https://themeselection.com/item/category/react-admin-templates/) to create eye-catching, high-quality WebApps. Your apps will be completely responsive, ensuring they’ll look stunning and function flawlessly on desktops, tablets, and mobile devices.
 
 Materio provides template with Javascript and Typescript
 
