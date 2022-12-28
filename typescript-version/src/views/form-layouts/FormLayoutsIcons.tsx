@@ -17,6 +17,7 @@ const FormLayoutsIcons = () => {
   return (
     <Card>
       <CardHeader title='Basic with Icons' titleTypographyProps={{ variant: 'h6' }} />
+
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
@@ -34,6 +35,7 @@ const FormLayoutsIcons = () => {
                 }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -50,6 +52,7 @@ const FormLayoutsIcons = () => {
                 }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -65,6 +68,7 @@ const FormLayoutsIcons = () => {
                 }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -82,6 +86,7 @@ const FormLayoutsIcons = () => {
                 }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <Button type='submit' variant='contained' size='large'>
                 Submit

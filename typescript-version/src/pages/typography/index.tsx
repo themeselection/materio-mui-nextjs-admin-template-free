@@ -11,6 +11,7 @@ const TypographyPage = () => {
       <Grid item xs={12}>
         <TypographyHeadings />
       </Grid>
+
       <Grid item xs={12}>
         <TypographyTexts />
       </Grid>

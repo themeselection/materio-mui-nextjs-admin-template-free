@@ -52,18 +52,21 @@ const Error500 = () => {
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <BoxWrapper>
           <Typography variant='h1'>500</Typography>
+
           <Typography variant='h5' sx={{ mb: 1, fontSize: '1.5rem !important' }}>
             Internal server error 👨🏻‍💻
           </Typography>
+
           <Typography variant='body2'>Oops, something went wrong!</Typography>
         </BoxWrapper>
+
         <Img height='487' alt='error-illustration' src='/images/pages/500.png' />
-        <Link passHref href='/'>
-          <Button component='a' variant='contained' sx={{ px: 5.5 }}>
-            Back to Home
-          </Button>
-        </Link>
+
+        <Button component={Link} variant='contained' sx={{ px: 5.5 }}>
+          Back to Home
+        </Button>
       </Box>
+
       <FooterIllustrations image={<TreeIllustration alt='tree' src='/images/pages/tree-3.png' />} />
     </Box>
   )

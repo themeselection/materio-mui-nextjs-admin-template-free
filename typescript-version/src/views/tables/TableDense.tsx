@@ -26,21 +26,30 @@ const TableDense = () => {
         <TableHead>
           <TableRow>
             <TableCell>Dessert (100g serving)</TableCell>
+
             <TableCell align='right'>Calories</TableCell>
+
             <TableCell align='right'>Fat (g)</TableCell>
+
             <TableCell align='right'>Carbs (g)</TableCell>
+
             <TableCell align='right'>Protein (g)</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {rows.map(row => (
             <TableRow key={row.name} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
               <TableCell component='th' scope='row'>
                 {row.name}
               </TableCell>
+
               <TableCell align='right'>{row.calories}</TableCell>
+
               <TableCell align='right'>{row.fat}</TableCell>
+
               <TableCell align='right'>{row.carbs}</TableCell>
+
               <TableCell align='right'>{row.protein}</TableCell>
             </TableRow>
           ))}

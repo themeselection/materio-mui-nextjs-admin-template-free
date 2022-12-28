@@ -44,6 +44,7 @@ const AppBarContent = (props: Props) => {
             <Menu />
           </IconButton>
         ) : null}
+
         <TextField
           size='small'
           sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
@@ -56,6 +57,7 @@ const AppBarContent = (props: Props) => {
           }}
         />
       </Box>
+
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {hiddenSm ? null : (
           <Box
@@ -72,8 +74,11 @@ const AppBarContent = (props: Props) => {
             />
           </Box>
         )}
+
         <ModeToggler settings={settings} saveSettings={saveSettings} />
+
         <NotificationDropdown />
+
         <UserDropdown />
       </Box>
     </Box>

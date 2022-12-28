@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton'
+import SvgIcon from '@mui/material/SvgIcon'
 
 // ** Configs Import
 import themeConfig from 'src/configs/themeConfig'
@@ -66,7 +67,7 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
   // ** Hooks
   const router = useRouter()
 
-  const IconTag: ReactNode = item.icon
+  const IconTag: ReactNode | typeof SvgIcon = item.icon
 
   const isNavLinkActive = () => {
     if (router.pathname === item.path || handleURLQueries(router, item.path)) {
@@ -83,7 +84,7 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
       disabled={item.disabled || false}
       sx={{ mt: 1.5, px: '0 !important' }}
     >
-      <Link passHref href={item.path === undefined ? '/' : `${item.path}`}>
+      <Link passHref href={item.path === undefined ? '/' : `${item.path}`} legacyBehavior>
         <MenuNavLink
           component={'a'}
           className={isNavLinkActive() ? 'active' : ''}
@@ -91,8 +92,10 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
           onClick={e => {
             if (item.path === undefined) {
               e.preventDefault()
+
               e.stopPropagation()
             }
+
             if (navVisible) {
               toggleNavVisibility()
             }
@@ -114,6 +117,7 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
 
           <MenuItemTextMetaWrapper>
             <Typography {...(themeConfig.menuTextTruncate && { noWrap: true })}>{item.title}</Typography>
+
             {item.badgeContent ? (
               <Chip
                 label={item.badgeContent}

@@ -46,9 +46,11 @@ const FormLayoutsAlignment = () => {
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
+
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -56,18 +58,22 @@ const FormLayoutsAlignment = () => {
   return (
     <Card>
       <CardHeader title='Form Alignment' titleTypographyProps={{ variant: 'h6' }} />
+
       <CardContent sx={{ minHeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant='h5'>Sign In</Typography>
             </Grid>
+
             <Grid item xs={12}>
               <TextField fullWidth label='Username' placeholder='carterLeonard' />
             </Grid>
+
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='form-layouts-alignment-password'>Password</InputLabel>
+
                 <OutlinedInput
                   label='Password'
                   value={values.password}
@@ -89,6 +95,7 @@ const FormLayoutsAlignment = () => {
                 />
               </FormControl>
             </Grid>
+
             <Grid item xs={12}>
               <FormControlLabel
                 label='Remember me'
@@ -96,6 +103,7 @@ const FormLayoutsAlignment = () => {
                 sx={{ '& .MuiButtonBase-root': { paddingTop: 0, paddingBottom: 0 } }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <Button size='large' type='submit' variant='contained' sx={{ width: '100%' }}>
                 Login

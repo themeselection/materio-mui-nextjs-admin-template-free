@@ -24,6 +24,7 @@ const BuyNowButton = () => {
 
   const handleOpen = () => {
     setOpen(true)
+
     update ? update() : null
   }
 
@@ -55,6 +56,7 @@ const BuyNowButton = () => {
       >
         Upgrade To Pro
       </Button>
+
       <Fade in={open} timeout={700}>
         <Box
           style={styles.popper}
@@ -72,17 +74,21 @@ const BuyNowButton = () => {
             >
               <img width='100%' alt='materio-pro-banner' src='/images/misc/materio-pro-banner.png' />
             </a>
+
             <CardContent>
               <Typography sx={{ mb: 4 }} variant='h6'>
                 Materio - React Admin Template
               </Typography>
+
               <Typography sx={{ mb: 4 }} variant='body2'>
                 Materio Admin is the most developer friendly & highly customizable Admin Dashboard Template based on MUI
                 and NextJS.
               </Typography>
+
               <Typography sx={{ mb: 4 }} variant='body2'>
                 Click on below buttons to explore PRO version.
               </Typography>
+
               <Button
                 component='a'
                 sx={{ mr: 4 }}
@@ -92,6 +98,7 @@ const BuyNowButton = () => {
               >
                 Demo
               </Button>
+
               <Button
                 component='a'
                 target='_blank'

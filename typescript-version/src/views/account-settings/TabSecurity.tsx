@@ -45,9 +45,11 @@ const TabSecurity = () => {
   const handleCurrentPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowCurrentPassword = () => {
     setValues({ ...values, showCurrentPassword: !values.showCurrentPassword })
   }
+
   const handleMouseDownCurrentPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -56,9 +58,11 @@ const TabSecurity = () => {
   const handleNewPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowNewPassword = () => {
     setValues({ ...values, showNewPassword: !values.showNewPassword })
   }
+
   const handleMouseDownNewPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -67,9 +71,11 @@ const TabSecurity = () => {
   const handleConfirmNewPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowConfirmNewPassword = () => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword })
   }
+
   const handleMouseDownConfirmNewPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -83,6 +89,7 @@ const TabSecurity = () => {
               <Grid item xs={12} sx={{ marginTop: 4.75 }}>
                 <FormControl fullWidth>
                   <InputLabel htmlFor='account-settings-current-password'>Current Password</InputLabel>
+
                   <OutlinedInput
                     label='Current Password'
                     value={values.currentPassword}
@@ -108,6 +115,7 @@ const TabSecurity = () => {
               <Grid item xs={12} sx={{ marginTop: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel htmlFor='account-settings-new-password'>New Password</InputLabel>
+
                   <OutlinedInput
                     label='New Password'
                     value={values.newPassword}
@@ -133,6 +141,7 @@ const TabSecurity = () => {
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel htmlFor='account-settings-confirm-new-password'>Confirm New Password</InputLabel>
+
                   <OutlinedInput
                     label='Confirm New Password'
                     value={values.confirmNewPassword}
@@ -173,6 +182,7 @@ const TabSecurity = () => {
       <CardContent>
         <Box sx={{ mt: 1.75, display: 'flex', alignItems: 'center' }}>
           <KeyOutline sx={{ marginRight: 3 }} />
+
           <Typography variant='h6'>Two-factor authentication</Typography>
         </Box>
 
@@ -192,9 +202,11 @@ const TabSecurity = () => {
             >
               <LockOpenOutline sx={{ fontSize: '1.75rem' }} />
             </Avatar>
+
             <Typography sx={{ fontWeight: 600, marginTop: 3.5, marginBottom: 3.5 }}>
               Two factor authentication is not enabled yet.
             </Typography>
+
             <Typography variant='body2'>
               Two-factor authentication adds an additional layer of security to your account by requiring more than just
               a password to log in. Learn more.
@@ -206,6 +218,7 @@ const TabSecurity = () => {
           <Button variant='contained' sx={{ marginRight: 3.5 }}>
             Save Changes
           </Button>
+
           <Button
             type='reset'
             variant='outlined'

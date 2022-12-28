@@ -94,6 +94,7 @@ const SalesByCountries = () => {
           </IconButton>
         }
       />
+
       <CardContent sx={{ pt: theme => `${theme.spacing(2)} !important` }}>
         {data.map((item: DataType, index: number) => {
           return (
@@ -130,8 +131,10 @@ const SalesByCountries = () => {
                 <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{ display: 'flex' }}>
                     <Typography sx={{ mr: 0.5, fontWeight: 600, letterSpacing: '0.25px' }}>{item.title}</Typography>
+
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       {item.trend}
+
                       <Typography
                         variant='caption'
                         sx={{
@@ -144,6 +147,7 @@ const SalesByCountries = () => {
                       </Typography>
                     </Box>
                   </Box>
+
                   <Typography variant='caption' sx={{ lineHeight: 1.5 }}>
                     {item.subtitle}
                   </Typography>
@@ -153,6 +157,7 @@ const SalesByCountries = () => {
                   <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.72, letterSpacing: '0.22px' }}>
                     {item.sales}
                   </Typography>
+
                   <Typography variant='caption' sx={{ lineHeight: 1.5 }}>
                     Sales
                   </Typography>

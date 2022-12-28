@@ -87,6 +87,7 @@ const Navigation = (props: Props) => {
   // ** Scroll Menu
   const scrollMenu = (container: any) => {
     container = hidden ? container.target : container
+
     if (shadowRef && container.scrollTop > 0) {
       // @ts-ignore
       if (!shadowRef.current.classList.contains('d-block')) {
@@ -104,6 +105,7 @@ const Navigation = (props: Props) => {
   return (
     <Drawer {...props}>
       <VerticalNavHeader {...props} />
+
       <StyledBoxForShadow
         ref={shadowRef}
         sx={{
@@ -113,8 +115,10 @@ const Navigation = (props: Props) => {
           )} 95%,${hexToRGBA(theme.palette.background.default, 0.05)})`
         }}
       />
+
       <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
         {/* @ts-ignore */}
+
         <ScrollWrapper
           containerRef={(ref: any) => handleInfiniteScroll(ref)}
           {...(hidden
@@ -128,6 +132,7 @@ const Navigation = (props: Props) => {
               })}
         >
           {beforeVerticalNavMenuContent ? beforeVerticalNavMenuContent(props) : null}
+
           <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             {userVerticalNavMenuContent ? (
               userVerticalNavMenuContent(props)
@@ -145,6 +150,7 @@ const Navigation = (props: Props) => {
           </Box>
         </ScrollWrapper>
       </Box>
+
       {afterVerticalNavMenuContent ? afterVerticalNavMenuContent(props) : null}
     </Drawer>
   )

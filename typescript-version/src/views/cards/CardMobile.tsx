@@ -44,6 +44,7 @@ const CardMobile = () => {
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
+
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -52,52 +53,81 @@ const CardMobile = () => {
     <Card>
       <Grid container spacing={6}>
         <StyledGrid item md={5} xs={12}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cards/iPhone-11-pro.png' />
+          <CardContent
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <img
+              width={137}
+              height={176}
+              alt="Apple iPhone 11 Pro"
+              src="/images/cards/iPhone-11-pro.png"
+            />
           </CardContent>
         </StyledGrid>
+
         <Grid
           item
           xs={12}
           md={7}
           sx={{
             paddingTop: ['0 !important', '0 !important', '1.5rem !important'],
-            paddingLeft: ['1.5rem !important', '1.5rem !important', '0 !important']
+            paddingLeft: [
+              '1.5rem !important',
+              '1.5rem !important',
+              '0 !important'
+            ]
           }}
         >
           <CardContent>
-            <Typography variant='h6' sx={{ marginBottom: 2 }}>
+            <Typography variant="h6" sx={{ marginBottom: 2 }}>
               Apple iPhone 11 Pro
             </Typography>
-            <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
-              Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
+
+            <Typography variant="body2" sx={{ marginBottom: 3.5 }}>
+              Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″
+              display Apple A13 Bionic
             </Typography>
+
             <Typography sx={{ fontWeight: 500, marginBottom: 3 }}>
               Price:{' '}
-              <Box component='span' sx={{ fontWeight: 'bold' }}>
+
+              <Box component="span" sx={{ fontWeight: 'bold' }}>
                 $899
               </Box>
             </Typography>
           </CardContent>
-          <CardActions className='card-action-dense'>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+
+          <CardActions className="card-action-dense">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%'
+              }}
+            >
               <Button>
-                <CartPlus fontSize='small' sx={{ marginRight: 2 }} />
+                <CartPlus fontSize="small" sx={{ marginRight: 2 }} />
                 Add to Card
               </Button>
+
               <IconButton
-                id='long-button'
-                aria-label='share'
-                aria-haspopup='true'
+                id="long-button"
+                aria-label="share"
+                aria-haspopup="true"
                 onClick={handleClick}
-                aria-controls='long-menu'
+                aria-controls="long-menu"
                 aria-expanded={open ? 'true' : undefined}
               >
-                <ShareVariant fontSize='small' />
+                <ShareVariant fontSize="small" />
               </IconButton>
+
               <Menu
                 open={open}
-                id='long-menu'
+                id="long-menu"
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 MenuListProps={{
@@ -107,12 +137,15 @@ const CardMobile = () => {
                 <MenuItem onClick={handleClose}>
                   <Facebook />
                 </MenuItem>
+
                 <MenuItem onClick={handleClose}>
                   <Twitter />
                 </MenuItem>
+
                 <MenuItem onClick={handleClose}>
                   <Linkedin />
                 </MenuItem>
+
                 <MenuItem onClick={handleClose}>
                   <GooglePlus />
                 </MenuItem>

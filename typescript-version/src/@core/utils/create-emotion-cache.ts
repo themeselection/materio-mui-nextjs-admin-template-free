@@ -1,5 +1,9 @@
 import createCache from '@emotion/cache'
 
 export const createEmotionCache = () => {
-  return createCache({ key: 'css' })
+  const cache = createCache({ key: 'css' })
+
+  // cache.compat = true;
+
+  return cache
 }

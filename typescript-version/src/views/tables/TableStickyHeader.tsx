@@ -88,6 +88,7 @@ const TableStickyHeader = () => {
 
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value)
+
     setPage(0)
   }
 
@@ -104,6 +105,7 @@ const TableStickyHeader = () => {
               ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
@@ -123,6 +125,7 @@ const TableStickyHeader = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component='div'

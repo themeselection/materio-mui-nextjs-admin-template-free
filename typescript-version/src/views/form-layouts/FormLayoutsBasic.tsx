@@ -45,6 +45,7 @@ const FormLayoutsBasic = () => {
   const handleConfirmPassChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassValues({ ...confirmPassValues, [prop]: event.target.value })
   }
+
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
@@ -60,12 +61,14 @@ const FormLayoutsBasic = () => {
   return (
     <Card>
       <CardHeader title='Basic' titleTypographyProps={{ variant: 'h6' }} />
+
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <TextField fullWidth label='Name' placeholder='Leonard Carter' />
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -75,9 +78,11 @@ const FormLayoutsBasic = () => {
                 helperText='You can use letters, numbers & periods'
               />
             </Grid>
+
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='form-layouts-basic-password'>Password</InputLabel>
+
                 <OutlinedInput
                   label='Password'
                   value={values.password}
@@ -98,14 +103,17 @@ const FormLayoutsBasic = () => {
                     </InputAdornment>
                   }
                 />
+
                 <FormHelperText id='form-layouts-basic-password-helper'>
                   Use 8 or more characters with a mix of letters, numbers & symbols
                 </FormHelperText>
               </FormControl>
             </Grid>
+
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='form-layouts-confirm-password'>Confirm Password</InputLabel>
+
                 <OutlinedInput
                   label='Confirm Password'
                   value={confirmPassValues.password}
@@ -126,11 +134,13 @@ const FormLayoutsBasic = () => {
                     </InputAdornment>
                   }
                 />
+
                 <FormHelperText id='form-layouts-confirm-password-helper'>
                   Make sure to type the same password as above
                 </FormHelperText>
               </FormControl>
             </Grid>
+
             <Grid item xs={12}>
               <Box
                 sx={{
@@ -144,8 +154,10 @@ const FormLayoutsBasic = () => {
                 <Button type='submit' variant='contained' size='large'>
                   Get Started!
                 </Button>
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Typography sx={{ mr: 2 }}>Already have an account?</Typography>
+
                   <Link href='/' onClick={(e: SyntheticEvent) => e.preventDefault()}>
                     Log in
                   </Link>

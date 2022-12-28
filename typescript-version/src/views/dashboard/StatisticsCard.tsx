@@ -72,8 +72,10 @@ const renderStats = () => {
         >
           {item.icon}
         </Avatar>
+
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant='caption'>{item.title}</Typography>
+
           <Typography variant='h6'>{item.stats}</Typography>
         </Box>
       </Box>
@@ -107,6 +109,7 @@ const StatisticsCard = () => {
           }
         }}
       />
+
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
           {renderStats()}

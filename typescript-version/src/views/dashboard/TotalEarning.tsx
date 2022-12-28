@@ -67,13 +67,16 @@ const TotalEarning = () => {
           </IconButton>
         }
       />
+
       <CardContent sx={{ pt: theme => `${theme.spacing(2.25)} !important` }}>
         <Box sx={{ mb: 1.5, display: 'flex', alignItems: 'center' }}>
           <Typography variant='h4' sx={{ fontWeight: 600, fontSize: '2.125rem !important' }}>
             $24,895
           </Typography>
+
           <Box sx={{ display: 'flex', alignItems: 'center', color: 'success.main' }}>
             <MenuUp sx={{ fontSize: '1.875rem', verticalAlign: 'middle' }} />
+
             <Typography variant='body2' sx={{ fontWeight: 600, color: 'success.main' }}>
               10%
             </Typography>
@@ -105,6 +108,7 @@ const TotalEarning = () => {
               >
                 <img src={item.imgSrc} alt={item.title} height={item.imgHeight} />
               </Avatar>
+
               <Box
                 sx={{
                   width: '100%',
@@ -118,6 +122,7 @@ const TotalEarning = () => {
                   <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
                     {item.title}
                   </Typography>
+
                   <Typography variant='caption'>{item.subtitle}</Typography>
                 </Box>
 
@@ -125,6 +130,7 @@ const TotalEarning = () => {
                   <Typography variant='body2' sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
                     {item.amount}
                   </Typography>
+
                   <LinearProgress color={item.color} value={item.progress} variant='determinate' />
                 </Box>
               </Box>

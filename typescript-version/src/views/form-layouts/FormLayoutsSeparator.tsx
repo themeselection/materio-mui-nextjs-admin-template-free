@@ -52,9 +52,11 @@ const FormLayoutsSeparator = () => {
   const handlePasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
+
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -63,9 +65,11 @@ const FormLayoutsSeparator = () => {
   const handleConfirmChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const handleClickShowConfirmPassword = () => {
     setValues({ ...values, showPassword2: !values.showPassword2 })
   }
+
   const handleMouseDownConfirmPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -78,7 +82,9 @@ const FormLayoutsSeparator = () => {
   return (
     <Card>
       <CardHeader title='Multi Column with Form Separator' titleTypographyProps={{ variant: 'h6' }} />
+
       <Divider sx={{ margin: 0 }} />
+
       <form onSubmit={e => e.preventDefault()}>
         <CardContent>
           <Grid container spacing={5}>
@@ -87,15 +93,19 @@ const FormLayoutsSeparator = () => {
                 1. Account Details
               </Typography>
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label='Username' placeholder='carterLeonard' />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField fullWidth type='email' label='Email' placeholder='carterleonard@gmail.com' />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='form-layouts-separator-password'>Password</InputLabel>
+
                 <OutlinedInput
                   label='Password'
                   value={values.password}
@@ -117,9 +127,11 @@ const FormLayoutsSeparator = () => {
                 />
               </FormControl>
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='form-layouts-separator-password-2'>Confirm Password</InputLabel>
+
                 <OutlinedInput
                   value={values.password2}
                   label='Confirm Password'
@@ -141,23 +153,29 @@ const FormLayoutsSeparator = () => {
                 />
               </FormControl>
             </Grid>
+
             <Grid item xs={12}>
               <Divider sx={{ marginBottom: 0 }} />
             </Grid>
+
             <Grid item xs={12}>
               <Typography variant='body2' sx={{ fontWeight: 600 }}>
                 2. Personal Info
               </Typography>
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label='First Name' placeholder='Leonard' />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label='Last Name' placeholder='Carter' />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-select-label'>Country</InputLabel>
+
                 <Select
                   label='Country'
                   defaultValue=''
@@ -165,15 +183,20 @@ const FormLayoutsSeparator = () => {
                   labelId='form-layouts-separator-select-label'
                 >
                   <MenuItem value='UK'>UK</MenuItem>
+
                   <MenuItem value='USA'>USA</MenuItem>
+
                   <MenuItem value='Australia'>Australia</MenuItem>
+
                   <MenuItem value='Germany'>Germany</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-multiple-select-label'>Language</InputLabel>
+
                 <Select
                   multiple
                   value={language}
@@ -183,15 +206,22 @@ const FormLayoutsSeparator = () => {
                   input={<OutlinedInput label='Language' id='select-multiple-language' />}
                 >
                   <MenuItem value='English'>English</MenuItem>
+
                   <MenuItem value='French'>French</MenuItem>
+
                   <MenuItem value='Spanish'>Spanish</MenuItem>
+
                   <MenuItem value='Portuguese'>Portuguese</MenuItem>
+
                   <MenuItem value='Italian'>Italian</MenuItem>
+
                   <MenuItem value='German'>German</MenuItem>
+
                   <MenuItem value='Arabic'>Arabic</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <DatePicker
                 selected={date}
@@ -203,16 +233,20 @@ const FormLayoutsSeparator = () => {
                 onChange={(date: Date) => setDate(date)}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label='Phone No.' placeholder='+1-123-456-8790' />
             </Grid>
           </Grid>
         </CardContent>
+
         <Divider sx={{ margin: 0 }} />
+
         <CardActions>
           <Button size='large' type='submit' sx={{ mr: 2 }} variant='contained'>
             Submit
           </Button>
+
           <Button size='large' color='secondary' variant='outlined'>
             Cancel
           </Button>

@@ -66,6 +66,7 @@ const VerticalLayout = (props: LayoutProps) => {
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
         {/* Navigation Menu */}
+
         <Navigation
           navWidth={navWidth}
           navVisible={navVisible}
@@ -73,11 +74,14 @@ const VerticalLayout = (props: LayoutProps) => {
           toggleNavVisibility={toggleNavVisibility}
           {...props}
         />
+
         <MainContentWrapper className='layout-content-wrapper'>
           {/* AppBar Component */}
+
           <AppBar toggleNavVisibility={toggleNavVisibility} {...props} />
 
           {/* Content */}
+
           <ContentWrapper
             className='layout-page-content'
             sx={{
@@ -92,9 +96,11 @@ const VerticalLayout = (props: LayoutProps) => {
           </ContentWrapper>
 
           {/* Footer Component */}
+
           <Footer {...props} />
 
           {/* Portal for React Datepicker */}
+
           <DatePickerWrapper sx={{ zIndex: 11 }}>
             <Box id='react-datepicker-portal'></Box>
           </DatePickerWrapper>
@@ -102,6 +108,7 @@ const VerticalLayout = (props: LayoutProps) => {
       </VerticalLayoutWrapper>
 
       {/* Scroll to top button */}
+
       {scrollToTop ? (
         scrollToTop(props)
       ) : (

@@ -139,13 +139,16 @@ const Icons = () => {
             Material Design Icons
           </Link>
         </Typography>
+
         <Typography variant='body2'>Material Design Icons from the Community</Typography>
       </Grid>
+
       <Grid item xs={12}>
         <Grid container spacing={6}>
           {renderIconGrids()}
         </Grid>
       </Grid>
+
       <Grid item xs={12} sx={{ textAlign: 'center' }}>
         <Button
           target='_blank'

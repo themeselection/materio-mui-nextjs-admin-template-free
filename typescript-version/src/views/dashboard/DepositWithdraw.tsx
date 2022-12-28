@@ -126,6 +126,7 @@ const DepositWithdraw = () => {
             sx: { lineHeight: '1.6 !important', letterSpacing: '0.15px !important' }
           }}
         />
+
         <CardContent sx={{ pb: theme => `${theme.spacing(5.5)} !important` }}>
           {depositData.map((item: DataType, index: number) => {
             return (
@@ -136,6 +137,7 @@ const DepositWithdraw = () => {
                 <Box sx={{ minWidth: 38, display: 'flex', justifyContent: 'center' }}>
                   <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
                 </Box>
+
                 <Box
                   sx={{
                     ml: 4,
@@ -148,8 +150,10 @@ const DepositWithdraw = () => {
                 >
                   <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
                     <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{item.title}</Typography>
+
                     <Typography variant='caption'>{item.subtitle}</Typography>
                   </Box>
+
                   <Typography variant='subtitle2' sx={{ fontWeight: 600, color: 'success.main' }}>
                     {item.amount}
                   </Typography>
@@ -172,6 +176,7 @@ const DepositWithdraw = () => {
             sx: { lineHeight: '1.6 !important', letterSpacing: '0.15px !important' }
           }}
         />
+
         <CardContent sx={{ pb: theme => `${theme.spacing(5.5)} !important` }}>
           {withdrawData.map((item: DataType, index: number) => {
             return (
@@ -182,6 +187,7 @@ const DepositWithdraw = () => {
                 <Box sx={{ minWidth: 36, display: 'flex', justifyContent: 'center' }}>
                   <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
                 </Box>
+
                 <Box
                   sx={{
                     ml: 4,
@@ -194,8 +200,10 @@ const DepositWithdraw = () => {
                 >
                   <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
                     <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{item.title}</Typography>
+
                     <Typography variant='caption'>{item.subtitle}</Typography>
                   </Box>
+
                   <Typography variant='subtitle2' sx={{ fontWeight: 600, color: 'error.main' }}>
                     {item.amount}
                   </Typography>

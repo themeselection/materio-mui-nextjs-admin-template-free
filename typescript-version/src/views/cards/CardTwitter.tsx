@@ -21,26 +21,33 @@ const CardTwitter = () => {
           <Twitter sx={{ marginRight: 2.5 }} />
           Twitter Card
         </Typography>
+
         <Typography variant='body2' sx={{ marginBottom: 3, color: 'common.white' }}>
           Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as
           well.
         </Typography>
+
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
             <Avatar alt='Mary Vaughn' src='/images/avatars/4.png' sx={{ width: 34, height: 34, marginRight: 2.75 }} />
+
             <Typography variant='body2' sx={{ color: 'common.white' }}>
               Mary Vaughn
             </Typography>
           </Box>
+
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mr: 3.5 }}>
               <Heart sx={{ marginRight: 1.25 }} />
+
               <Typography variant='body2' sx={{ color: 'common.white' }}>
                 1.2k
               </Typography>
             </Box>
+
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ShareVariant sx={{ marginRight: 1.25 }} />
+
               <Typography variant='body2' sx={{ color: 'common.white' }}>
                 80
               </Typography>

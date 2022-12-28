@@ -25,13 +25,16 @@ const CardSupport = () => {
         >
           <HelpCircleOutline sx={{ fontSize: '2rem' }} />
         </Avatar>
+
         <Typography variant='h6' sx={{ marginBottom: 2.75 }}>
           Support
         </Typography>
+
         <Typography variant='body2' sx={{ marginBottom: 6 }}>
           According to us blisters are a very common thing and we come across them very often in our daily lives. It is
           a very common occurrence like cold or fever depending upon your lifestyle.
         </Typography>
+
         <Button variant='contained' sx={{ padding: theme => theme.spacing(1.75, 5.5) }}>
           Contact Now
         </Button>

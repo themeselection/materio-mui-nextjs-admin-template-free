@@ -53,6 +53,7 @@ const TabAccount = () => {
   const onChange = (file: ChangeEvent) => {
     const reader = new FileReader()
     const { files } = file.target as HTMLInputElement
+
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result as string)
 
@@ -67,6 +68,7 @@ const TabAccount = () => {
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ImgStyled src={imgSrc} alt='Profile Pic' />
+
               <Box>
                 <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                   Upload New Photo
@@ -78,9 +80,11 @@ const TabAccount = () => {
                     id='account-settings-upload-image'
                   />
                 </ButtonStyled>
+
                 <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
                   Reset
                 </ResetButtonStyled>
+
                 <Typography variant='body2' sx={{ marginTop: 5 }}>
                   Allowed PNG or JPEG. Max size of 800K.
                 </Typography>
@@ -91,9 +95,11 @@ const TabAccount = () => {
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label='Username' placeholder='johnDoe' defaultValue='johnDoe' />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label='Name' placeholder='John Doe' defaultValue='John Doe' />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -103,28 +109,39 @@ const TabAccount = () => {
               defaultValue='johnDoe@example.com'
             />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
+
               <Select label='Role' defaultValue='admin'>
                 <MenuItem value='admin'>Admin</MenuItem>
+
                 <MenuItem value='author'>Author</MenuItem>
+
                 <MenuItem value='editor'>Editor</MenuItem>
+
                 <MenuItem value='maintainer'>Maintainer</MenuItem>
+
                 <MenuItem value='subscriber'>Subscriber</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
+
               <Select label='Status' defaultValue='active'>
                 <MenuItem value='active'>Active</MenuItem>
+
                 <MenuItem value='inactive'>Inactive</MenuItem>
+
                 <MenuItem value='pending'>Pending</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label='Company' placeholder='ABC Pvt. Ltd.' defaultValue='ABC Pvt. Ltd.' />
           </Grid>
@@ -141,6 +158,7 @@ const TabAccount = () => {
                 }
               >
                 <AlertTitle>Your email is not confirmed. Please check your inbox.</AlertTitle>
+
                 <Link href='/' onClick={(e: SyntheticEvent) => e.preventDefault()}>
                   Resend Confirmation
                 </Link>
@@ -152,6 +170,7 @@ const TabAccount = () => {
             <Button variant='contained' sx={{ marginRight: 3.5 }}>
               Save Changes
             </Button>
+
             <Button type='reset' variant='outlined' color='secondary'>
               Reset
             </Button>
