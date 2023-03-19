@@ -125,7 +125,7 @@ const Navigation = (props: Props) => {
             : {
                 options: { wheelPropagation: false },
                 onScrollY: (container: any) => scrollMenu(container),
-                containerRef={(ref: any) => handleInfiniteScroll(ref)}
+                containerRef: (ref: any) => handleInfiniteScroll(ref)
               })}
         >
           {beforeVerticalNavMenuContent ? beforeVerticalNavMenuContent(props) : null}
