@@ -1,6 +1,6 @@
 name: Bug 🐞
 description: Report a bug 
-labels: [Bug] 
+labels: [Bug,support] 
 body:
   - type: markdown
     attributes:

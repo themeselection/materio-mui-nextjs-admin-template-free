@@ -1,6 +1,6 @@
 name: Feature request ✨
 description: Suggest an idea or ask for a feature that you would like to have
-labels: [feat-req]
+labels: [feat-req,support]
 body:
   - type: markdown
     attributes:
