@@ -12,6 +12,7 @@ import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
 import Abacus from 'mdi-material-ui/Abacus'
 import Cards from 'mdi-material-ui/Cards'
 import Robot from 'mdi-material-ui/RobotHappyOutline'
+
 const navigation = () => {
   return [
     {
@@ -66,27 +67,27 @@ const navigation = () => {
     {
       title: 'NFT Management',
       icon: FormatLetterCase,
-      path: '/typography'
+      path: '/'
     },
     {
       title: 'Rewards',
-      path: '/icons',
+      path: '/',
       icon: GoogleCirclesExtended
     },
     {
       title: 'On Chain Viewer',
       icon: CreditCardOutline,
-      path: '/cards'
+      path: '/'
     },
     {
       title: 'ENS - Wallet con nome utente',
       icon: Table,
-      path: '/tables'
+      path: '/'
     },
     {
       icon: CubeOutline,
       title: 'Direct Support',
-      path: '/form-layouts'
+      path: '/'
     }
   ]
 }
