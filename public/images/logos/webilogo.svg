@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 371 253.24">
+  <defs>
+    <linearGradient id="Sfumatura_senza_nome_18" data-name="Sfumatura senza nome 18" x1="242.33" y1="219.22" x2="128.52" y2="219.22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#915eeb"/>
+      <stop offset=".13" stop-color="#9363e6"/>
+      <stop offset=".3" stop-color="#9c74d9"/>
+      <stop offset=".49" stop-color="#aa90c4"/>
+      <stop offset=".71" stop-color="#bdb7a7"/>
+      <stop offset=".93" stop-color="#d5e882"/>
+      <stop offset="1" stop-color="#def976"/>
+    </linearGradient>
+    <clipPath id="clippath">
+      <path d="m200.6,73.88h55.19v-18.68c0-30.48-24.71-55.2-55.19-55.2v73.88Z" fill="#915eeb"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <path d="m101.99,0v24.91c0,44.39,35.99,80.38,80.39,80.38h31.81v-53.88C214.18,23.02,191.16,0,162.78,0h-60.79Z" fill="#915eeb"/>
+    </clipPath>
+  </defs>
+  <path d="m185.43,185.19h-45.3c-5.83,0-11.05,3.5-13.31,8.9-2.25,5.4-1.01,11.56,3.12,15.69l1.19,1.07.13.11,41.62,37.5c7.06,6.36,17.78,6.38,24.86.04l43.15-38.63.09-.08s.02-.03.03-.04c4.11-4.13,5.35-10.27,3.11-15.66-2.26-5.4-7.48-8.9-13.32-8.9h-45.38Z" fill="url(#Sfumatura_senza_nome_18)"/>
+  <g>
+    <path d="m200.6,73.88h55.19v-18.68c0-30.48-24.71-55.2-55.19-55.2v73.88Z" fill="#915eeb"/>
+    <g clip-path="url(#clippath)">
+      <rect x="200.6" width="55.19" height="73.88" fill="#915eeb"/>
+    </g>
+  </g>
+  <g>
+    <path d="m101.99,0v24.91c0,44.39,35.99,80.38,80.39,80.38h31.81v-53.88C214.18,23.02,191.16,0,162.78,0h-60.79Z" fill="#915eeb"/>
+    <g clip-path="url(#clippath-1)">
+      <rect x="101.99" y="0" width="112.19" height="105.29" fill="#915eeb"/>
+    </g>
+  </g>
+  <path d="m286.29,65.16H84.63C37.89,65.16,0,103.05,0,149.87s37.89,84.71,84.63,84.71h48.53l-14.44-12.96-.23-.32c-8.77-8.77-11.49-21.81-6.76-33.31h-27.1c-20.97,0-38.04-17.08-38.04-38.13s17.08-38.13,38.04-38.13h201.66c20.96,0,38.12,17.08,38.12,38.13s-17.16,38.13-38.12,38.13h-27.1c4.58,11.03,2.25,23.53-5.75,32.3l-.08.15-1.32,1.24-14.37,12.89h48.61c46.74,0,84.71-37.97,84.71-84.71s-37.97-84.72-84.71-84.72" fill="#18003a"/>
+</svg>
