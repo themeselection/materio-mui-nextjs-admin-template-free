@@ -1,13 +1,13 @@
 <p align="center"></p>
 
 <p align="center">
-   <a href="https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/" target="_blank">
+   <a href="https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/" target="_blank">
       <img src="https://user-images.githubusercontent.com/64475785/158384184-1fe44a59-6b68-40f5-b860-d14c51f0ce5d.svg" alt="materio-logo" width="60px" height="auto">
    </a>
 </p>
 
 <h1 align="center">
-   <a href="https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/" target="_blank" align="center">
+   <a href="https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/" target="_blank" align="center">
       Materio - Free MUI React NextJS Admin Template
    </a>
 </h1>
@@ -34,13 +34,13 @@
    </a>
 </p>
 
-<kbd>[![Materio - Free MUI React NextJS Admin Template Demo Screenshot](https://user-images.githubusercontent.com/64475785/158384546-57879619-2d6d-4df6-8dc3-b4e53a536d50.png)](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/)</kbd>
+<kbd>[![Materio - Free MUI React NextJS Admin Template Demo Screenshot](https://user-images.githubusercontent.com/64475785/158384546-57879619-2d6d-4df6-8dc3-b4e53a536d50.png)](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/)</kbd>
 
 ## Introduction 🚀
 
-If you’re a developer looking for the most powerful and comprehensive [**Free MUI React NextJS Admin Dashboard Template**](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/) built for developers, rich with features, and highly customizable, look no further than Materio. We’ve followed the highest industry standards to bring you the very best admin template that is not only easy to use, but highly scalable. Offering ultimate convenience and flexibility, you’ll be able to build whatever application you want with very little hassle.
+If you’re a developer looking for the most powerful and comprehensive [**Free MUI React NextJS Admin Dashboard Template**](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/) built for developers, rich with features, and highly customizable, look no further than Materio. We’ve followed the highest industry standards to bring you the very best admin template that is not only easy to use, but highly scalable. Offering ultimate convenience and flexibility, you’ll be able to build whatever application you want with very little hassle.
 
-Build premium quality applications with ease. Use one of the most innovative [React admin templates](https://themeselection.com/products/category/react-admin-templates/) to create eye-catching, high-quality web apps. Your apps will be fully responsive, ensuring they’ll look stunning and function flawlessly on desktops, tablets, and mobile devices.
+Build premium quality applications with ease. Use one of the most innovative [React admin templates](https://themeselection.com/item/category/react-admin-templates/) to create eye-catching, high-quality web apps. Your apps will be fully responsive, ensuring they’ll look stunning and function flawlessly on desktops, tablets, and mobile devices.
 
 Materio provides JavaScript and TypeScript based template sets.
 
@@ -96,7 +96,7 @@ yarn dev
 | Materio Free Version | Materio Premium Version |
 | :------------------- | :---------------------- |
 | [Demo](https://demos.themeselection.com/materio-mui-react-nextjs-admin-template-free/) | [Demo](https://demos.themeselection.com/materio-mui-react-nextjs-admin-template/landing/)                |
-| [Download](https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/) | [Purchase](https://themeselection.com/products/materio-mui-react-nextjs-admin-template/) |
+| [Download](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/) | [Purchase](https://themeselection.com/item/materio-mui-react-nextjs-admin-template/) |
 | Simple vertical menu | Vertical (+ vertical collapsed) menu & Horizontal menu |
 | Default skin | Default, bordered & semi dark skins |
 | 1 Simple Dashboard | 3 Niche Dashboards |
@@ -165,15 +165,15 @@ Please refer to the [CHANGELOG](CHANGELOG.md) file. We will add a detailed relea
 
 ## Looking For Premium Admin Templates ?? 👀
 
-**[ThemeSelection](https://themeselection.com/)** provides selected high quality, modern design, professional and easy-to-use Free and Premium [Bootstrap Admin Templates](https://themeselection.com/products/category/bootstrap-admin-templates/), [VueJS Admin Templates](https://themeselection.com/products/category/vuejs-admin-templates/), [Laravel Admin Templates](https://themeselection.com/products/category/laravel-admin-templates/), [React Admin Templates](https://themeselection.com/products/category/react-admin-templates/) and [Free UI Kits](https://themeselection.com/products/category/free-ui-kits/) to create your applications more quickly!
+**[ThemeSelection](https://themeselection.com/)** provides selected high quality, modern design, professional and easy-to-use Free and Premium [Bootstrap Admin Templates](https://themeselection.com/item/category/bootstrap-admin-templates/), [VueJS Admin Templates](https://themeselection.com/item/category/vuejs-admin-templates/), [Laravel Admin Templates](https://themeselection.com/item/category/laravel-admin-templates/), [React Admin Templates](https://themeselection.com/item/category/react-admin-templates/) and [Free UI Kits](https://themeselection.com/item/category/free-ui-kits/) to create your applications more quickly!
 
-If you want to [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/) like Materio, then visit [ThemeSelection](https://themeselection.com/).
+If you want to [Download Free Admin Templates](https://themeselection.com/item/category/download-free-admin-templates/) like Materio, then visit [ThemeSelection](https://themeselection.com/).
 
 ## Other variants
 
-- [Materio - Vuetify VueJS Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-admin-template/)
-- [Materio - Vuetify VueJS Laravel Free Admin Template](https://themeselection.com/products/materio-free-vuetify-vuejs-laravel-admin-template/)
-- [Materio - Figma Admin Dashboard UI Kit](https://themeselection.com/products/materio-figma-admin-dashboard-ui-kit/)
+- [Materio - Vuetify VueJS Free Admin Template](https://themeselection.com/item/materio-free-vuetify-vuejs-admin-template/)
+- [Materio - Vuetify VueJS Laravel Free Admin Template](https://themeselection.com/item/materio-free-vuetify-vuejs-laravel-admin-template/)
+- [Materio - Figma Admin Dashboard UI Kit](https://themeselection.com/item/materio-figma-admin-dashboard-ui-kit/)
 
 ## Credits 🙏
 
@@ -192,8 +192,8 @@ If you want to [Download Free Admin Templates](https://themeselection.com/produc
 ## Useful Links 🎁
 
 - [More products from ThemeSelection](https://themeselection.com/)
-- [Freebies](https://themeselection.com/products/category/freebies/)
-- [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/)
+- [Freebies](https://themeselection.com/item/category/freebies/)
+- [Download Free Admin Templates](https://themeselection.com/item/category/download-free-admin-templates/)
 - [Bootstrap 5 CheatSheet](https://bootstrap-cheatsheet.themeselection.com/)
 - [Blog](https://themeselection.com/blog/)
 
