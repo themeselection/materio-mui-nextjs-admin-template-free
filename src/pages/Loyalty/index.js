@@ -1,7 +1,8 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Icons Imports
+// ** Private Route
+import PrivateRoute from 'src/pages/privateRoute';
 
 
 // ** Custom Components Imports
@@ -21,6 +22,7 @@ import Table from 'src/views/Loyalty/Table'
 
 const Loyalty = () => {
   return (
+    <PrivateRoute>
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={4}>
@@ -40,6 +42,7 @@ const Loyalty = () => {
         </Grid>
       </Grid>
     </ApexChartWrapper>
+    </PrivateRoute>
   )
 }
 

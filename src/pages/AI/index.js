@@ -1,9 +1,6 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Icons Imports
-
-
 // ** Custom Components Imports
 
 // ** Styled Component Import
@@ -17,6 +14,7 @@ import AIChat from 'src/views/AI/ai-chatbot'
 
 const AI = () => {
   return (
+
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={4} lg={12}>
@@ -24,6 +22,7 @@ const AI = () => {
         </Grid>
       </Grid>
     </ApexChartWrapper>
+
   )
 }
 

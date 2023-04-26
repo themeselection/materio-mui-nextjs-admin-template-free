@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import Auth from './auth'
+import Auth from 'src/pages/auth'
 
 function PrivateRoute({ children }) {
   const router = useRouter()

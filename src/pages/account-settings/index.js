@@ -1,6 +1,9 @@
 // ** React Imports
 import { useState } from 'react'
 
+// ** Private Route
+import PrivateRoute from 'src/pages/privateRoute';
+
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -50,6 +53,7 @@ const AccountSettings = () => {
   }
 
   return (
+    <PrivateRoute>
     <Card>
       <TabContext value={value}>
         <TabList
@@ -97,6 +101,7 @@ const AccountSettings = () => {
         </TabPanel>
       </TabContext>
     </Card>
+    </PrivateRoute>
   )
 }
 

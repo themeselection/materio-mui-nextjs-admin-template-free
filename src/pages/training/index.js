@@ -1,11 +1,8 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Icons Imports
-
-
-// ** Custom Components Imports
-
+// ** Private Route
+import PrivateRoute from 'src/pages/privateRoute';
 
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
@@ -27,6 +24,7 @@ import Badge9 from 'src/views/training/Badge9'
 
 const training = () => {
   return (
+    <PrivateRoute>
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={4}>
@@ -64,6 +62,7 @@ const training = () => {
         </Grid>
       </Grid>
     </ApexChartWrapper>
+    </PrivateRoute>
   )
 }
 
