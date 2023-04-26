@@ -1,8 +1,14 @@
 // ** React Imports
 import { useState, Fragment } from 'react'
 
+
 // ** Next Imports
 import Link from 'next/link'
+
+// ** Fifrebase
+import {  createUserWithEmailAndPassword  } from 'firebase/auth';
+import { auth } from 'src/firebase';
+
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -80,6 +86,36 @@ const RegisterPage = () => {
     event.preventDefault()
   }
 
+  // Registrazione
+
+
+  //const navigate = useNavigate();
+ 
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('');
+ 
+    const onSubmit = async (e) => {
+      e.preventDefault()
+     
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            navigate("/login")
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            // ..
+        });
+ 
+   
+    }
+  
+
   return (
     <Box className='content-center'>
       <Card sx={{ zIndex: 1 }}>
@@ -106,16 +142,24 @@ const RegisterPage = () => {
             <Typography variant='body2'>Utilizza il Web3 in modo semplice e intuitivo!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
+            <FormControl fullWidth sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor='auth-register-email'>Email</InputLabel>
+              <OutlinedInput
+                type= "email"
+                label='Email address'
+                value={email}
+                id='auth-register-password'
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormControl>
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
               <OutlinedInput
-                label='Password'
-                value={values.password}
+                type= "password"
+                label='Create password'
+                value={password}
                 id='auth-register-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                onChange={(e) => setPassword(e.target.value)}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -141,7 +185,7 @@ const RegisterPage = () => {
                 </Fragment>
               }
             />
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
+            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }} onClick={onSubmit}>
               Registrati
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -186,6 +230,8 @@ const RegisterPage = () => {
     </Box>
   )
 }
+
 RegisterPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
-export default RegisterPage
+
+export default RegisterPage 

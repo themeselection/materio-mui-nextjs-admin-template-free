@@ -1,21 +1,13 @@
 {
-  "name": "materio-mui-react-nextjs-admin-template-free",
-  "description": "Most Powerful & Comprehensive Free MUI React NextJS Admin Dashboard Template built for developers! 🚀",
+  "name": "webi3dash",
+  "description": "Webidoo Chain Dashboard! 🚀",
   "license": "MIT",
   "version": "1.0.0",
   "author": {
-    "name": "ThemeSelection",
-    "url": "https://themeselection.com/"
+    "name": "WebiDooChain",
+    "url": "https://webidoochain.com/"
   },
-  "bugs": {
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free/issues"
-  },
-  "private": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free.git"
-  },
-  "homepage": "https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/",
+  "homepage": "https://webidoochain.com/",
   "keywords": [
     "react",
     "javascript",
@@ -60,6 +52,7 @@
     "cors": "^2.8.5",
     "ethers": "5.7.2",
     "express": "^4.18.2",
+    "firebase": "^9.20.0",
     "fs": "^0.0.1-security",
     "git": "^0.1.5",
     "mdi-material-ui": "^7.1.0",
@@ -73,8 +66,11 @@
     "react-apexcharts": "^1.3.9",
     "react-datepicker": "^4.5.0",
     "react-dom": "17.0.2",
+    "react-firebase-hooks": "^5.1.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.2.5",
+    "react-router": "^6.10.0",
+    "react-router-dom": "^6.10.0",
     "readline-sync": "^1.4.10",
     "tls": "^0.0.1",
     "web3": "^1.8.2"

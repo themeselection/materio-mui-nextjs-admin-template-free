@@ -12,18 +12,31 @@ import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
 import Abacus from 'mdi-material-ui/Abacus'
 import Cards from 'mdi-material-ui/Cards'
 import Robot from 'mdi-material-ui/RobotHappyOutline'
+import School from 'mdi-material-ui/SchoolOutline'
+import PrivateRoute from 'src/pages/privateRoute'
+import { useAuth } from 'src/pages/auth';
+
+import DashboardPage from 'src/pages/index';
+
+
 
 const navigation = () => {
   return [
     {
       title: 'Dashboard',
       icon: HomeOutline,
-      path: '/'
+      path: "/"
     },
     {
       title: 'Loyalty',
       icon: Abacus,
-      path: '/Loyalty'
+      props: {
+        component: PrivateRoute,
+        auth: true
+      },
+      path: "/Loyalty"
+      
+      
     },
     {
       title: 'NFT Management',
@@ -31,15 +44,16 @@ const navigation = () => {
       path: '/NFT'
     },
     {
+      title: 'Training',
+      icon: School,
+      path: '/training'
+    },
+    {
       title: 'AI Chatbot',
       icon: Robot,
       path: '/AI'
     },
-    {
-      title: 'Impostazioni Account',
-      icon: AccountCogOutline,
-      path: '/account-settings'
-    },
+  
     {
       sectionTitle: 'Pages'
     },
@@ -54,6 +68,11 @@ const navigation = () => {
       icon: AccountPlusOutline,
       path: '/pages/register',
       openInNewTab: true
+    },
+    {
+      title: 'Impostazioni Account',
+      icon: AccountCogOutline,
+      path: '/account-settings'
     },
     {
       title: 'Error',
@@ -89,7 +108,7 @@ const navigation = () => {
       title: 'Direct Support',
       path: '/'
     }
-  ]
+  ];
 }
 
 export default navigation
