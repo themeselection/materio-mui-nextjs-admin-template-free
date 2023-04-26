@@ -10,6 +10,8 @@ const initialSettings = {
   contentWidth: themeConfig.contentWidth
 }
 
+createContext( {userDataPresent:false, user:null} )
+
 // ** Create Context
 export const SettingsContext = createContext({
   saveSettings: () => null,
