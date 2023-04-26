@@ -30,13 +30,7 @@ const navigation = () => {
     {
       title: 'Loyalty',
       icon: Abacus,
-      props: {
-        component: PrivateRoute,
-        auth: true
-      },
       path: "/Loyalty"
-      
-      
     },
     {
       title: 'NFT Management',
