@@ -11,7 +11,7 @@ import PrivateRoute from 'src/pages/privateRoute';
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
-// **  Components Imports
+// **  Components Importsa
 import Trophy from 'src/views/dashboard/Trophy'
 import StatisticsCard from 'src/views/dashboard/StatisticsCard'
 import WidgetUnico from 'src/views/Loyalty/Widgetunicoloyalty'

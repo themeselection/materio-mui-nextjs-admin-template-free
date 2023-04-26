@@ -2,12 +2,12 @@
 import Grid from '@mui/material/Grid'
 
 // ** Private Route
-import PrivateRoute from 'src/pages/privateRoute';
+import PrivateRoute from 'src/pages/privateRoute'
 
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
-// **  Components Imports
+// **  Components Importss
 import Trophy from 'src/views/training/Trophy'
 import StatisticsCard from 'src/views/training/StatisticsCard'
 import Badge1 from 'src/views/training/Badge1'
@@ -20,48 +20,46 @@ import Badge7 from 'src/views/training/Badge7'
 import Badge8 from 'src/views/training/Badge8'
 import Badge9 from 'src/views/training/Badge9'
 
-
-
 const training = () => {
   return (
     <PrivateRoute>
-    <ApexChartWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12} md={4}>
-          <Trophy />
+      <ApexChartWrapper>
+        <Grid container spacing={6}>
+          <Grid item xs={12} md={4}>
+            <Trophy />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <StatisticsCard />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge1 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge2 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge3 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge4 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge5 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge6 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge7 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge8 />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Badge9 />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <StatisticsCard />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge1 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge2 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge3 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge4 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge5 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge6 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge7 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge8 />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Badge9 />
-        </Grid>
-      </Grid>
-    </ApexChartWrapper>
+      </ApexChartWrapper>
     </PrivateRoute>
   )
 }
