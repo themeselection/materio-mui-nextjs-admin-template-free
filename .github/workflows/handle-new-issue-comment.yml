@@ -9,6 +9,6 @@ jobs:
     name: Handle new issue comment
     steps:
       - name: Toggle awaiting-reply label
-        uses: jd-0001/gh-action-toggle-awaiting-reply-label@v2.0.0
+        uses: jd-solanki/gh-action-toggle-awaiting-reply-label@v2.1.0
         with:
           label: awaiting-reply
