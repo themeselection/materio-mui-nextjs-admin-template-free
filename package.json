@@ -1,0 +1,10 @@
+{
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "release": "code -r CHANGELOG.md && node -e \"process.stdin.once('data', () => process.exit())\" && yarn bumpp --all package.json javascript-version/**/package.json typescript-version/**/package.json"
+  },
+  "devDependencies": {
+    "bumpp": "^8.2.1"
+  }
+}
