@@ -24,8 +24,11 @@ const IconContainer = styled('div')(({ theme }) => ({
 }))
 
 const MyForm = ({ Data }) => {
+
+  console.log(Data)
+  
   const [formData, setFormData] = useState({
-    Username: Data.username,
+    username: Data.username,
     email: Data.email,
     firstName: Data.firstName,
     lastName: Data.lastName,
@@ -57,7 +60,7 @@ const MyForm = ({ Data }) => {
         <TextField
           name='username'
           label='Username'
-          value={formData.Username}
+          value={formData.username}
           onChange={handleChange}
           fullWidth
           margin='normal'

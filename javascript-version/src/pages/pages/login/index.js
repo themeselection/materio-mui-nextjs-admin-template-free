@@ -4,7 +4,7 @@ import { useState } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import MyForm from 'src/pages/pages/userinfo'
+import MyForm from '../userinfo'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -89,11 +89,12 @@ const LoginPage = () => {
         body: JSON.stringify({ username, password })
       })
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 204) {
         const data = await response.json()
 
         // Update the form data with auto-populated values
         setFormData(data);
+
       } else {
         alert('Login failed. Please try again.');
       }
@@ -119,7 +120,7 @@ const LoginPage = () => {
 
   return (
     <>
-      {formData ? (
+      { formData ? (
         <MyForm Data={formData} />
       ) : (
         <Box className='content-center'>
