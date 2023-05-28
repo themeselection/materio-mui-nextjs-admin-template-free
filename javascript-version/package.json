@@ -36,7 +36,8 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "babel src -d lib",
+    "test": "jest",
     "start": "next start",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx}\"",
