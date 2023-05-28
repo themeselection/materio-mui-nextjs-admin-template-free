@@ -4,7 +4,7 @@ import { useState } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import MyForm from './userinfo'
+import MyForm from 'src/pages/pages/userinfo'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -75,7 +75,7 @@ const LoginPage = () => {
 
   const handleLogin = async( e )=> {
     e.preventDefault()
-    
+
     // Perform authentication using the url https://dummyjson.com/auth/login
     // with the username and password entered by the user
     const username = EnteredUsername
