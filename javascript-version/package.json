@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "babel src -d lib",
+    "build": "next build",
     "test": "jest",
     "start": "next start",
     "export": "next export",
