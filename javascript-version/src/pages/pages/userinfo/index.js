@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { TextField, Button, FormControlLabel, Radio, RadioGroup, FormControl, FormLabel } from '@mui/material'
 import styled from '@emotion/styled'
-import CloseIcon from '@mui/icons-material/Close';
-import { useRouter } from 'next/router';
+import CloseIcon from '@mui/icons-material/Close'
+import { useRouter } from 'next/router'
 
 const Container = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -11,8 +11,8 @@ const Container = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   width: '100%',
   height: '100%',
-  position:'relative',
-  margin: '2rem auto',
+  position: 'relative',
+  margin: '2rem auto'
 }))
 
 const IconContainer = styled('div')(({ theme }) => ({
@@ -23,16 +23,13 @@ const IconContainer = styled('div')(({ theme }) => ({
   cursor: 'pointer'
 }))
 
-const MyForm = ({ Data }) => {
-
-  console.log(Data)
-  
+const MyForm = () => {
   const [formData, setFormData] = useState({
-    username: Data.username,
-    email: Data.email,
-    firstName: Data.firstName,
-    lastName: Data.lastName,
-    gender: Data.gender
+    username: 'kminchelle',
+    email: 'kminchelle@qq.com',
+    firstName: 'Jeanne',
+    lastName: 'Halvorson',
+    gender: 'female'
   })
 
   const router = useRouter()
@@ -47,7 +44,6 @@ const MyForm = ({ Data }) => {
 
   const handleSubmit = event => {
     event.preventDefault()
-
   }
 
   const handleClose = () => {
@@ -107,11 +103,10 @@ const MyForm = ({ Data }) => {
         Submit
       </Button>
       <IconContainer>
-      <CloseIcon onClick={handleClose} />
+        <CloseIcon onClick={handleClose} />
       </IconContainer>
-
     </Container>
   )
 }
 
-export default MyForm;
+export default MyForm
