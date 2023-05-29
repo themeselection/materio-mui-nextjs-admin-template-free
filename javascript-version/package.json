@@ -43,6 +43,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx}\""
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-0",
     "@emotion/cache": "^11.6.0",
     "@emotion/react": "^11.7.0",
     "@emotion/server": "^11.4.0",
@@ -54,6 +55,7 @@
     "apexcharts-clevision": "3.28.5",
     "babel-eslint": "^10.1.0",
     "clsx": "^1.1.1",
+    "critters": "^0.0.17",
     "mdi-material-ui": "^7.1.0",
     "next": "12.0.4",
     "nprogress": "^0.2.0",
@@ -63,6 +65,7 @@
     "react-dom": "17.0.2",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.2.5",
+    "typescript": "^3.7.0",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
