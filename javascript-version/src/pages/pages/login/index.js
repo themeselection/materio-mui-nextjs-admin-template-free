@@ -4,7 +4,7 @@ import { useState } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import MyForm from '../../pages/userinfo'
+import MyForm from '../userinfo/userinfo'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -65,7 +65,7 @@ const LoginPage = () => {
     showPassword: false
   })
 
-  const [formData, setFormData] = useState()
+
   const [EnteredUsername, setEnteredUsername] = useState('')
   const [EnteredPassword, setEnteredPassword] = useState('')
 
@@ -93,7 +93,7 @@ const LoginPage = () => {
         const data = await response.json()
 
         // Update the form data with auto-populated values
-        setFormData(data)
+        
         router.push('/pages/userinfo')
       } else {
         alert('Login failed. Please try again.')
