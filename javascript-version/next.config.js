@@ -6,7 +6,10 @@ module.exports = {
   distDir: 'build',
   experimental: {
     esmExternals: false,
-    jsconfigPaths: true // enables it for both jsconfig.json and tsconfig.json
+    jsconfigPaths: true,
+    optimizeCss: true, // Optional: If you use CSS
+    optimizeImages: true, // Optional: If you use images
+    workerThreads: true, // enables it for both jsconfig.json and tsconfig.json
   },
   webpack: config => {
     config.resolve.alias = {
