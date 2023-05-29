@@ -4,7 +4,7 @@ import { useState } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import MyForm from '../userinfo/userinfo'
+import MyForm from '../form'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -93,7 +93,7 @@ const LoginPage = () => {
         const data = await response.json()
 
         // Update the form data with auto-populated values
-        
+
         router.push('/pages/userinfo')
       } else {
         alert('Login failed. Please try again.')
