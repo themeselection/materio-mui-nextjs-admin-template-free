@@ -39,6 +39,65 @@ const themeOptions = settings => {
       toolbar: {
         minHeight: 64
       }
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            ...(mode === 'light'
+              ? {
+                  scrollbarColor: '#d1d1d1',
+                  '&::-webkit-scrollbar, & *::-webkit-scrollbar': {
+                    width: 8,
+                    height: 8
+
+                    //backgroundColor: 'transparent'
+                  },
+                  '&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb': {
+                    borderRadius: 8,
+                    backgroundColor: '#d1d1d1',
+                    minHeight: 24
+                  },
+                  '&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner': {
+                    backgroundColor: 'transparent'
+                  }
+                }
+              : {
+                  scrollbarColor: '#d1d1d1',
+                  '&::-webkit-scrollbar, & *::-webkit-scrollbar': {
+                    width: 8,
+                    height: 8
+                  },
+                  '&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb': {
+                    borderRadius: 8,
+                    backgroundColor: '#d1d1d1',
+                    minHeight: 24
+                  },
+                  '&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover': {
+                    backgroundColor: '#a7a7a7'
+                  },
+                  '&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner': {
+                    backgroundColor: 'transparent'
+                  }
+                })
+          }
+        }
+      }
     }
   }
 
