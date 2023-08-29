@@ -34,7 +34,7 @@
    </a>
 </p>
 
-<kbd>[![Materio - Free MUI React NextJS Admin Template Demo Screenshot](https://cdn.jsdelivr.net/gh/themeselection/ts-assets/materio/materio-mui-nextjs-admin-template-free/marketing/materio-mui-nextjs-admin-template-free-github.png](https://themeselection.com/item/materio-free-mui-react-nextjs-admin-template/)</kbd>
+<kbd>[![Materio – MUI React NextJS Admin Template Free](https://cdn.jsdelivr.net/gh/themeselection/ts-assets/materio/materio-mui-nextjs-admin-template-free/marketing/materio-mui-nextjs-admin-template-free-github.png)](https://themeselection.com/item/materio-free-vuetify-vuejs-admin-template/)</kbd>
 
 ## Introduction 🚀
 
