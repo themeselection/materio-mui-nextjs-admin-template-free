@@ -24,7 +24,6 @@ import Close from 'mdi-material-ui/Close'
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
   height: 120,
-  marginRight: theme.spacing(6.25),
   borderRadius: theme.shape.borderRadius
 }))
 
@@ -64,7 +63,7 @@ const TabAccount = () => {
       <form>
         <Grid container spacing={7}>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: { xs: 'column', sm: 'row' }, gap: 6.25 }}>
               <ImgStyled src={imgSrc} alt='Profile Pic' />
               <Box>
                 <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
@@ -147,10 +146,8 @@ const TabAccount = () => {
             </Grid>
           ) : null}
 
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
+          <Grid item xs={12} sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Button variant='contained'>Save Changes</Button>
             <Button type='reset' variant='outlined' color='secondary'>
               Reset
             </Button>

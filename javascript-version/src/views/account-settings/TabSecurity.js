@@ -199,10 +199,8 @@ const TabSecurity = () => {
           </Box>
         </Box>
 
-        <Box sx={{ mt: 11 }}>
-          <Button variant='contained' sx={{ marginRight: 3.5 }}>
-            Save Changes
-          </Button>
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mt: 11 }}>
+          <Button variant='contained'>Save Changes</Button>
           <Button
             type='reset'
             variant='outlined'

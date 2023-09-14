@@ -109,10 +109,8 @@ const TabInfo = () => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
+          <Grid item xs={12} sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Button variant='contained'>Save Changes</Button>
             <Button type='reset' variant='outlined' color='secondary' onClick={() => setDate(null)}>
               Reset
             </Button>
