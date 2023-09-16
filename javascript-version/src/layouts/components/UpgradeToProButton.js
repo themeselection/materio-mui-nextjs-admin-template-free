@@ -70,7 +70,7 @@ const BuyNowButton = () => {
               rel='noreferrer'
               href='https://themeselection.com/products/materio-mui-react-nextjs-admin-template/'
             >
-              <img width='100%' alt='materio-pro-banner' src='/images/misc/materio-pro-banner.png' />
+              <img draggable={false} width='100%' alt='materio-pro-banner' src='/images/misc/materio-pro-banner.png' />
             </a>
             <CardContent>
               <Typography sx={{ mb: 4 }} variant='h6'>

@@ -90,7 +90,7 @@ const TotalEarning = () => {
                   backgroundColor: theme => `rgba(${theme.palette.customColors.main}, 0.04)`
                 }}
               >
-                <img src={item.imgSrc} alt={item.title} height={item.imgHeight} />
+                <img draggable={false} src={item.imgSrc} alt={item.title} height={item.imgHeight} />
               </Avatar>
               <Box
                 sx={{

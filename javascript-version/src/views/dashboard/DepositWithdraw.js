@@ -106,7 +106,7 @@ const Divider = styled(MuiDivider)(({ theme }) => ({
 
 const DepositWithdraw = () => {
   return (
-    <Card sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: ['column', 'column', 'row'] }}>
+    <Card sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
       <Box sx={{ width: '100%' }}>
         <CardHeader
           title='Deposit'
@@ -125,7 +125,7 @@ const DepositWithdraw = () => {
                 sx={{ display: 'flex', alignItems: 'center', mb: index !== depositData.length - 1 ? 6 : 0 }}
               >
                 <Box sx={{ minWidth: 38, display: 'flex', justifyContent: 'center' }}>
-                  <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
+                  <img draggable={false} src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
                 </Box>
                 <Box
                   sx={{
@@ -171,7 +171,7 @@ const DepositWithdraw = () => {
                 sx={{ display: 'flex', alignItems: 'center', mb: index !== depositData.length - 1 ? 6 : 0 }}
               >
                 <Box sx={{ minWidth: 36, display: 'flex', justifyContent: 'center' }}>
-                  <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
+                  <img draggable={false} src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
                 </Box>
                 <Box
                   sx={{
