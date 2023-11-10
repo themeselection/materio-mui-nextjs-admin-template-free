@@ -3,7 +3,7 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { Typography } from '@mui/material'
 import Box from '@mui/material/Box'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Custom Components Imports
 import ETFPieChart from './ETFPieChart'
@@ -18,7 +18,7 @@ const columns: GridColDef[] = [
 
 
 const ETFCard = ({ name, ticker,size, client, contactPoint, salesIC, aum, since, series, stockRows}: { name: string; ticker: string,
-  size:string, client:string, contactPoint:string, salesIC:string, aum:string,since:string,series:number[], stockRows:GridColDef[]}) => {
+  size:string, client:string, contactPoint:string, salesIC:string, aum:string,since:string,series:number[], stockRows:[]}) => {
 
   if (size === undefined) {
     size = '0.7rem'
@@ -55,7 +55,10 @@ const ETFCard = ({ name, ticker,size, client, contactPoint, salesIC, aum, since,
     ]
   }
 
+  console.log(stockRows);
+
   return (
+    <Card>
     <Grid sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', ml: 4, mt: 4 }}>
         <Box sx={{ width: '30%', display: 'flex', flexDirection: 'row' }}>
@@ -114,6 +117,7 @@ const ETFCard = ({ name, ticker,size, client, contactPoint, salesIC, aum, since,
         </Grid>
       </Card>
     </Grid>
+    </Card>
   )
 }
 

@@ -470,6 +470,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@mdi/react@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.npmjs.org/@mdi/react/-/react-1.6.1.tgz"
+  integrity sha512-4qZeDcluDFGFTWkHs86VOlHkm6gnKaMql13/gpIcUQ8kzxHgpj31NuCkD8abECVfbULJ3shc7Yt4HJ6Wu6SN4w==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@mui/base@5.0.0-alpha.72":
   version "5.0.0-alpha.72"
   resolved "https://registry.npmjs.org/@mui/base/-/base-5.0.0-alpha.72.tgz"

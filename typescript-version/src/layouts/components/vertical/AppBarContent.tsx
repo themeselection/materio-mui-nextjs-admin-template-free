@@ -1,14 +1,11 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import { Theme } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icons Imports
 import Menu from 'mdi-material-ui/Menu'
-import Magnify from 'mdi-material-ui/Magnify'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
@@ -17,6 +14,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
+import React from 'react'
 
 interface Props {
   hidden: boolean
@@ -26,6 +24,7 @@ interface Props {
 }
 
 const AppBarContent = (props: Props) => {
+
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
@@ -44,17 +43,20 @@ const AppBarContent = (props: Props) => {
             <Menu />
           </IconButton>
         ) : null}
-        <TextField
+        {/* <TextField
+          value={searchText}
+          onChange={handleChange} // change onClick to onChange
+          onKeyDown={handleKeyDown}
           size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+          sx={{ '& .MuiOutlinedInput-root': { width: '300%', borderRadius: 4, mr: 8 } }}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <Magnify fontSize='small' />
+                <Magnify fontSize='small' onClick={handleSearch} />
               </InputAdornment>
             )
           }}
-        />
+        /> */}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {hiddenSm ? null : (

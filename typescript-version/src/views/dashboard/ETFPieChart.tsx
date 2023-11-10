@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { ApexOptions } from 'apexcharts';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
@@ -10,23 +10,17 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DotsVertical from 'mdi-material-ui/DotsVertical';
 import ReactApexcharts from 'src/@core/components/react-apexcharts';
+import { CheckUnderline } from 'mdi-material-ui';
 
 interface ETFPieChartProps {
-  series: number[];
-  labels: string[];
+  series?: number[];
+  labels?: string[];
 }
 
 const ETFPieChart: React.FC<ETFPieChartProps> = ({ series, labels }) => {
   const theme = useTheme();
-
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 3; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
+  const [loc_series,setSeries] = useState(undefined);
+  const [loc_labels, setLabels]= useState(undefined);
 
   const getRandomValues = (length: number) => {
     const values = [];
@@ -64,14 +58,25 @@ const ETFPieChart: React.FC<ETFPieChartProps> = ({ series, labels }) => {
       },
     },
   };
-
-  if (series === undefined) {
-    series = getRandomValues(3);
+  if(loc_series === undefined){
+    if(series === undefined){
+    setSeries(getRandomValues(3));
+  }
+    else{
+      setSeries(series);
+    }
   }
 
-  if (labels === undefined) {
-    labels = ['Cash', 'Equity', 'Commodities'];
+  if(loc_labels === undefined){
+    if(labels === undefined){
+      setLabels(["Commodities","Cash","Equities"]);
+    }
+    else{
+      setLabels(labels);
+    }
   }
+  
+  
 
   return (
     <Card>
@@ -86,7 +91,7 @@ const ETFPieChart: React.FC<ETFPieChartProps> = ({ series, labels }) => {
         }
       />
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexcharts type='donut' height={205} options={options} series={series} labels={labels} />
+        <ReactApexcharts type='donut' height={205} options={options} series={loc_series} labels={loc_labels} />
         <Box sx={{ mb: 7, display: 'flex', alignItems: 'center' }}>
         </Box>
       </CardContent>

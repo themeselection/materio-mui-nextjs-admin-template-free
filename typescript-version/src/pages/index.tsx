@@ -22,77 +22,122 @@ import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
 import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react'
+
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import Magnify from 'mdi-material-ui/Magnify'
+import ETFCard from 'src/views/dashboard/ETFCard'
+import { Robot } from 'mdi-material-ui'
+
 const Dashboard = () => {
+  const [searchText, setSearchText] = useState('')
+  const [searchResults, setSearchResults] = useState([]) // <-- set an empty array for the search results
+  const [secondOrder, setSecondOrder] = useState(true)
+  const [endpoint, setEndPoint] = useState(`http://127.0.0.1:8080/search_vector?request=`)
+
+  // const endpoint = `http://http://127.0.0.1:8080/search_vector?request=`
+  const handleSearch = async () => {
+    if (searchText === '') {
+      console.log('Search Text not updated')
+      return
+    }
+    try {
+      // Send the searchText to the API endpoint
+      console.log('I have run')
+      console.log(searchText)
+      console.log(endpoint)
+      
+      
+      const response = await fetch(endpoint+encodeURI(searchText), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Request-Method': 'GET'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const data = await response.json()
+      console.log(data)
+      setSearchResults(data['results'])
+    } catch (error) {
+      // Handle any errors
+      console.error(error)
+    }
+  }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchText(event.target.value)
+  }
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  const columns: GridColDef[] = [
+    { field: 'name', headerName: 'Name', width: 100 },
+    { field: 'ticker', headerName: 'Ticker', width: 10 },
+    { field: 'weight', headerName: 'Weight', width: 10 },
+    { field: 'YTD', headerName: 'YTD', width: 10 }
+  ]
+
+  const switchOrder = () => {
+    setSecondOrder(!secondOrder)
+    if (secondOrder) {
+      setEndPoint(`http://127.0.0.1:8080/search_data?request=`);
+    }
+    else {
+      setEndPoint(`http://127.0.0.1:8080/search_vector?request=`)
+    }
+  }
+
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        {/* <Grid item xs={12} md={4}>
-          <Trophy />
-        </Grid> */}
         <Grid item xs={12} md={8}>
-          <StatisticsCard />
+          <TextField
+            value={searchText}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            size='small'
+            sx={{ '& .MuiOutlinedInput-root': { width: '300%', borderRadius: 4, mr: 8, backgroundColor: 'white' } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Magnify fontSize='small' onClick={handleSearch} />
+                </InputAdornment>
+              )
+              ,
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <Robot fontSize='small' onClick={switchOrder} sx={{color:secondOrder ? "green":"red"}}/>
+                </InputAdornment>
+              )
+            }}
+          />
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <WeeklyOverview />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <TotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$25.6k'
-                icon={<Poll />}
-                color='success'
-                trendNumber='+42%'
-                title='Total Profit'
-                subtitle='Weekly Profit'
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$78'
-                title='Refunds'
-                trend='negative'
-                color='secondary'
-                trendNumber='-15%'
-                subtitle='Past Month'
-                icon={<CurrencyUsd />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='862'
-                trend='negative'
-                trendNumber='-18%'
-                title='New Project'
-                subtitle='Yearly Project'
-                icon={<BriefcaseVariantOutline />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='15'
-                color='warning'
-                trend='negative'
-                trendNumber='-18%'
-                subtitle='Last Week'
-                title='Sales Queries'
-                icon={<HelpCircleOutline />}
-              />
-            </Grid>
+        {/** based on the search results, we can render the results by generating a list of ETFCard components */}
+        {searchResults.map((result: any) => (
+          <Grid item xs={12} md={8} key={result.id}>
+            <ETFCard
+              name={result['ETF Name']}
+              ticker={result['ETF Name']}
+              stockRows={result['Shorter_Top']?.map((name: string, index: number) => ({
+                id: `${result.id}-${index + 1}`,
+                name: name,
+                ticker: '',
+                weight: ' ',
+                YTD: ' '
+              }))}
+            />
           </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <SalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
-          <DepositWithdraw />
-        </Grid>
-        <Grid item xs={12}>
-          <Table />
-        </Grid>
+        ))}
       </Grid>
     </ApexChartWrapper>
   )
