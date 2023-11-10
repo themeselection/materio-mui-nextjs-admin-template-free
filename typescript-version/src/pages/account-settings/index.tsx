@@ -1,102 +1,157 @@
-// ** React Imports
-import { SyntheticEvent, useState } from 'react'
-
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
-import TabContext from '@mui/lab/TabContext'
-import { styled } from '@mui/material/styles'
-import MuiTab, { TabProps } from '@mui/material/Tab'
-
-// ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import InformationOutline from 'mdi-material-ui/InformationOutline'
-
-// ** Demo Tabs Imports
-import TabInfo from 'src/views/account-settings/TabInfo'
-import TabAccount from 'src/views/account-settings/TabAccount'
-import TabSecurity from 'src/views/account-settings/TabSecurity'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import CardHeader from '@mui/material/CardHeader'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 
-const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    minWidth: 100
-  },
-  [theme.breakpoints.down('sm')]: {
-    minWidth: 67
-  }
-}))
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
-const TabName = styled('span')(({ theme }) => ({
-  lineHeight: 1.71,
-  fontSize: '0.875rem',
-  marginLeft: theme.spacing(2.4),
-  [theme.breakpoints.down('md')]: {
-    display: 'none'
+import UserPortfolio from 'src/views/dashboard/UserPortfolio'
+import ReccETF from 'src/views/dashboard/ReccETF'
+
+const columns: GridColDef[] = [
+  { field: 'from', headerName: 'From', width: 130 },
+  { field: 'subject', headerName: 'Subject', width: 400, editable: true },
+  { field: 'Received', headerName: 'Received', width: 180, editable: true }
+]
+
+const rows = [
+  {
+    id: 0,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 1,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 2,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 3,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 4,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 5,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 6,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 7,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
+  },
+  {
+    id: 8,
+    from: Math.random() < 0.5 ? 'Yigit Sen' : 'Betty Lin',
+    subject: Math.random() < 0.5 ? 'Touch Ups on Previous Meetings' : 'Meeting Summary',
+    Received: `${new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1)
+      .toISOString()
+      .slice(0, 10)}`
   }
-}))
+]
 
 const AccountSettings = () => {
-  // ** State
-  const [value, setValue] = useState<string>('account')
-
-  const handleChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
-
   return (
-    <Card>
-      <TabContext value={value}>
-        <TabList
-          onChange={handleChange}
-          aria-label='account-settings tabs'
-          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-        >
-          <Tab
-            value='account'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline />
-                <TabName>Account</TabName>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={8}>
+        <Card>
+          <Card>
+            <Box sx={{ display: 'flex', flexDirection: 'row', ml: 4, mt:4}}>
+              <Box sx={{ width: '30%', display: 'flex', flexDirection: 'row' }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: '#0297DB' }}>Client</Typography>
               </Box>
-            }
-          />
-          <Tab
-            value='security'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Security</TabName>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: '#0297DB' }}>Contact Point</Typography>
               </Box>
-            }
-          />
-          <Tab
-            value='info'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InformationOutline />
-                <TabName>Info</TabName>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: '#0297DB' }}>Sales IC</Typography>
               </Box>
-            }
-          />
-        </TabList>
-
-        <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo />
-        </TabPanel>
-      </TabContext>
-    </Card>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: '#0297DB' }}>AUM</Typography>
+              </Box>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', color: '#0297DB' }}>Since</Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', ml: 4 }}>
+              <Box sx={{ width: '30%', display: 'flex', flexDirection: 'row' }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '1.5rem'}}>ABC Co. Ltd</Typography>
+              </Box>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2, mt:2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem'}}>John Lee</Typography>
+              </Box>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 , mt:2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem'}}>A.Z.</Typography>
+              </Box>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 , mt:2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem'}}>$100M</Typography>
+              </Box>
+              <Box sx={{ width: '20%', display: 'flex', flexDirection: 'row', ml: 2 , mt:2 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>1999</Typography>
+              </Box>
+            </Box>
+          </Card>
+          <Card>
+            <Typography  sx={{ fontWeight: 600, fontSize: '0.875rem', ml:4, color:'#0297DB', mt:2 }}>Recent Communications</Typography>
+          </Card>
+          <Card>
+            <DataGrid rows={rows} columns={columns} pageSize={2} checkboxSelection sx={{mt:4}}/>
+          </Card>
+        </Card>
+        <h1></h1>
+        <Grid item xs={12} md={12} lg={12}>
+          <UserPortfolio />
+        </Grid>
+      </Grid>
+      {/* Right side pie charts*/}
+      <Grid item xs={12} md={4}>
+        <ReccETF />
+      </Grid>
+    </Grid>
   )
 }
 

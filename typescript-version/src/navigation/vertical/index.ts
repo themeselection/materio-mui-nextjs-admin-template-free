@@ -16,64 +16,62 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 const navigation = (): VerticalNavItemsType => {
   return [
     {
-      title: 'Dashboard',
+      title: 'Plutus Filter',
       icon: HomeOutline,
       path: '/'
     },
     {
-      title: 'Account Settings',
+      title: 'Plutus Journal',
       icon: AccountCogOutline,
       path: '/account-settings'
     },
     {
-      sectionTitle: 'Pages'
-    },
-    {
-      title: 'Login',
+      title: 'NewsPulse',
       icon: Login,
-      path: '/pages/login',
+      path: '/icons',
       openInNewTab: true
     },
     {
-      title: 'Register',
+      title: 'Messages',
       icon: AccountPlusOutline,
       path: '/pages/register',
       openInNewTab: true
     },
     {
-      title: 'Error',
+      title: 'Settings',
       icon: AlertCircleOutline,
       path: '/pages/error',
       openInNewTab: true
-    },
-    {
-      sectionTitle: 'User Interface'
-    },
-    {
-      title: 'Typography',
-      icon: FormatLetterCase,
-      path: '/typography'
-    },
-    {
-      title: 'Icons',
-      path: '/icons',
-      icon: GoogleCirclesExtended
-    },
-    {
-      title: 'Cards',
-      icon: CreditCardOutline,
-      path: '/cards'
-    },
-    {
-      title: 'Tables',
-      icon: Table,
-      path: '/tables'
-    },
-    {
-      icon: CubeOutline,
-      title: 'Form Layouts',
-      path: '/form-layouts'
     }
+    // ,
+    // {
+    //   sectionTitle: 'User Interface'
+    // },
+    // {
+    //   title: 'Typography',
+    //   icon: FormatLetterCase,
+    //   path: '/typography'
+    // },
+    // {
+    //   title: 'Icons',
+    //   path: '/icons',
+    //   icon: GoogleCirclesExtended
+    // },
+    // {
+    //   title: 'Cards',
+    //   icon: CreditCardOutline,
+    //   path: '/cards'
+    // },
+    // {
+    //   title: 'Tables',
+    //   icon: Table,
+    //   path: '/tables'
+    // },
+    // {
+    //   icon: CubeOutline,
+    //   title: 'Form Layouts',
+    //   path: '/form-layouts'
+    // }
   ]
 }
 
