@@ -28,6 +28,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import Magnify from 'mdi-material-ui/Magnify'
 import ETFCard from 'src/views/dashboard/ETFCard'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Robot } from 'mdi-material-ui'
 
 const Dashboard = () => {
@@ -47,9 +48,8 @@ const Dashboard = () => {
       console.log('I have run')
       console.log(searchText)
       console.log(endpoint)
-      
-      
-      const response = await fetch(endpoint+encodeURI(searchText), {
+
+      const response = await fetch(endpoint + encodeURI(searchText), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -90,9 +90,8 @@ const Dashboard = () => {
   const switchOrder = () => {
     setSecondOrder(!secondOrder)
     if (secondOrder) {
-      setEndPoint(`http://127.0.0.1:8080/search_data?request=`);
-    }
-    else {
+      setEndPoint(`http://127.0.0.1:8080/search_data?request=`)
+    } else {
       setEndPoint(`http://127.0.0.1:8080/search_vector?request=`)
     }
   }
@@ -112,11 +111,10 @@ const Dashboard = () => {
                 <InputAdornment position='start'>
                   <Magnify fontSize='small' onClick={handleSearch} />
                 </InputAdornment>
-              )
-              ,
+              ),
               endAdornment: (
                 <InputAdornment position='end'>
-                  <Robot fontSize='small' onClick={switchOrder} sx={{color:secondOrder ? "green":"red"}}/>
+                  <Robot fontSize='small' onClick={switchOrder} sx={{ color: secondOrder ? 'green' : 'red' }} />
                 </InputAdornment>
               )
             }}
