@@ -22,7 +22,12 @@ import { ArrowDownDropCircle, ArrowUpDropCircle } from 'mdi-material-ui'
 
 import UserPortfolio from 'src/views/dashboard/UserPortfolio'
 import ReccETF from 'src/views/dashboard/ReccETF'
-// import RichTextInput from 'src/views/dashboard/RichTextInput'
+import { EditorState } from 'draft-js'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+
+import dynamic from 'next/dynamic'
+import { EditorProps } from 'react-draft-wysiwyg'
+const Editor = dynamic<EditorProps>(() => import('react-draft-wysiwyg').then(mod => mod.Editor), { ssr: false })
 
 const columns: GridColDef[] = [
   { field: 'from', headerName: 'From', width: 130 },
@@ -32,7 +37,7 @@ const columns: GridColDef[] = [
 
 const AccountSettings = () => {
   const [openNewCommu, togOpenNewCommu] = useState<any>(false)
-  const [commu, setCommu] = useState<any>({ topic: '', sentBy: '', content: '' })
+  const [commu, setCommu] = useState<any>({ topic: '', sentBy: '', content: EditorState.createEmpty() })
   const [rows, setRows] = useState<any>([
     {
       id: 0,
@@ -112,7 +117,7 @@ const AccountSettings = () => {
     <Grid container spacing={2}>
       <Grid item xs={12} md={8}>
         <Card>
-          {/* 2 Rows of Client Info */}
+          {/* Client Info& new Comuunications */}
           <Card sx={{ mb: 4 }}>
             {/* Client info Row 1 */}
             <Box sx={{ display: 'flex', flexDirection: 'row', ml: 4, mt: 4 }}>
@@ -207,8 +212,8 @@ const AccountSettings = () => {
                     </Select>
                   </FormControl>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', m: 6 }}>
-                  <TextField
+                <Box sx={{ display: 'block', flexDirection: 'row', m: 6 }}>
+                  {/* <TextField
                     fullWidth
                     rows={10}
                     multiline
@@ -217,6 +222,14 @@ const AccountSettings = () => {
                     id='content'
                     value={commu?.content}
                     onChange={e => setCommu({ ...commu, content: e.target.value })}
+                  /> */}
+                  <Editor
+                    editorStyle={{ height: '300px', margin: 10, paddingLeft: 10 }}
+                    editorState={commu?.content}
+                    toolbarClassName='toolbarClassName'
+                    wrapperClassName='wrapperClassName'
+                    editorClassName='editorClassName'
+                    onEditorStateChange={(data: any) => setCommu({ ...commu, content: data })}
                   />
                 </Box>
 
