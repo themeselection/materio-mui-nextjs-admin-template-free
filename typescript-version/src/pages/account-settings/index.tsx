@@ -1,5 +1,5 @@
 // ** MUI Imports
-import react, { useState } from 'react'
+import react, { ChangeEvent, useState } from 'react'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
@@ -10,6 +10,11 @@ import CardHeader from '@mui/material/CardHeader'
 import Fab from '@mui/material/Fab'
 import IconButton from '@mui/material/IconButton'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -100,10 +105,8 @@ const rows = [
 ]
 
 const AccountSettings = () => {
-  type Bool = typeof Boolean
-  const [openNewCommu, togOpenNewCommu] = useState<Bool>(false)
-
-  const handleClick = () => togOpenNewCommu(!openNewCommu)
+  const [openNewCommu, togOpenNewCommu] = useState<any>(false)
+  const [commu, setCommu] = useState<any>({ topic: '', sentBy: '', content: '' })
 
   return (
     <Grid container spacing={2}>
@@ -151,17 +154,66 @@ const AccountSettings = () => {
           </Card>
 
           {/* New Conversation */}
-          <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', ml: 4, color: '#0297DB', mt: 2 }}>
-              Recent Communications
-            </Typography>
-            <Button onClick={() => handleClick()} variant='contained' size='small' startIcon={<ArrowDownDropCircle />}>
-              <Typography sx={{ fontSize: '0.875rem', color: 'white' }}>New Conversation</Typography>
-              <ArrowDownDropCircle />
-            </Button>
-          </Card>
-          <Card sx={{ padding: '.5 rem', margin: 3 }}></Card>
+          <Card>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', ml: 4, color: '#0297DB', mt: 2 }}>
+                Recent Communications
+              </Typography>
+              <Button
+                onClick={() => togOpenNewCommu(!openNewCommu)}
+                variant='contained'
+                size='small'
+                startIcon={<ArrowDownDropCircle />}
+              >
+                <Typography sx={{ fontSize: '0.875rem', color: 'white' }}>New Conversation</Typography>
+                <ArrowDownDropCircle />
+              </Button>
+            </Box>
 
+            <form
+              noValidate
+              autoComplete='off'
+              onSubmit={e => {
+                e.preventDefault()
+                console.log(commu)
+              }}
+            >
+              <Box sx={{ display: 'flex', flexDirection: 'row', mx: 6, my: 4, gap: 10 }}>
+                <TextField
+                  label='Topic'
+                  id='topic'
+                  sx={{ flexGrow: 1 }}
+                  onChange={e => setCommu({ ...commu, topic: e.target.value })}
+                />
+                <FormControl sx={{ mr: 10 }} id='sentBy'>
+                  <InputLabel id='sentBy-label'>Age</InputLabel>
+                  <Select
+                    label='Sent By'
+                    labelId='sentBy-label'
+                    defaultValue=''
+                    onChange={e => setCommu({ ...commu, sentBy: e.target.value })}
+                  >
+                    <MenuItem value='Betty Lin'>Betty Lin</MenuItem>
+                    <MenuItem value='Yigit Sen'>Yigit Sen</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'row', m: 6 }}>
+                <TextField
+                  fullWidth
+                  rows={10}
+                  multiline
+                  label='Main Content'
+                  placeholder='Input your communication content here'
+                  id='content'
+                  onChange={e => setCommu({ ...commu, content: e.target.value })}
+                />
+              </Box>
+              <Button size='large' variant='contained' sx={{ marginBottom: 7 }} type='submit'>
+                Login
+              </Button>
+            </form>
+          </Card>
           {/* Communication Log */}
           <Card>
             <DataGrid rows={rows} columns={columns} checkboxSelection sx={{ mt: 4 }} />
