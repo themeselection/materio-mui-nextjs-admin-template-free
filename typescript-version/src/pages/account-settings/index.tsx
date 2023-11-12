@@ -13,10 +13,11 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
-import { DotsVertical, ArrowDownDropCircle } from 'mdi-material-ui'
+import { ArrowDownDropCircle } from 'mdi-material-ui'
 
 import UserPortfolio from 'src/views/dashboard/UserPortfolio'
 import ReccETF from 'src/views/dashboard/ReccETF'
+// import RichTextInput from 'src/views/dashboard/RichTextInput'
 
 const columns: GridColDef[] = [
   { field: 'from', headerName: 'From', width: 130 },
@@ -103,6 +104,7 @@ const AccountSettings = () => {
   const [openNewCommu, togOpenNewCommu] = useState<Bool>(false)
 
   const handleClick = () => togOpenNewCommu(!openNewCommu)
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={8}>
@@ -148,20 +150,23 @@ const AccountSettings = () => {
             </Box>
           </Card>
 
+          {/* New Conversation */}
           <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', ml: 4, color: '#0297DB', mt: 2 }}>
               Recent Communications
             </Typography>
-            <Button onClick={() => handleClick()}>
+            <Button onClick={() => handleClick()} variant='contained' size='small' startIcon={<ArrowDownDropCircle />}>
               <Typography sx={{ fontSize: '0.875rem', color: 'white' }}>New Conversation</Typography>
               <ArrowDownDropCircle />
             </Button>
           </Card>
+          <Card sx={{ padding: '.5 rem', margin: 3 }}></Card>
+
+          {/* Communication Log */}
           <Card>
             <DataGrid rows={rows} columns={columns} checkboxSelection sx={{ mt: 4 }} />
           </Card>
         </Card>
-        <h1></h1>
         <Grid item xs={12} md={12} lg={12}>
           <UserPortfolio />
         </Grid>
