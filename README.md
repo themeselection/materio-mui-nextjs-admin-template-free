@@ -63,10 +63,12 @@ Check out our live [Documentation]({live_docs_link})
 
 ## Browser Support 🖥️
 
-![chrome](https://github.com/themeselection/template-free/assets/47495003/1d0c484d-d5e3-4062-a382-cd7c5a72257c)
-&nbsp;&nbsp;![firefox](https://github.com/themeselection/template-free/assets/47495003/4ba29799-ec83-44db-9b40-43076714a05f)
-&nbsp;&nbsp;![safari](https://github.com/themeselection/template-free/assets/47495003/5cea3807-df27-4edb-99b6-bb46398bff7a)
-&nbsp;&nbsp;![Microsoft Edge](https://github.com/themeselection/template-free/assets/47495003/8d143a62-6adf-4b24-927c-eaf1e5a16290)
+![chrome](https://github.com/nuxt/nuxt/assets/47495003/bbb6d7b0-2db6-4af4-abdc-a73de71dd287)
+&nbsp;&nbsp;![firefox](https://github.com/nuxt/nuxt/assets/47495003/bca1f2d0-d597-453b-8525-5c94e36bfc33)
+&nbsp;&nbsp;![safari](https://github.com/nuxt/nuxt/assets/47495003/8ecbb395-78fb-40fb-bb59-7301bf8a7e5d)
+&nbsp;&nbsp;![Microsoft Edge](https://github.com/nuxt/nuxt/assets/47495003/f945821b-0cbd-464d-8103-824d4d5c4e9a)
+
+*_It also supports other browser which implemented latest CSS standards_
 
 ## Contributing 🦸
 
