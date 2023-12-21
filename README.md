@@ -139,7 +139,7 @@ For free products, enjoy community support via GitHub issues. Upgrade to Premium
 - [VueJS Admin Templates](https://themeselection.com/products/category/vuejs-admin-templates/)
 - [Laravel Admin Templates](https://themeselection.com/products/category/laravel-admin-templates/)
 - [Django Admin Templates](https://themeselection.com/item/category/django-admin-template/)
-- [Reatc (NextJS) Admin Templates](https://themeselection.com/item/category/next-js-admin-template/)
+- [React (NextJS) Admin Templates](https://themeselection.com/item/category/next-js-admin-template/)
 - [ASP.Net Core Admin Templates](https://themeselection.com/item/category/asp-net-dashboard/)
 - [Free UI Kits](https://themeselection.com/products/category/free-ui-kits/) 
 
