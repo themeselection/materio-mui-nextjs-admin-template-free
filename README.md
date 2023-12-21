@@ -94,7 +94,7 @@ For free products, enjoy community support via GitHub issues. Upgrade to Premium
 ## License &copy;
 
 - Copyright © [ThemeSelection](https://themeselection.com/)
-- Licensed under [MIT](LICENSE.md)
+- Licensed under [MIT](LICENSE)
 - All our free items are Open Source and licensed under MIT. You can use our free items for personal as well as commercial purposes. We just need an attribution from your end. Copy the below link and paste it at the footer of your web application or project.
    ```html
   <a href="https://themeselection.com/">ThemeSelection</a>
@@ -127,11 +127,11 @@ For free products, enjoy community support via GitHub issues. Upgrade to Premium
    <a href="{pro_angular_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/da7f0abe-9f83-4205-b691-bc8d2ffef59b"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/9ebeb520-442a-4047-9000-5b13d0e6c000"><img width="auto" height="74px" alt="angular" src="https://github.com/microsoft/vscode/assets/47495003/9ebeb520-442a-4047-9000-5b13d0e6c000"></picture></img></a>&nbsp;&nbsp;
 </p>
 
-<!-- Add other pro variants here. You can get logo URL from here: https://icones.js.org/collection/logos -->
+<!-- Add other pro variants here. You can get the logo URL from here: https://icones.js.org/collection/logos -->
 
 ## Looking For Premium Admin Templates ?? 👀
 
-**[ThemeSelection](https://themeselection.com/)** provides Selected high quality, modern design, professional and easy-to-use Free and Premium [Bootstrap Admin Templates](https://themeselection.com/products/category/bootstrap-admin-templates/), [VueJS Admin Templates](https://themeselection.com/products/category/vuejs-admin-templates/), [Laravel Admin Templates](https://themeselection.com/products/category/laravel-admin-templates/), HTML Themes, and [Free UI Kits](https://themeselection.com/products/category/free-ui-kits/) to create your applications faster!.
+**[ThemeSelection](https://themeselection.com/)** provides Selected high quality, modern design, professional and easy-to-use Free and Premium [Bootstrap Admin Templates](https://themeselection.com/products/category/bootstrap-admin-templates/), [VueJS Admin Templates](https://themeselection.com/products/category/vuejs-admin-templates/), [Laravel Admin Templates](https://themeselection.com/products/category/laravel-admin-templates/), [Django Admin Templates](https://themeselection.com/item/category/django-admin-template/), [Reatc (NextJS) Admin Templates](https://themeselection.com/item/category/next-js-admin-template/), [ASP.Net Core Admin Templates](https://themeselection.com/item/category/asp-net-dashboard/), and [Free UI Kits](https://themeselection.com/products/category/free-ui-kits/) to create your applications faster!
 
 If you want to [Download Free Admin Templates](https://themeselection.com/products/category/download-free-admin-templates/) like Materio then do visit [ThemeSelection](https://themeselection.com/).
 
