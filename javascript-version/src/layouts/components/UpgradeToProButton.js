@@ -1,4 +1,4 @@
-// ** React Import
+// ** React Imports
 import { useState } from 'react'
 
 // ** MUI Imports
@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // ** Third Party Imports
-import { usePopper } from 'react-popper'
+import { usePopper } from 'react-popper'  // Hook for managing popper state
 
 const BuyNowButton = () => {
   // ** States
@@ -18,15 +18,18 @@ const BuyNowButton = () => {
   const [popperElement, setPopperElement] = useState(null)
   const [referenceElement, setReferenceElement] = useState(null)
 
+  // ** Popper configuration
   const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
     placement: 'top-end'
   })
 
+  // ** Function to handle opening the popper
   const handleOpen = () => {
     setOpen(true)
     update ? update() : null
   }
 
+  // ** Function to handle closing the popper
   const handleClose = () => {
     setOpen(false)
   }
@@ -36,6 +39,7 @@ const BuyNowButton = () => {
       className='upgrade-to-pro-button mui-fixed'
       sx={{ right: theme => theme.spacing(20), bottom: theme => theme.spacing(10), zIndex: 11, position: 'fixed' }}
     >
+      {/* Upgrade To Pro Button */}
       <Button
         component='a'
         target='_blank'
@@ -55,6 +59,8 @@ const BuyNowButton = () => {
       >
         Upgrade To Pro
       </Button>
+
+      {/* Popper for displaying additional information */}
       <Fade in={open} timeout={700}>
         <Box
           style={styles.popper}
@@ -65,6 +71,7 @@ const BuyNowButton = () => {
           sx={{ pb: 4, minWidth: theme => (theme.breakpoints.down('sm') ? 400 : 300) }}
         >
           <Paper elevation={9} sx={{ borderRadius: 1, overflow: 'hidden' }}>
+            {/* Banner Image */}
             <a
               target='_blank'
               rel='noreferrer'
@@ -72,17 +79,26 @@ const BuyNowButton = () => {
             >
               <img width='100%' alt='materio-pro-banner' src='/images/misc/materio-pro-banner.png' />
             </a>
+
+            {/* Content inside the Popper */}
             <CardContent>
+              {/* Product Title */}
               <Typography sx={{ mb: 4 }} variant='h6'>
                 Materio - React Admin Template
               </Typography>
+
+              {/* Product Description */}
               <Typography sx={{ mb: 4 }} variant='body2'>
                 Materio Admin is the most developer friendly & highly customizable Admin Dashboard Template based on MUI
                 and NextJS.
               </Typography>
+
+              {/* Additional Information */}
               <Typography sx={{ mb: 4 }} variant='body2'>
                 Click on below buttons to explore PRO version.
               </Typography>
+
+              {/* Demo Button */}
               <Button
                 component='a'
                 sx={{ mr: 4 }}
@@ -92,6 +108,8 @@ const BuyNowButton = () => {
               >
                 Demo
               </Button>
+
+              {/* Download Button */}
               <Button
                 component='a'
                 target='_blank'
