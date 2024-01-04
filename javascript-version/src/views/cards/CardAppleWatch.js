@@ -8,7 +8,7 @@ import CardContent from '@mui/material/CardContent'
 const CardAppleWatch = () => {
   return (
     <Card>
-      <CardMedia sx={{ height: '9.375rem' }} image='/images/cards/watch-on-hand.jpg' />
+      <CardMedia sx={{ height: '9.375rem' }} image='/apps/materio/images/cards/watch-on-hand.jpg' />
       <CardContent sx={{ padding: theme => `${theme.spacing(3, 5.25, 4)} !important` }}>
         <Typography variant='h6' sx={{ marginBottom: 2 }}>
           Apple Watch

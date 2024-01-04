@@ -27,7 +27,7 @@ const CardWithCollapse = () => {
 
   return (
     <Card>
-      <CardMedia sx={{ height: '14.5625rem' }} image='/images/cards/paper-boat.png' />
+      <CardMedia sx={{ height: '14.5625rem' }} image='/apps/materio/images/cards/paper-boat.png' />
       <CardContent>
         <Typography variant='h6' sx={{ marginBottom: 2 }}>
           Popular Uses Of The Internet

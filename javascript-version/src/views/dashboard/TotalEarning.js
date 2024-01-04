@@ -20,7 +20,7 @@ const data = [
     color: 'primary',
     amount: '$24,895.65',
     subtitle: 'Vuejs, React & HTML',
-    imgSrc: '/images/cards/logo-zipcar.png'
+    imgSrc: '/apps/materio/images/cards/logo-zipcar.png'
   },
   {
     progress: 50,
@@ -29,7 +29,7 @@ const data = [
     title: 'Bitbank',
     amount: '$8,650.20',
     subtitle: 'Sketch, Figma & XD',
-    imgSrc: '/images/cards/logo-bitbank.png'
+    imgSrc: '/apps/materio/images/cards/logo-bitbank.png'
   },
   {
     progress: 20,
@@ -38,7 +38,7 @@ const data = [
     color: 'secondary',
     amount: '$1,245.80',
     subtitle: 'HTML & Angular',
-    imgSrc: '/images/cards/logo-aviato.png'
+    imgSrc: '/apps/materio/images/cards/logo-aviato.png'
   }
 ]
 

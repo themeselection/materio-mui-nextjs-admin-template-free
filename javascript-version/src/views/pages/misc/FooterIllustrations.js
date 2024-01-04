@@ -35,7 +35,7 @@ const FooterIllustrations = props => {
   if (!hidden) {
     return (
       <Fragment>
-        {image || <TreeImg alt='tree' src='/images/pages/tree-2.png' />}
+        {image || <TreeImg alt='tree' src='/apps/materio/images/pages/tree-2.png' />}
         <MaskImg alt='mask' src={`/images/pages/misc-mask-${theme.palette.mode}.png`} />
       </Fragment>
     )

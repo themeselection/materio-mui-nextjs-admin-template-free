@@ -14,7 +14,7 @@ const depositData = [
     amount: '+$4,650',
     subtitle: 'Sell UI Kit',
     title: 'Gumroad Account',
-    logo: '/images/logos/gumroad.png'
+    logo: '/apps/materio/images/logos/gumroad.png'
   },
   {
     logoWidth: 38,
@@ -22,7 +22,7 @@ const depositData = [
     amount: '+$92,705',
     title: 'Mastercard',
     subtitle: 'Wallet deposit',
-    logo: '/images/logos/mastercard-label.png'
+    logo: '/apps/materio/images/logos/mastercard-label.png'
   },
   {
     logoWidth: 20,
@@ -30,7 +30,7 @@ const depositData = [
     amount: '+$957',
     title: 'Stripe Account',
     subtitle: 'iOS Application',
-    logo: '/images/logos/stripe.png'
+    logo: '/apps/materio/images/logos/stripe.png'
   },
   {
     logoWidth: 34,
@@ -38,7 +38,7 @@ const depositData = [
     amount: '+$6,837',
     title: 'American Bank',
     subtitle: 'Bank Transfer',
-    logo: '/images/logos/american-bank.png'
+    logo: '/apps/materio/images/logos/american-bank.png'
   },
   {
     logoWidth: 33,
@@ -46,7 +46,7 @@ const depositData = [
     amount: '+$446',
     title: 'Bank Account',
     subtitle: 'Wallet deposit',
-    logo: '/images/logos/citi-bank.png'
+    logo: '/apps/materio/images/logos/citi-bank.png'
   }
 ]
 
@@ -57,14 +57,14 @@ const withdrawData = [
     amount: '-$145',
     title: 'Google Adsense',
     subtitle: 'Paypal deposit',
-    logo: '/images/logos/google.png'
+    logo: '/apps/materio/images/logos/google.png'
   },
   {
     logoWidth: 34,
     logoHeight: 34,
     amount: '-$1870',
     title: 'Github Enterprise',
-    logo: '/images/logos/github.png',
+    logo: '/apps/materio/images/logos/github.png',
     subtitle: 'Security & compliance'
   },
   {
@@ -73,7 +73,7 @@ const withdrawData = [
     amount: '-$450',
     title: 'Upgrade Slack Plan',
     subtitle: 'Debit card deposit',
-    logo: '/images/logos/slack.png'
+    logo: '/apps/materio/images/logos/slack.png'
   },
   {
     logoWidth: 30,
@@ -81,14 +81,14 @@ const withdrawData = [
     amount: '-$540',
     title: 'Digital Ocean',
     subtitle: 'Cloud Hosting',
-    logo: '/images/logos/digital-ocean.png'
+    logo: '/apps/materio/images/logos/digital-ocean.png'
   },
   {
     logoWidth: 36,
     logoHeight: 21,
     amount: '-$21',
     title: 'AWS Account',
-    logo: '/images/logos/aws.png',
+    logo: '/apps/materio/images/logos/aws.png',
     subtitle: 'Choosing a Cloud Platform'
   }
 ]

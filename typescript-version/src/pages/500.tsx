@@ -57,14 +57,14 @@ const Error500 = () => {
           </Typography>
           <Typography variant='body2'>Oops, something went wrong!</Typography>
         </BoxWrapper>
-        <Img height='487' alt='error-illustration' src='/images/pages/500.png' />
+        <Img height='487' alt='error-illustration' src='/apps/materio/images/pages/500.png' />
         <Link passHref href='/'>
           <Button component='a' variant='contained' sx={{ px: 5.5 }}>
             Back to Home
           </Button>
         </Link>
       </Box>
-      <FooterIllustrations image={<TreeIllustration alt='tree' src='/images/pages/tree-3.png' />} />
+      <FooterIllustrations image={<TreeIllustration alt='tree' src='/apps/materio/images/pages/tree-3.png' />} />
     </Box>
   )
 }

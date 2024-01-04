@@ -37,9 +37,9 @@ const FooterIllustrationsV1 = props => {
   if (!hidden) {
     return (
       <Fragment>
-        {image1 || <Tree1Img alt='tree' src='/images/pages/auth-v1-tree.png' />}
+        {image1 || <Tree1Img alt='tree' src='/apps/materio/images/pages/auth-v1-tree.png' />}
         <MaskImg alt='mask' src={`/images/pages/auth-v1-mask-${theme.palette.mode}.png`} />
-        {image2 || <Tree2Img alt='tree-2' src='/images/pages/auth-v1-tree-2.png' />}
+        {image2 || <Tree2Img alt='tree-2' src='/apps/materio/images/pages/auth-v1-tree-2.png' />}
       </Fragment>
     )
   } else {
