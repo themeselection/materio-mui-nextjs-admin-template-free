@@ -94,6 +94,7 @@ const Navigation = props => {
       />
       <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
         <ScrollWrapper
+          containerRef={ref => handleInfiniteScroll(ref)}
           {...(hidden
             ? {
                 onScroll: container => scrollMenu(container),
@@ -101,8 +102,7 @@ const Navigation = props => {
               }
             : {
                 options: { wheelPropagation: false },
-                onScrollY: container => scrollMenu(container),
-                containerRef: ref => handleInfiniteScroll(ref)
+                onScrollY: container => scrollMenu(container)
               })}
         >
           {beforeVerticalNavMenuContent ? beforeVerticalNavMenuContent(props) : null}
