@@ -26,12 +26,14 @@ import { useRouter } from 'next/router'
 import { MessageOutline, TimerOutline, WalletOutline } from 'mdi-material-ui'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { Bank, Banks, CreditType, CreditTypes, Neighborhood, Neighborhoods } from 'src/configs/credits'
 
 interface State {
   budget: number
   duration: number
-  bank: string
-  neighborhood: string
+  banks: Bank[]
+  neighborhoods: Neighborhood[]
+  creditType: CreditType
 }
 
 const PreferencesForm = () => {
@@ -42,11 +44,13 @@ const PreferencesForm = () => {
   const [values, setValues] = useState<State>({
     budget: 0,
     duration: 0,
-    bank: '',
-    neighborhood: ''
+    banks: [],
+    creditType: 'Adquisicion',
+    neighborhoods: []
   })
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event)
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -55,8 +59,9 @@ const PreferencesForm = () => {
       ...context?.data,
       budget: values.budget,
       duration: values.duration,
-      bank: values.bank,
-      neighborhood: values.neighborhood
+      banks: values.banks,
+      neighborhoods: values.neighborhoods,
+      creditType: values.creditType
     })
 
     router.push('/comparison')
@@ -71,24 +76,58 @@ const PreferencesForm = () => {
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-select-label'>Recibis tus haberes en algun banco?</InputLabel>
-                <Select label='Banco' multiple defaultValue={[]} id='form-layouts-separator-select' onChange={ () => handleChange("bank")}>
+                <Select
+                  label='Banco'
+                  multiple
+                  defaultValue={context?.data.banks ?? []}
+                  id='form-layouts-separator-select'
+                  onChange={() => handleChange('banks')}
+                >
                   labelId='form-layouts-separator-select-label'
-                  <MenuItem value='bbva'>BBVA</MenuItem>
-                  <MenuItem value='supervielle'>Supervielle</MenuItem>
-                  <MenuItem value='santander'>Santander</MenuItem>
-                  <MenuItem value='hipotecario'>Hipotecario</MenuItem>
+                  {Banks.map(bank => (
+                    <MenuItem key={bank} value={bank}>
+                      {bank}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-select-label'>Barrio donde te gustaria comprar?</InputLabel>
-                <Select label='barrio' multiple defaultValue={[]} id='form-layouts-separator-select'  onChange={ () => handleChange("neighborhood")}>
+                <Select
+                  label='barrio'
+                  multiple
+                  defaultValue={context?.data.neighborhoods ?? []}
+                  id='form-layouts-separator-select'
+                  onChange={() => handleChange('neighborhoods')}
+                >
                   labelId='form-layouts-separator-select-label'
-                  <MenuItem value='almagro'>Almagro</MenuItem>
-                  <MenuItem value='balvanera'>Balvanera</MenuItem>
-                  <MenuItem value='palermo'>Palermo</MenuItem>
-                  <MenuItem value='recoleta'>Recoleta</MenuItem>
+                  {Neighborhoods.map(neighborhood => (
+                    <MenuItem key={neighborhood} value={neighborhood}>
+                      {neighborhood}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id='form-layouts-separator-select-label'>
+                  Tipo de credito que te gustaria obtener?
+                </InputLabel>
+                <Select
+                  label='creditType'
+                  defaultValue={context?.data.creditType ?? 'Adquisicion'}
+                  id='form-layouts-separator-select'
+                  onChange={() => handleChange('creditType')}
+                >
+                  labelId='form-layouts-separator-select-label'
+                  {CreditTypes.map(creditType => (
+                    <MenuItem key={creditType} value={creditType}>
+                      {creditType}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -96,8 +135,9 @@ const PreferencesForm = () => {
               <TextField
                 fullWidth
                 type='number'
+                defaultValue={context?.data.budget}
                 label='Presupuesto'
-                onChange={handleChange("budget")}
+                onChange={handleChange('budget')}
                 placeholder='$100,000'
                 InputProps={{
                   startAdornment: (
@@ -114,7 +154,8 @@ const PreferencesForm = () => {
                 fullWidth
                 type='number'
                 label='Años'
-                onChange={handleChange("duration")}
+                defaultValue={context?.data.duration}
+                onChange={handleChange('duration')}
                 placeholder='30'
                 InputProps={{
                   startAdornment: (

@@ -65,7 +65,6 @@ const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({
 function QontoStepIcon(props: StepIconProps) {
   const { active, completed, className } = props
 
-
   return (
     <Link href={props.accessKey ?? ''}>
       <QontoStepIconRoot ownerState={{ active }} className={className}>
@@ -75,10 +74,12 @@ function QontoStepIcon(props: StepIconProps) {
   )
 }
 
-const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados']
+const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
+const links = ['/name', '/risk', '/preferences', '/comparison']
 
 const getActiveStep = (data: UserData) => {
-  if (data.budget) {
+  console.log(data)
+  if (data.budget && data.creditType && data.duration) {
     return 3
   }
 
@@ -99,12 +100,18 @@ export default function ProgressBar() {
   const activeStep = context?.data ? getActiveStep(context?.data) : 0
 
   return (
-    <div className='m-3'>
+    <div style={{ padding: '3em' }}>
       <Stack sx={{ width: '100%' }} spacing={4}>
         <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-          {steps.map(label => (
+          {steps.map((label, index) => (
             <Step key={label}>
-              <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+              {activeStep >= index ? (
+                <Link href={links[index]} key={label}>
+                  <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+                </Link>
+              ) : (
+                <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+              )}
             </Step>
           ))}
         </Stepper>

@@ -1,5 +1,5 @@
 // ** React Imports
-import { Dispatch, ReactChildren, SetStateAction, createContext, useContext, useState } from 'react'
+import { Dispatch, ReactChildren, SetStateAction, createContext, useContext, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Fab from '@mui/material/Fab'
@@ -23,8 +23,9 @@ import ScrollToTop from 'src/@core/components/scroll-to-top'
 
 // ** Styled Component
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-import { Step, StepConnector, StepIcon, StepLabel, Stepper } from '@mui/material'
+import { Step, StepConnector, StepIcon, StepLabel, Stepper, Typography } from '@mui/material'
 import ProgressBar from './components/vertical/navigation/ProgressBar'
+import { Bank, CreditType, Neighborhood } from 'src/configs/credits'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -55,8 +56,10 @@ export type UserData = {
   riskAssesmentPassed?: boolean
   email?: string
   budget?: number
-  neighborhood?: string
-  durationInMonths?: number
+  neighborhoods?: Neighborhood[]
+  duration?: number
+  creditType?: CreditType
+  banks?: Bank[]
 }
 
 export type ContextType = {
@@ -69,6 +72,19 @@ export const useData = () => useContext(DataContext)
 
 export const DataProvider = ({ children }: { children: any }) => {
   const [data, setData] = useState({})
+
+  // Effect to load data from localStorage when the component mounts
+  useEffect(() => {
+    const savedData = localStorage.getItem('data')
+    if (savedData) {
+      setData(JSON.parse(savedData))
+    }
+  }, [])
+
+  useEffect(() => {
+    // Save the data to localStorage
+    localStorage.setItem('data', JSON.stringify(data))
+  }, [data]) // Only re-run the effect if data changes
 
   return <DataContext.Provider value={{ data, setData }}>{children}</DataContext.Provider>
 }
@@ -95,7 +111,6 @@ const HypotecarLayout = (props: LayoutProps) => {
         <DataProvider>
           <MainContentWrapper className='layout-content-wrapper'>
             {/* Content */}
-            <ProgressBar></ProgressBar>
             <ContentWrapper
               className='layout-page-content'
               sx={{
@@ -106,6 +121,9 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
+              <Typography variant="h3" width="100%" style={{textAlign: "center"}}><img src="/images/logo.png" width="40px" /> HipotecAR</Typography>
+              <Typography variant="h6" width="100%" style={{textAlign: "center", opacity: 0.5}}>Tu aliado para surfear la ola de creditos</Typography>
+              <ProgressBar></ProgressBar>
               {children}
             </ContentWrapper>
 

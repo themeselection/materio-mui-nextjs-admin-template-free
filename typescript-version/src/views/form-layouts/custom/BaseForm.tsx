@@ -57,7 +57,7 @@ const BaseForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <TextField fullWidth label='Name' placeholder='Leo Messi' onChange={handleChange('name')} />
+              <TextField fullWidth label='Name' defaultValue={context?.data.name} placeholder='Leo Messi' onChange={handleChange('name')} />
             </Grid>
 
             <Grid item xs={12}>

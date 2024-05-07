@@ -25,16 +25,12 @@ import Card from 'src/@core/theme/overrides/card'
 import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
 import RiskForm from 'src/views/form-layouts/custom/RiskForm'
 import BaseForm from 'src/views/form-layouts/custom/BaseForm'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 const Dashboard = () => {
-  const router = useRouter()
-  useEffect(() => {
-    router.push('/name')
-  }, []);
+  return <div>
+    <BaseForm />
 
-  return null;
+  </div>
 }
 
 export default Dashboard
