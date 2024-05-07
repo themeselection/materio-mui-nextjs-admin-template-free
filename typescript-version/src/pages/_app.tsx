@@ -1,6 +1,6 @@
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
@@ -29,6 +29,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import HypotecarLayoutWrapper from 'src/layouts/HipotecarLayoutWrapper'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -55,8 +56,17 @@ if (themeConfig.routingLoader) {
 const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
+  const router = useRouter()
+
   // Variables
-  const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
+  const getLayout =
+    Component.getLayout ??
+    (page =>
+      router.pathname !== '/theme' ? (
+        <HypotecarLayoutWrapper>{page}</HypotecarLayoutWrapper>
+      ) : (
+        <UserLayout>{page}</UserLayout>
+      ))
 
   return (
     <CacheProvider value={emotionCache}>

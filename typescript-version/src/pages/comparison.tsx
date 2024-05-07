@@ -24,13 +24,14 @@ import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 import Card from 'src/@core/theme/overrides/card'
 import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
 import RiskForm from 'src/views/form-layouts/custom/RiskForm'
-import BaseForm from 'src/views/form-layouts/custom/BaseForm'
+import ComparisonForm from 'src/views/form-layouts/custom/ComparisonForm'
 
 const Dashboard = () => {
-  return <div>
-    <BaseForm />
-
-  </div>
+  return (
+    <div>
+      <ComparisonForm />
+    </div>
+  )
 }
 
 export default Dashboard

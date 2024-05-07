@@ -24,11 +24,10 @@ import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 import Card from 'src/@core/theme/overrides/card'
 import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
 import RiskForm from 'src/views/form-layouts/custom/RiskForm'
-import BaseForm from 'src/views/form-layouts/custom/BaseForm'
 
 const Dashboard = () => {
   return <div>
-    <BaseForm />
+    <RiskForm />
 
   </div>
 }
