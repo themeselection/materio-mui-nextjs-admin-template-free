@@ -26,13 +26,14 @@ import { useRouter } from 'next/router'
 import { MessageOutline, TimerOutline, WalletOutline } from 'mdi-material-ui'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
-import { Bank, Banks, CreditType, CreditTypes, Neighborhood, Neighborhoods } from 'src/configs/credits'
+import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
 
 interface State {
   budget: number
+  salary: number
   duration: number
-  banks: Bank[]
-  neighborhoods: Neighborhood[]
+  banks: string[]
+  provinces: Province[]
   creditType: CreditType
 }
 
@@ -43,25 +44,29 @@ const PreferencesForm = () => {
   // ** States
   const [values, setValues] = useState<State>({
     budget: 0,
+    salary: 0,
     duration: 0,
     banks: [],
     creditType: 'Adquisicion',
-    neighborhoods: []
+    provinces: []
   })
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event)
     setValues({ ...values, [prop]: event.target.value })
   }
 
   const handleClick = () => {
     context?.setData({
       ...context?.data,
-      budget: values.budget,
-      duration: values.duration,
-      banks: values.banks,
-      neighborhoods: values.neighborhoods,
-      creditType: values.creditType
+      user: {
+        ...context?.data.user,
+        budget: values.budget,
+        salary: values.salary,
+        duration: values.duration,
+        banks: values.banks,
+        provinces: values.provinces,
+        creditType: values.creditType
+      }
     })
 
     router.push('/comparison')
@@ -84,7 +89,7 @@ const PreferencesForm = () => {
                   onChange={() => handleChange('banks')}
                 >
                   labelId='form-layouts-separator-select-label'
-                  {Banks.map(bank => (
+                  {context?.data.banks?.map(bank => (
                     <MenuItem key={bank} value={bank}>
                       {bank}
                     </MenuItem>
@@ -94,18 +99,18 @@ const PreferencesForm = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='form-layouts-separator-select-label'>Barrio donde te gustaria comprar?</InputLabel>
+                <InputLabel id='form-layouts-separator-select-label'>Provincia donde te gustaria comprar?</InputLabel>
                 <Select
-                  label='barrio'
+                  label='province'
                   multiple
-                  defaultValue={context?.data.neighborhoods ?? []}
+                  defaultValue={context?.data.provinces ?? []}
                   id='form-layouts-separator-select'
-                  onChange={() => handleChange('neighborhoods')}
+                  onChange={() => handleChange('provinces')}
                 >
                   labelId='form-layouts-separator-select-label'
-                  {Neighborhoods.map(neighborhood => (
-                    <MenuItem key={neighborhood} value={neighborhood}>
-                      {neighborhood}
+                  {context?.data.provinces?.map(province => (
+                    <MenuItem key={province} value={province}>
+                      {province}
                     </MenuItem>
                   ))}
                 </Select>
@@ -118,7 +123,7 @@ const PreferencesForm = () => {
                 </InputLabel>
                 <Select
                   label='creditType'
-                  defaultValue={context?.data.creditType ?? 'Adquisicion'}
+                  defaultValue={context?.data.user.creditType ?? 'Adquisicion'}
                   id='form-layouts-separator-select'
                   onChange={() => handleChange('creditType')}
                 >
@@ -135,10 +140,25 @@ const PreferencesForm = () => {
               <TextField
                 fullWidth
                 type='number'
-                defaultValue={context?.data.budget}
-                label='Presupuesto'
+                defaultValue={context?.data.user.budget}
+                label='Sueldo (en ARS)'
+                onChange={handleChange('salary')}
+                placeholder='$700000'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <WalletOutline />
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <TextField
+                fullWidth
+                type='number'
+                defaultValue={context?.data.user.budget}
+                label='Presupuesto del inmueble (en ARS)'
                 onChange={handleChange('budget')}
-                placeholder='$100,000'
+                placeholder='$100000000'
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
@@ -154,7 +174,7 @@ const PreferencesForm = () => {
                 fullWidth
                 type='number'
                 label='Años'
-                defaultValue={context?.data.duration}
+                defaultValue={context?.data.user.duration}
                 onChange={handleChange('duration')}
                 placeholder='30'
                 InputProps={{

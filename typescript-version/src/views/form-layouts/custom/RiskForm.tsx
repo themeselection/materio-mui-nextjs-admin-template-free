@@ -26,8 +26,11 @@ import { useRouter } from 'next/router'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 
 interface State {
-  password: string
-  showPassword: boolean
+  stableWork: boolean
+  notOver50: boolean
+  noDebts: boolean
+  paymentCapacity: boolean
+  minimumBudget: boolean
 }
 
 const RiskForm = () => {
@@ -36,42 +39,36 @@ const RiskForm = () => {
 
   // ** States
   const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-  const [confirmPassValues, setConfirmPassValues] = useState<State>({
-    password: '',
-    showPassword: false
+    stableWork: true,
+    notOver50: true,
+    minimumBudget: true,
+    noDebts: true,
+    paymentCapacity: true
   })
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleConfirmPassChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassValues({ ...confirmPassValues, [prop]: event.target.value })
-  }
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
-
-  const handleClickConfirmPassShow = () => {
-    setConfirmPassValues({ ...confirmPassValues, showPassword: !confirmPassValues.showPassword })
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+    setValues({ ...values, [prop]: event.target.checked })
   }
 
   const handleClick = () => {
-    context?.setData({ ...context?.data, riskAssesmentPassed: true })
+    context?.setData({
+      ...context?.data,
+      user: {
+        ...context?.data.user,
+        riskAssesmentPassed: true
+      }
+    })
     router.push('/preferences')
   }
+
+  const allowed = !Object.values(values).some(v => v === false)
 
   return (
     <Card>
       <CardHeader
-        title={`${context?.data.name || "Primero"}, algunas preguntas para asegurarnos que te conviene sacar un credito hipotecario`}
+        title={`${
+          context?.data.user.name || 'Primero'
+        }, algunas preguntas para asegurarnos que te conviene sacar un credito hipotecario`}
         titleTypographyProps={{ variant: 'h6' }}
       />
       <CardContent>
@@ -79,18 +76,38 @@ const RiskForm = () => {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <FormGroup>
-                <FormControlLabel control={<Checkbox defaultChecked />} label='Tengo un trabajo estable' />
-                <FormControlLabel control={<Checkbox defaultChecked />} label='No tengo mas de 50 años' />
                 <FormControlLabel
-                  control={<Checkbox defaultChecked />}
+                  control={<Checkbox onChange={handleChange('stableWork')} defaultChecked />}
+                  label='Tengo un trabajo estable'
+                />
+                <FormControlLabel
+                  control={<Checkbox onChange={handleChange('noDebts')} defaultChecked />}
+                  label='No registro deudas en el sistema bancario Argentino'
+                />
+                <FormControlLabel
+                  control={<Checkbox onChange={handleChange('paymentCapacity')} defaultChecked />}
+                  label='Puedo dedicarle al menos un 20% de mi salario a pagar la cuota del credito o tengo otras formas de demostrar caoaacidad de pago.'
+                />
+                <FormControlLabel
+                  control={<Checkbox onChange={handleChange('notOver50')} defaultChecked />}
+                  label='No tengo mas de 50 años'
+                />
+                <FormControlLabel
+                  control={<Checkbox onChange={handleChange('minimumBudget')} defaultChecked />}
                   label='Tengo disponible un monto minimo para cubrir gastos operativos'
                 />
               </FormGroup>
             </Grid>
-            <Grid item xs={12}>
-              <Button type='submit' variant='contained' size='large' onClick={handleClick}>
+            <Grid item xs={12} className='flex '>
+              <Button type='submit' disabled={!allowed} variant='contained' size='large' onClick={handleClick}>
                 Confirmar
               </Button>
+              {!allowed && (
+                <FormHelperText className='text-warning' style={{ color: 'red', fontSize: '1em' }}>
+                  Exponerte a un credito podria representar un riesgo muy grande.
+                  <br></br>Te recomendamos revisar los puntos de arriba con especialistas antes de continuar.
+                </FormHelperText>
+              )}
             </Grid>
           </Grid>
         </form>

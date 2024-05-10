@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState, SyntheticEvent } from 'react'
+import { ChangeEvent, MouseEvent, useState, SyntheticEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
@@ -25,9 +25,11 @@ import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
 import { useRouter } from 'next/router'
 import { TimerOutline } from 'mdi-material-ui'
-import { Credits, credits } from 'src/configs/credits'
+import { Credit } from 'src/configs/constants'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { parseMoney } from 'src/@core/utils/string'
+import { CreditEvaluationResult, getCompatibleCredits } from 'src/@core/utils/misc'
+import { useAsync } from 'react-async'
 
 interface State {
   password: string
@@ -71,9 +73,15 @@ const ComparisonForm = () => {
     router.push('/preferences')
   }
 
-  const compatibleCredits = credits
-    .filter(credit => credit.type === context?.data.creditType)
-    .sort((a, b) => a.tna - b.tna)
+  const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
+    creditosCompatibles: [],
+    razonesDeLosRestantes: []
+  })
+
+  useEffect(() => {
+    const compatibleCredits = getCompatibleCredits(context?.data.credits ?? [], context?.data.user ?? {})
+    setCompatibleCreditsResult(compatibleCredits)
+  }, [context?.data.user, context?.data.credits])
 
   return (
     <Card>
@@ -102,17 +110,17 @@ const ComparisonForm = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {compatibleCredits.map((row: Credits, index) => (
+                    {compatibleCreditsResults.creditosCompatibles.map((row: Credit, index) => (
                       <TableRow
                         hover
-                        key={row.name}
+                        key={index}
                         style={{ opacity: index === 0 ? 1 : 0.5 }}
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
                         <TableCell width={30}>
                           <img
-                            src={`/images/banks/${row.bank}.png`}
-                            alt={row.name}
+                            src={`/images/banks/${row.Banco}.png`}
+                            alt={row.Nombre}
                             className='object-contain	'
                             height={40}
                           />
@@ -120,14 +128,16 @@ const ComparisonForm = () => {
                         <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                              {row.name}
+                              {row.Nombre}
                             </Typography>
-                            <Typography variant='caption'>Banco {row.bank}</Typography>
+                            <Typography variant='caption'>Banco {row.Banco}</Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>{row.tna}</TableCell>
+                        <TableCell>{row.Tasa}</TableCell>
                         <TableCell>
-                          {context?.data.budget ? parseMoney((context?.data.budget * row.tna) / 100 / 12) : ''}
+                          {context?.data.user.budget
+                            ? parseMoney((context?.data.user.budget * row.Tasa) / 100 / 12)
+                            : ''}
                         </TableCell>
                         {/* <TableCell>{row.date}</TableCell>
                         <TableCell>{row.salary}</TableCell>
@@ -146,6 +156,22 @@ const ComparisonForm = () => {
                         </TableCell> */}
                       </TableRow>
                     ))}
+                    {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <Typography align='left'>
+                            Las razones por las que el resto de los creditos estan ocultos:
+                          </Typography>
+
+                          {compatibleCreditsResults.razonesDeLosRestantes.map((r, i) => (
+                            <Typography key={i} align='center' variant='caption'>
+                              {r}
+                              <br></br>
+                            </Typography>
+                          ))}
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

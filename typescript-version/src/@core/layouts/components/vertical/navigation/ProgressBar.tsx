@@ -78,7 +78,6 @@ const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as cons
 const links = ['/name', '/risk', '/preferences', '/comparison']
 
 const getActiveStep = (data: UserData) => {
-  console.log(data)
   if (data.budget && data.creditType && data.duration) {
     return 3
   }

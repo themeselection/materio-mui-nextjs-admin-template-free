@@ -30,6 +30,9 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // ** Global css styles
 import '../../styles/globals.css'
 import HypotecarLayoutWrapper from 'src/layouts/HipotecarLayoutWrapper'
+import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV } from 'src/configs/constants'
+import { useEffect, useState } from 'react'
+import { useAsync } from 'react-async'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {

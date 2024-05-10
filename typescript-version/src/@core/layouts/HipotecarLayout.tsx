@@ -25,7 +25,9 @@ import ScrollToTop from 'src/@core/components/scroll-to-top'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { Step, StepConnector, StepIcon, StepLabel, Stepper, Typography } from '@mui/material'
 import ProgressBar from './components/vertical/navigation/ProgressBar'
-import { Bank, CreditType, Neighborhood } from 'src/configs/credits'
+import { CreditType, Province } from 'src/configs/constants'
+import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV, provincesCsvUrl } from 'src/configs/constants'
+import { useAsync } from 'react-async'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -56,34 +58,80 @@ export type UserData = {
   riskAssesmentPassed?: boolean
   email?: string
   budget?: number
-  neighborhoods?: Neighborhood[]
+  salary?: number
+  provinces?: Province[]
   duration?: number
   creditType?: CreditType
-  banks?: Bank[]
+  banks?: string[]
 }
 
 export type ContextType = {
-  data: UserData
-  setData: Dispatch<SetStateAction<{}>>
+  data: {
+    user: UserData
+    credits: Credit[]
+    provinces: string[]
+    banks: string[]
+  }
+  setData: Dispatch<
+    SetStateAction<{
+      user: UserData
+      credits: any[]
+      provinces: any
+      banks: any
+    }>
+  >
 }
 const DataContext = createContext<ContextType | null>(null)
 
 export const useData = () => useContext(DataContext)
 
 export const DataProvider = ({ children }: { children: any }) => {
-  const [data, setData] = useState({})
+  const [data, setData] = useState<{
+    user: UserData
+    credits: Credit[]
+    provinces: string[]
+    banks: string[]
+  }>({
+    user: {},
+    credits: [],
+    provinces: [],
+    banks: []
+  })
 
   // Effect to load data from localStorage when the component mounts
   useEffect(() => {
-    const savedData = localStorage.getItem('data')
+    const savedData = localStorage.getItem('userData')
     if (savedData) {
-      setData(JSON.parse(savedData))
+      setData({ ...data, user: JSON.parse(savedData) })
     }
   }, [])
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (data.credits.length === 0) {
+        const loadedCredits = await loadDataFromCSV<Credit>(creditsCsvUrl)
+        setData(prevData => ({ ...prevData, credits: loadedCredits }))
+      }
+      if (data.provinces.length === 0) {
+        const loadedProvinces = await loadDataFromCSV<{ Provincia: string }>(provincesCsvUrl)
+        const provinceNames = loadedProvinces.map(p => p.Provincia)
+        setData(prevData => ({ ...prevData, provinces: provinceNames }))
+      }
+      if (data.banks.length === 0) {
+        const loadedBanks = await loadDataFromCSV<{ Banco: string }>(banksCsvUrl)
+        const bankNames = loadedBanks.map(b => b.Banco)
+        setData(prevData => ({ ...prevData, banks: bankNames }))
+      }
+    }
+
+    fetchData()
+
+    // Adding an empty dependency array ensures this effect only runs once on mount.
+  }, [])
+
+  useEffect(() => {
     // Save the data to localStorage
-    localStorage.setItem('data', JSON.stringify(data))
+    localStorage.setItem('userData', JSON.stringify(data))
   }, [data]) // Only re-run the effect if data changes
 
   return <DataContext.Provider value={{ data, setData }}>{children}</DataContext.Provider>
@@ -121,8 +169,12 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
-              <Typography variant="h3" width="100%" style={{textAlign: "center"}}><img src="/images/logo.png" width="40px" /> HipotecAR</Typography>
-              <Typography variant="h6" width="100%" style={{textAlign: "center", opacity: 0.5}}>Tu aliado para surfear la ola de creditos</Typography>
+              <Typography variant='h3' width='100%' style={{ textAlign: 'center' }}>
+                <img src='/images/logo.png' width='40px' /> HipotecAR
+              </Typography>
+              <Typography variant='h6' width='100%' style={{ textAlign: 'center', opacity: 0.5 }}>
+                Tu aliado para surfear la ola de creditos
+              </Typography>
               <ProgressBar></ProgressBar>
               {children}
             </ContentWrapper>
