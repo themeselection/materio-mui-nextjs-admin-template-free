@@ -22,55 +22,21 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
+import { Checkbox, FormControlLabel, FormGroup, Link } from '@mui/material'
 import { useRouter } from 'next/router'
-import { TimerOutline } from 'mdi-material-ui'
+import { TimerOutline, WalletOutline } from 'mdi-material-ui'
 import { Credit } from 'src/configs/constants'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { parseMoney } from 'src/@core/utils/string'
-import { CreditEvaluationResult, getCompatibleCredits } from 'src/@core/utils/misc'
+import { CreditEvaluationResult, calcularCuotaMensual, getCompatibleCredits } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
-
-interface State {
-  password: string
-  showPassword: boolean
-}
 
 const ComparisonForm = () => {
   const router = useRouter()
   const context = useData()
 
-  // ** States
-  const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-  const [confirmPassValues, setConfirmPassValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleConfirmPassChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassValues({ ...confirmPassValues, [prop]: event.target.value })
-  }
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
-
-  const handleClickConfirmPassShow = () => {
-    setConfirmPassValues({ ...confirmPassValues, showPassword: !confirmPassValues.showPassword })
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
-
   const handleClick = () => {
-    router.push('/preferences')
+    console.log('save data')
   }
 
   const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
@@ -83,6 +49,10 @@ const ComparisonForm = () => {
     setCompatibleCreditsResult(compatibleCredits)
   }, [context?.data.user, context?.data.credits])
 
+  const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
+    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
+  }
+
   return (
     <Card>
       <CardHeader
@@ -94,6 +64,42 @@ const ComparisonForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
+              <Grid container columns={2} gap={2}>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    defaultValue={context?.data.user.budget}
+                    label='Presupuesto del inmueble (en ARS)'
+                    onChange={handleChange('budget')}
+                    placeholder='$100000000'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <WalletOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    label='Años'
+                    defaultValue={context?.data.user.duration}
+                    onChange={handleChange('duration')}
+                    placeholder='30'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <TimerOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+              </Grid>
               <TableContainer>
                 <Table sx={{ minWidth: 800 }} aria-label='table in dashboard'>
                   <TableHead>
@@ -103,16 +109,13 @@ const ComparisonForm = () => {
                       <TableCell>Creditos Recomendados</TableCell>
                       <TableCell>TNA</TableCell>
                       <TableCell>Cuota</TableCell>
-                      {/* <TableCell>Date</TableCell>
-                      <TableCell>Salary</TableCell>
-                      <TableCell>Age</TableCell>
-                      <TableCell>Status</TableCell> */}
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {compatibleCreditsResults.creditosCompatibles.map((row: Credit, index) => (
                       <TableRow
-                        hover
+                        hover={row.Link.length > 0}
                         key={index}
                         style={{ opacity: index === 0 ? 1 : 0.5 }}
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
@@ -129,31 +132,45 @@ const ComparisonForm = () => {
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                               {row.Nombre}
+                              {index === 0 && (
+                                <Typography variant='caption' style={{ margin: '1em' }}>
+                                  <Chip label='Cuota mas baja' size='small' color='primary' />
+                                </Typography>
+                              )}
                             </Typography>
                             <Typography variant='caption'>Banco {row.Banco}</Typography>
                           </Box>
                         </TableCell>
                         <TableCell>{row.Tasa}</TableCell>
                         <TableCell>
-                          {context?.data.user.budget
-                            ? parseMoney((context?.data.user.budget * row.Tasa) / 100 / 12)
-                            : ''}
+                          {context?.data.user.budget &&
+                            context.data.user.duration &&
+                            parseMoney(
+                              calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration)
+                            )}
+
+                          {row['Tasa especial por tiempo definido'] &&
+                            context?.data.user.budget &&
+                            context.data.user.duration && (
+                              <Typography>
+                                {parseMoney(
+                                  calcularCuotaMensual(
+                                    context.data.user.budget,
+                                    row['Tasa especial por tiempo definido'],
+                                    context.data.user.duration
+                                  )
+                                )}{' '}
+                                por {row['Duracion Tasa Especial en Meses']} meses
+                              </Typography>
+                            )}
                         </TableCell>
-                        {/* <TableCell>{row.date}</TableCell>
-                        <TableCell>{row.salary}</TableCell>
-                        <TableCell>{row.age}</TableCell>
                         <TableCell>
-                          <Chip
-                            label={row.status}
-                            color={statusObj[row.status].color}
-                            sx={{
-                              height: 24,
-                              fontSize: '0.75rem',
-                              textTransform: 'capitalize',
-                              '& .MuiChip-label': { fontWeight: 500 }
-                            }}
-                          />
-                        </TableCell> */}
+                          {row.Link.length > 0 && (
+                            <Link href={row.Link} target='_blank'>
+                              Ir al sitio del banco
+                            </Link>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                     {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (

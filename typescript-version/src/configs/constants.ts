@@ -58,9 +58,10 @@ export type Province = typeof Provinces[number]
 export interface Credit {
   Banco: string
   Tipo: CreditType
+  Link: string
   Nombre: string
   'Sueldo En Banco': 'TRUE' | 'FALSE'
-  'Plazo hasta en Meses': number
+  Duracion: number
   'Monto Maximo en UVAs': number
   '% Maximo de Financiacion': number
   'Relacion Cuota Ingreso': number
@@ -75,7 +76,7 @@ export interface Credit {
 
 export async function loadDataFromCSV<T>(url: string): Promise<T[]> {
   try {
-    const response = await fetch(url, {cache: "no-store"})
+    const response = await fetch(url, { cache: 'no-store' })
     const csvData = await response.text()
 
     const parsedData = parse<T>(csvData, {

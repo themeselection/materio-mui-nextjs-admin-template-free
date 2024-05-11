@@ -7,9 +7,6 @@ export interface CreditEvaluationResult {
 }
 
 export const getCompatibleCredits = (credits: Credit[], userData: UserData): CreditEvaluationResult => {
-  console.log('credits', credits)
-  console.log('userData', userData)
-
   const creditosCompatibles: Credit[] = []
   const razonesDeLosRestantes: string[] = []
 
@@ -24,9 +21,9 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       isCompatible = false
     }
 
-    if (userData?.duration && credit['Plazo hasta en Meses'] < userData.duration) {
+    if (userData?.duration && credit['Duracion'] < userData.duration) {
       reasons.push(
-        `El plazo máximo ofrecido de ${credit['Plazo hasta en Meses']} meses es menor que el plazo deseado de ${userData.duration} meses.`
+        `El plazo máximo ofrecido de ${credit['Duracion']} meses es menor que el plazo deseado de ${userData.duration} meses.`
       )
       isCompatible = false
     }
@@ -45,7 +42,6 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       isCompatible = false
     }
 
-    console.log(credit)
     if (credit['Sueldo En Banco'] == 'TRUE') {
       if (userData?.banks && !userData.banks.includes(credit.Banco)) {
         reasons.push(
@@ -58,12 +54,25 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     if (isCompatible) {
       creditosCompatibles.push(credit)
     } else {
-      razonesDeLosRestantes.push(`Crédito en ${credit.Banco}: ${reasons.join(' ')}\n`)
+      razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
     }
   })
+
+  // Sort by Tasa
+  creditosCompatibles.sort((a, b) => a.Tasa - b.Tasa)
 
   return {
     creditosCompatibles,
     razonesDeLosRestantes
   }
 }
+
+export function calcularCuotaMensual(montoPrestamo: number, tasaAnual: number, plazoAnios: number): number {
+  const tasaMensual = tasaAnual / 12 / 100; // Convertir la tasa anual en decimal y dividirla por 12 para obtener la tasa mensual
+  const plazoMeses = plazoAnios * 12; // Convertir el plazo de años a meses
+  const cuotaMensual =
+    (montoPrestamo * tasaMensual * Math.pow(1 + tasaMensual, plazoMeses)) / (Math.pow(1 + tasaMensual, plazoMeses) - 1);
+
+  return cuotaMensual;
+}
+

@@ -131,8 +131,8 @@ export const DataProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     // Save the data to localStorage
-    localStorage.setItem('userData', JSON.stringify(data))
-  }, [data]) // Only re-run the effect if data changes
+    localStorage.setItem('userData', JSON.stringify(data.user))
+  }, [data.user]) // Only re-run the effect if data changes
 
   return <DataContext.Provider value={{ data, setData }}>{children}</DataContext.Provider>
 }

@@ -84,7 +84,7 @@ const PreferencesForm = () => {
                 <Select
                   label='Banco'
                   multiple
-                  defaultValue={context?.data.banks ?? []}
+                  defaultValue={context?.data.user.banks ?? []}
                   id='form-layouts-separator-select'
                   onChange={() => handleChange('banks')}
                 >
@@ -103,7 +103,7 @@ const PreferencesForm = () => {
                 <Select
                   label='province'
                   multiple
-                  defaultValue={context?.data.provinces ?? []}
+                  defaultValue={context?.data.user.provinces ?? []}
                   id='form-layouts-separator-select'
                   onChange={() => handleChange('provinces')}
                 >

@@ -78,6 +78,7 @@ const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as cons
 const links = ['/name', '/risk', '/preferences', '/comparison']
 
 const getActiveStep = (data: UserData) => {
+  console.log(data)
   if (data.budget && data.creditType && data.duration) {
     return 3
   }
@@ -96,7 +97,7 @@ const getActiveStep = (data: UserData) => {
 export default function ProgressBar() {
   const context = useData()
 
-  const activeStep = context?.data ? getActiveStep(context?.data) : 0
+  const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
 
   return (
     <div style={{ padding: '3em' }}>
