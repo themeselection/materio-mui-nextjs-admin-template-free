@@ -22,13 +22,33 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-import { Checkbox, FormControlLabel, FormGroup, Link } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Link
+} from '@mui/material'
 import { useRouter } from 'next/router'
-import { TimerOutline, WalletOutline } from 'mdi-material-ui'
+import {
+  ArrowDown,
+  ArrowDownBoldOutline,
+  ExpandAll,
+  ExpandAllOutline,
+  TimerOutline,
+  WalletOutline
+} from 'mdi-material-ui'
 import { Credit } from 'src/configs/constants'
 import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { parseMoney } from 'src/@core/utils/string'
-import { CreditEvaluationResult, calcularCuotaMensual, getCompatibleCredits } from 'src/@core/utils/misc'
+import {
+  CreditEvaluationResult,
+  calcularAdelanto,
+  calcularCuotaMensual,
+  getCompatibleCredits
+} from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
 
 const ComparisonForm = () => {
@@ -107,8 +127,8 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell></TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
-                      <TableCell>TNA</TableCell>
                       <TableCell>Cuota</TableCell>
+                      <TableCell>Adelanto</TableCell>
                       <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
@@ -141,7 +161,6 @@ const ComparisonForm = () => {
                             <Typography variant='caption'>Banco {row.Banco}</Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>{row.Tasa}</TableCell>
                         <TableCell>
                           {context?.data.user.budget &&
                             context.data.user.duration &&
@@ -165,6 +184,11 @@ const ComparisonForm = () => {
                             )}
                         </TableCell>
                         <TableCell>
+                          {context?.data.user.budget &&
+                            parseMoney(calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']))}
+                        </TableCell>
+
+                        <TableCell>
                           {row.Link.length > 0 && (
                             <Link href={row.Link} target='_blank'>
                               Ir al sitio del banco
@@ -173,25 +197,28 @@ const ComparisonForm = () => {
                         </TableCell>
                       </TableRow>
                     ))}
-                    {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <Typography align='left'>
-                            Las razones por las que el resto de los creditos estan ocultos:
-                          </Typography>
-
-                          {compatibleCreditsResults.razonesDeLosRestantes.map((r, i) => (
-                            <Typography key={i} align='center' variant='caption'>
-                              {r}
-                              <br></br>
-                            </Typography>
-                          ))}
-                        </TableCell>
-                      </TableRow>
-                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
+              {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
+                <Accordion style={{ width: '100%' }}>
+                  <AccordionSummary expandIcon={<ArrowDown />} aria-controls='panel1-content' id='panel1-header'>
+                    Por que los demas creditos no aparecen?
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        {compatibleCreditsResults.razonesDeLosRestantes.map((r, i) => (
+                          <Typography key={i} align='center' variant='caption'>
+                            {r}
+                            <br></br>
+                          </Typography>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  </AccordionDetails>
+                </Accordion>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>

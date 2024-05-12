@@ -74,8 +74,8 @@ const App = (props: ExtendedAppProps) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`HipotecAR - Tu aliado para surfear la ola de creditos`}</title>
-        <meta name='description' content={`HipotecAR - Tu aliado para surfear la ola de creditos`} />
+        <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
+        <meta name='description' content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`} />
         <meta name='keywords' content='Hipotecas, Creditos Hipotecarios, Argentina' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>

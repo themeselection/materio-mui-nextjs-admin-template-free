@@ -42,7 +42,7 @@ const BaseForm = () => {
   }
 
   const handleClick = () => {
-    context?.setData({ ...context?.data, name: values.name })
+    context?.setData({ ...context?.data, user: { ...context?.data.user, name: values.name } })
     router.push('/risk')
   }
 
@@ -57,8 +57,22 @@ const BaseForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <TextField fullWidth label='Name' defaultValue={context?.data.name} placeholder='Leo Messi' onChange={handleChange('name')} />
+              <TextField
+                fullWidth
+                label='Name'
+                defaultValue={context?.data.user.name}
+                placeholder='Leo Messi'
+                onChange={handleChange('name')}
+              />
             </Grid>
+
+            <Typography variant='caption' style={{ marginLeft: '2em', marginTop: '1em' }}>
+              No sabes lo que es un credito hipotecario?{' '}
+              <Link href='https://es.wikipedia.org/wiki/Cr%C3%A9dito_hipotecario' target='_blank'>
+                Haz click aqui.
+              </Link>
+            </Typography>
+            <Grid container spacing={5}></Grid>
 
             <Grid item xs={12}>
               <Button type='submit' variant='contained' size='large' onClick={handleClick}>

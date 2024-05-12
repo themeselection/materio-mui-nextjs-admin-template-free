@@ -170,7 +170,8 @@ const HypotecarLayout = (props: LayoutProps) => {
               }}
             >
               <Typography variant='h3' width='100%' style={{ textAlign: 'center' }}>
-                <img src='/images/logo.png' width='40px' /> HipotecAR
+                <img src='/images/logo.png' width='40px' /> Mi Credito Hipotecario{' '}
+                <img src='/images/logo.png' width='40px' />
               </Typography>
               <Typography variant='h6' width='100%' style={{ textAlign: 'center', opacity: 0.5 }}>
                 Tu aliado para surfear la ola de creditos

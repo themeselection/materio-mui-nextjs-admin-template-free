@@ -76,3 +76,7 @@ export function calcularCuotaMensual(montoPrestamo: number, tasaAnual: number, p
   return cuotaMensual;
 }
 
+export function calcularAdelanto(montoPrestamo: number, maximoFinanciacion: number): number {
+  return montoPrestamo * (100 - maximoFinanciacion) / 100;
+}
+
