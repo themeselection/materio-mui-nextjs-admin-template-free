@@ -1,5 +1,6 @@
 // ** React Import
 import { Children } from 'react'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 // ** Next Import
 import Document, { Html, Head, Main, NextScript } from 'next/document'

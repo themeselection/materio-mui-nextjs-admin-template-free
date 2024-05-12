@@ -78,6 +78,24 @@ const PreferencesForm = () => {
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id='form-layouts-separator-select-label'>Tipo de credito que te gustaria obtener?</InputLabel>
+              <Select
+                label='creditType'
+                defaultValue={context?.data.user.creditType ?? 'Adquisicion'}
+                id='form-layouts-separator-select'
+                onChange={() => handleChange('creditType')}
+              >
+                labelId='form-layouts-separator-select-label'
+                {CreditTypes.map(creditType => (
+                  <MenuItem key={creditType} value={creditType}>
+                    {creditType}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-select-label'>Recibis tus haberes en algun banco?</InputLabel>
@@ -116,75 +134,61 @@ const PreferencesForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id='form-layouts-separator-select-label'>
-                  Tipo de credito que te gustaria obtener?
-                </InputLabel>
-                <Select
-                  label='creditType'
-                  defaultValue={context?.data.user.creditType ?? 'Adquisicion'}
-                  id='form-layouts-separator-select'
-                  onChange={() => handleChange('creditType')}
-                >
-                  labelId='form-layouts-separator-select-label'
-                  {CreditTypes.map(creditType => (
-                    <MenuItem key={creditType} value={creditType}>
-                      {creditType}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                type='number'
-                defaultValue={context?.data.user.budget}
-                label='Sueldo (en ARS)'
-                onChange={handleChange('salary')}
-                placeholder='$700000'
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <WalletOutline />
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <TextField
-                fullWidth
-                type='number'
-                defaultValue={context?.data.user.budget}
-                label='Presupuesto del inmueble (en ARS)'
-                onChange={handleChange('budget')}
-                placeholder='$100000000'
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <WalletOutline />
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                type='number'
-                label='Años'
-                defaultValue={context?.data.user.duration}
-                onChange={handleChange('duration')}
-                placeholder='30'
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <TimerOutline />
-                    </InputAdornment>
-                  )
-                }}
-              />
+              <Grid container columns={3} gap={2}>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    defaultValue={context?.data.user.budget}
+                    label='Sueldo (en ARS)'
+                    onChange={handleChange('salary')}
+                    placeholder='$700000'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <WalletOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    defaultValue={context?.data.user.budget}
+                    label='Presupuesto del inmueble (en ARS)'
+                    onChange={handleChange('budget')}
+                    placeholder='$100000000'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <WalletOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    label='Años'
+                    defaultValue={context?.data.user.duration}
+                    onChange={handleChange('duration')}
+                    placeholder='30'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <TimerOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
 
             <Grid item xs={12}>

@@ -86,7 +86,7 @@ const RiskForm = () => {
                 />
                 <FormControlLabel
                   control={<Checkbox onChange={handleChange('paymentCapacity')} defaultChecked />}
-                  label='Puedo dedicarle al menos un 20% de mi salario a pagar la cuota del credito o tengo otras formas de demostrar caoaacidad de pago.'
+                  label='Puedo dedicarle al menos un 20% de mi salario a pagar la cuota del credito o tengo otras formas de demostrar capacidad de pago.'
                 />
                 <FormControlLabel
                   control={<Checkbox onChange={handleChange('notOver50')} defaultChecked />}

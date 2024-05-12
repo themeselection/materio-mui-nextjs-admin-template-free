@@ -26,15 +26,29 @@ import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
 import RiskForm from 'src/views/form-layouts/custom/RiskForm'
 import BaseForm from 'src/views/form-layouts/custom/BaseForm'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { getActiveStep, stepLinks } from 'src/@core/layouts/components/vertical/navigation/ProgressBar'
+import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { set } from 'nprogress'
 
 const Dashboard = () => {
   const router = useRouter()
-  useEffect(() => {
-    router.push('/name')
-  }, []);
+  const context = useData()
+  const [redirected, setRedirected] = useState(false)
 
-  return null;
+  useEffect(() => {
+    console.log('context?.data.user', context?.data)
+    if (redirected) return
+    if (!context?.data.loaded) return
+
+    const step = context?.data.user ? getActiveStep(context?.data.user) : 0
+    const link = stepLinks[step]
+
+    setRedirected(true)
+    router.push(link)
+  }, [context?.data.loaded])
+
+  return null
 }
 
 export default Dashboard

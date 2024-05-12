@@ -59,7 +59,7 @@ const BaseForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label='Name'
+                label='Nombre'
                 defaultValue={context?.data.user.name}
                 placeholder='Leo Messi'
                 onChange={handleChange('name')}

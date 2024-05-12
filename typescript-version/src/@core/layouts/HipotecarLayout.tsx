@@ -28,6 +28,7 @@ import ProgressBar from './components/vertical/navigation/ProgressBar'
 import { CreditType, Province } from 'src/configs/constants'
 import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV, provincesCsvUrl } from 'src/configs/constants'
 import { useAsync } from 'react-async'
+import { set } from 'nprogress'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -67,6 +68,7 @@ export type UserData = {
 
 export type ContextType = {
   data: {
+    loaded: boolean
     user: UserData
     credits: Credit[]
     provinces: string[]
@@ -78,6 +80,7 @@ export type ContextType = {
       credits: any[]
       provinces: any
       banks: any
+      loaded: boolean
     }>
   >
 }
@@ -87,11 +90,13 @@ export const useData = () => useContext(DataContext)
 
 export const DataProvider = ({ children }: { children: any }) => {
   const [data, setData] = useState<{
+    loaded: boolean
     user: UserData
     credits: Credit[]
     provinces: string[]
     banks: string[]
   }>({
+    loaded: false,
     user: {},
     credits: [],
     provinces: [],
@@ -104,6 +109,8 @@ export const DataProvider = ({ children }: { children: any }) => {
     if (savedData) {
       setData({ ...data, user: JSON.parse(savedData) })
     }
+    console.log(data, savedData)
+    setData({ ...data, loaded: true })
   }, [])
 
   useEffect(() => {
@@ -130,6 +137,8 @@ export const DataProvider = ({ children }: { children: any }) => {
   }, [])
 
   useEffect(() => {
+    if (!data.user || !Object.keys(data.user).length) return
+
     // Save the data to localStorage
     localStorage.setItem('userData', JSON.stringify(data.user))
   }, [data.user]) // Only re-run the effect if data changes
@@ -169,11 +178,11 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
-              <Typography variant='h3' width='100%' style={{ textAlign: 'center' }}>
-                <img src='/images/logo.png' width='40px' /> Mi Credito Hipotecario{' '}
-                <img src='/images/logo.png' width='40px' />
+              <Typography variant='h3' width='100%' sx={{fontSize: "20px"}} style={{ textAlign: 'center' }}>
+                <img src='/images/logo.png' width='20em' /> Mi Credito Hipotecario{' '}
+                <img src='/images/logo.png' width='20em' />
               </Typography>
-              <Typography variant='h6' width='100%' style={{ textAlign: 'center', opacity: 0.5 }}>
+              <Typography variant='h6' width='100%' sx={{fontSize: "15px"}} style={{ textAlign: 'center', opacity: 0.5 }}>
                 Tu aliado para surfear la ola de creditos
               </Typography>
               <ProgressBar></ProgressBar>

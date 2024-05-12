@@ -45,14 +45,23 @@ const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
   display: 'flex',
   height: 22,
+  transition: "1s",
   alignItems: 'center',
   ...(ownerState.active && {
-    color: '#784af4'
+    color: '#784af4' // Active color
   }),
   '& .QontoStepIcon-completedIcon': {
-    color: '#784af4',
+    color: '#784af4', // Completed icon color
     zIndex: 1,
     fontSize: 18
+  },
+  '& .QontoStepIcon-completedIcon:hover': {
+    color: 'gray', // Completed icon color
+    zIndex: 1,
+    cursor: "pointer",
+    transition: "1s",
+    fontSize: 18,
+    shadow: "1px 1px 1px 1px"
   },
   '& .QontoStepIcon-circle': {
     width: 8,
@@ -66,19 +75,17 @@ function QontoStepIcon(props: StepIconProps) {
   const { active, completed, className } = props
 
   return (
-    <Link href={props.accessKey ?? ''}>
       <QontoStepIconRoot ownerState={{ active }} className={className}>
         {completed ? <Check className='QontoStepIcon-completedIcon' /> : <div className='QontoStepIcon-circle' />}
       </QontoStepIconRoot>
-    </Link>
+    
   )
 }
 
-const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
-const links = ['/name', '/risk', '/preferences', '/comparison']
+export const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
+export const stepLinks = ['/name', '/risk', '/preferences', '/comparison']
 
-const getActiveStep = (data: UserData) => {
-  console.log(data)
+export const getActiveStep = (data: UserData) => {
   if (data.budget && data.creditType && data.duration) {
     return 3
   }
@@ -106,7 +113,7 @@ export default function ProgressBar() {
           {steps.map((label, index) => (
             <Step key={label}>
               {activeStep >= index ? (
-                <Link href={links[index]} key={label}>
+                <Link href={stepLinks[index]} key={label}>
                   <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
                 </Link>
               ) : (

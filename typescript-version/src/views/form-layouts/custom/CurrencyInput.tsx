@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import { WalletOutline } from 'mdi-material-ui';
@@ -11,36 +11,48 @@ interface CurrencyTextFieldProps extends Omit<TextFieldProps, 'onChange' | 'valu
 const CurrencyTextField: React.FC<CurrencyTextFieldProps> = ({ onChange, value: propsValue, ...props }) => {
   // Use local state to handle input value and formatting
   const [value, setValue] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
+
+  // Initialize value
+  useEffect(() => {
+    if (propsValue != null) {
+      setValue(formatNumberAsCurrency(propsValue));
+    }
+  }, [propsValue]);
 
   const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    setIsFocused(true);
+    // Convert formatted string to a plain number string on focus
     setValue(propsValue?.toString() || '');
-    props.onFocus && props.onFocus(event);
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    setIsFocused(false);
+    // Convert back to number and format on blur
     const numericalValue = parseFloat(value.replace(/,/g, ''));
     if (!isNaN(numericalValue)) {
+      setValue(formatNumberAsCurrency(numericalValue));
       onChange && onChange(numericalValue);
+    } else {
+      // Handle invalid number
+      setValue(formatNumberAsCurrency(propsValue || 0));
     }
-    props.onBlur && props.onBlur(event);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  const formatNumberAsCurrency = (amount: number) => {
-    return amount.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 });
+  const formatNumberAsCurrency = (amount: number): string => {
+    return amount.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2
+    });
   };
 
   return (
     <TextField
       {...props}
       type="text"
-      value={isFocused ? value : formatNumberAsCurrency(propsValue || 0)}
+      value={value}
       onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
