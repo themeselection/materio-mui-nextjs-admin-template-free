@@ -51,6 +51,11 @@ import {
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
 
+type ComparisonTableState = {
+  budget: number
+  duration: number
+}
+
 const ComparisonForm = () => {
   const router = useRouter()
   const context = useData()
@@ -70,8 +75,33 @@ const ComparisonForm = () => {
   }, [context?.data.user, context?.data.credits])
 
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value })
     context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
   }
+
+  const [values, setValues] = useState<ComparisonTableState>({
+    budget: 0,
+    duration: 20
+  })
+
+  useEffect(() => {
+    const updatedValues: ComparisonTableState = { ...values }
+
+    Object.keys(values).forEach(key => {
+      const val = values[key as keyof ComparisonTableState]
+      const newVal = context?.data.user[key as keyof ComparisonTableState]
+
+      // If it is already set, avoid
+      if ((Array.isArray(val) && val.length) || (!Array.isArray(val) && val)) return
+
+      // If no new value, avoid
+      if (!context || (Array.isArray(newVal) && !newVal.length) || (!Array.isArray(newVal) && !newVal)) return
+
+      updatedValues[key as keyof ComparisonTableState] = newVal as never
+    })
+
+    setValues(updatedValues)
+  }, [context?.data.user])
 
   return (
     <Card>
@@ -84,13 +114,17 @@ const ComparisonForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Grid container columns={2} gap={2}>
-                <Grid item>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     type='number'
-                    defaultValue={context?.data.user.budget}
-                    label='Presupuesto del inmueble (en ARS)'
+                    value={values.budget}
+                    label={`Presupuesto del inmueble en ARS ${
+                      context?.data.dolar && values.budget
+                        ? `(${parseMoney(values.budget / context?.data.dolar, 'USD')} )`
+                        : ''
+                    }`}
                     onChange={handleChange('budget')}
                     placeholder='$100000000'
                     InputProps={{
@@ -102,12 +136,12 @@ const ComparisonForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     type='number'
                     label='Años'
-                    defaultValue={context?.data.user.duration}
+                    value={values.duration}
                     onChange={handleChange('duration')}
                     placeholder='30'
                     InputProps={{
@@ -162,30 +196,73 @@ const ComparisonForm = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          {context?.data.user.budget &&
-                            context.data.user.duration &&
-                            parseMoney(
-                              calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration)
-                            )}
+                          <Grid container>
+                            <Grid item xs={12} color='blueviolet'>
+                              {context?.data.user.budget &&
+                                context.data.user.duration &&
+                                parseMoney(
+                                  calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration)
+                                )}
 
-                          {row['Tasa especial por tiempo definido'] &&
-                            context?.data.user.budget &&
-                            context.data.user.duration && (
-                              <Typography>
-                                {parseMoney(
-                                  calcularCuotaMensual(
-                                    context.data.user.budget,
-                                    row['Tasa especial por tiempo definido'],
-                                    context.data.user.duration
-                                  )
+                              {row['Tasa especial por tiempo definido'] &&
+                                context?.data.user.budget &&
+                                context.data.user.duration && (
+                                  <Typography>
+                                    {parseMoney(
+                                      calcularCuotaMensual(
+                                        context.data.user.budget,
+                                        row['Tasa especial por tiempo definido'],
+                                        context.data.user.duration
+                                      )
+                                    )}{' '}
+                                    por {row['Duracion Tasa Especial en Meses']} meses
+                                  </Typography>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} color='green'>
+                              {context?.data.user.budget &&
+                                context.data.user.duration &&
+                                context.data.dolar &&
+                                parseMoney(
+                                  calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration) /
+                                    context.data.dolar,
+                                  'USD'
                                 )}{' '}
-                                por {row['Duracion Tasa Especial en Meses']} meses
-                              </Typography>
-                            )}
+                              {row['Tasa especial por tiempo definido'] &&
+                                context?.data.user.budget &&
+                                context.data.user.duration &&
+                                context.data.dolar && (
+                                  <Typography>
+                                    {parseMoney(
+                                      calcularCuotaMensual(
+                                        context.data.user.budget,
+                                        row['Tasa especial por tiempo definido'],
+                                        context.data.user.duration
+                                      ) / context.data.dolar,
+                                      'USD'
+                                    )}{' '}
+                                    por {row['Duracion Tasa Especial en Meses']} meses
+                                  </Typography>
+                                )}
+                            </Grid>
+                          </Grid>
                         </TableCell>
                         <TableCell>
-                          {context?.data.user.budget &&
-                            parseMoney(calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']))}
+                          <Grid container>
+                            <Grid item xs={12} color='blueviolet'>
+                              {context?.data.user.budget &&
+                                parseMoney(calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']))}
+                            </Grid>
+                            <Grid item xs={12} color='green'>
+                              {context?.data.user.budget &&
+                                context.data.dolar &&
+                                parseMoney(
+                                  calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']) /
+                                    context.data.dolar,
+                                  'USD'
+                                )}{' '}
+                            </Grid>
+                          </Grid>
                         </TableCell>
 
                         <TableCell>

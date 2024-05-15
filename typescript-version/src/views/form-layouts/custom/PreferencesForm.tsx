@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState, SyntheticEvent } from 'react'
+import { ChangeEvent, MouseEvent, useState, SyntheticEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -25,15 +25,16 @@ import { Checkbox, FormControlLabel, FormGroup, MenuItem } from '@mui/material'
 import { useRouter } from 'next/router'
 import { MessageOutline, TimerOutline, WalletOutline } from 'mdi-material-ui'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
+import { parseMoney } from 'src/@core/utils/string'
 
-interface State {
+export interface PreferencesFormState {
   budget: number
   salary: number
   duration: number
   banks: string[]
-  provinces: Province[]
+  provinces: string[]
   creditType: CreditType
 }
 
@@ -42,16 +43,20 @@ const PreferencesForm = () => {
   const context = useData()
 
   // ** States
-  const [values, setValues] = useState<State>({
+  const [values, setValues] = useState<PreferencesFormState>({
     budget: 0,
     salary: 0,
-    duration: 0,
+    duration: 20,
     banks: [],
     creditType: 'Adquisicion',
     provinces: []
   })
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleSelectChange = (event: SelectChangeEvent<string> | SelectChangeEvent<string[]>, prop: keyof UserData) => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -72,41 +77,63 @@ const PreferencesForm = () => {
     router.push('/comparison')
   }
 
+  useEffect(() => {
+    const updatedValues: PreferencesFormState = { ...values }
+
+    Object.keys(values).forEach(key => {
+      const val = values[key as keyof PreferencesFormState]
+      const newVal = context?.data.user[key as keyof PreferencesFormState]
+
+      // If it is already set, avoid
+      if ((Array.isArray(val) && val.length) || (!Array.isArray(val) && val)) return
+
+      // If no new value, avoid
+      if (!context || (Array.isArray(newVal) && !newVal.length) || (!Array.isArray(newVal) && !newVal)) return
+
+      updatedValues[key as keyof PreferencesFormState] = newVal as never
+    })
+
+    setValues(updatedValues)
+  }, [context?.data.user])
+
   return (
     <Card>
       <CardHeader title='Veamos, cuales son tus preferencias?' titleTypographyProps={{ variant: 'h6' }} />
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id='form-layouts-separator-select-label'>Tipo de credito que te gustaria obtener?</InputLabel>
-              <Select
-                label='creditType'
-                defaultValue={context?.data.user.creditType ?? 'Adquisicion'}
-                id='form-layouts-separator-select'
-                onChange={() => handleChange('creditType')}
-              >
-                labelId='form-layouts-separator-select-label'
-                {CreditTypes.map(creditType => (
-                  <MenuItem key={creditType} value={creditType}>
-                    {creditType}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id='form-layouts-separator-select-label-creditType'>
+                  Tipo de credito que te gustaria obtener?
+                </InputLabel>
+                <Select
+                  label='form-layouts-separator-select-label-creditType'
+                  value={values.creditType ?? 'Adquisicion'}
+                  id='form-layouts-separator-select-label-creditType'
+                  onChange={e => handleSelectChange(e, 'creditType')}
+                >
+                  {CreditTypes.map(creditType => (
+                    <MenuItem key={creditType} value={creditType}>
+                      {creditType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='form-layouts-separator-select-label'>Recibis tus haberes en algun banco?</InputLabel>
+                <InputLabel id='form-layouts-separator-select-label-banks'>
+                  Recibis tus haberes en algun banco?
+                </InputLabel>
                 <Select
-                  label='Banco'
+                  label='form-layouts-separator-select-label-banks'
                   multiple
-                  defaultValue={context?.data.user.banks ?? []}
-                  id='form-layouts-separator-select'
-                  onChange={() => handleChange('banks')}
+                  disabled={!context?.data.banks.length}
+                  value={values.banks ?? []}
+                  id='form-layouts-separator-select-label-banks'
+                  onChange={e => handleSelectChange(e, 'banks')}
                 >
-                  labelId='form-layouts-separator-select-label'
                   {context?.data.banks?.map(bank => (
                     <MenuItem key={bank} value={bank}>
                       {bank}
@@ -117,15 +144,17 @@ const PreferencesForm = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='form-layouts-separator-select-label'>Provincia donde te gustaria comprar?</InputLabel>
+                <InputLabel id='form-layouts-separator-select-label-provinces'>
+                  Provincia donde te gustaria comprar?
+                </InputLabel>
                 <Select
-                  label='province'
+                  disabled={!context?.data.provinces.length}
+                  label='form-layouts-separator-select-label-provinces'
                   multiple
-                  defaultValue={context?.data.user.provinces ?? []}
-                  id='form-layouts-separator-select'
-                  onChange={() => handleChange('provinces')}
+                  value={values.provinces ?? []}
+                  id='form-layouts-separator-select-label-provinces'
+                  onChange={e => handleSelectChange(e, 'provinces')}
                 >
-                  labelId='form-layouts-separator-select-label'
                   {context?.data.provinces?.map(province => (
                     <MenuItem key={province} value={province}>
                       {province}
@@ -136,13 +165,15 @@ const PreferencesForm = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Grid container columns={3} gap={2}>
-                <Grid item>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
                     type='number'
-                    defaultValue={context?.data.user.budget}
-                    label='Sueldo (en ARS)'
+                    value={values.salary}
+                    label={`Sueldo en ARS ${
+                      context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
+                    }`}
                     onChange={handleChange('salary')}
                     placeholder='$700000'
                     InputProps={{
@@ -154,12 +185,14 @@ const PreferencesForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
                     type='number'
-                    defaultValue={context?.data.user.budget}
-                    label='Presupuesto del inmueble (en ARS)'
+                    value={values.budget}
+                    label={`Presupuesto del inmueble en ARS ${
+                      context?.data.dolar ? `(${parseMoney(values.budget / context?.data.dolar, 'USD')})` : ''
+                    }`}
                     onChange={handleChange('budget')}
                     placeholder='$100000000'
                     InputProps={{
@@ -171,12 +204,12 @@ const PreferencesForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
                     type='number'
                     label='Años'
-                    defaultValue={context?.data.user.duration}
+                    value={values.duration}
                     onChange={handleChange('duration')}
                     placeholder='30'
                     InputProps={{
