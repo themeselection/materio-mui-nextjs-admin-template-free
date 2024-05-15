@@ -204,7 +204,7 @@ const HypotecarLayout = (props: LayoutProps) => {
               sx={{
                 ...(contentWidth === 'boxed' && {
                   mx: 'auto',
-                  '@media (min-width:1440px)': { maxWidth: 1440, padding: '8em' },
+                  '@media (min-width:1440px)': { maxWidth: 1440, paddingLeft: '8em', paddingRight: '8em' },
                   '@media (min-width:1200px)': { maxWidth: '100%' }
                 })
               }}

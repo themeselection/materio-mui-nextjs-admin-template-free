@@ -303,7 +303,8 @@ const ComparisonForm = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Button type='submit' variant='outlined' size='small' onClick={handleClick}>
-                Acepto recibir informacion de productos y servicios alineados con mis intereses
+                Encender alertas de nuevos creditos y recibir informacion de productos y servicios alineados con mis
+                intereses
               </Button>
             </Grid>
           </Grid>
