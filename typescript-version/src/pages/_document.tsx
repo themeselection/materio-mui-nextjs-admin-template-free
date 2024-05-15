@@ -1,15 +1,16 @@
 // ** React Import
 import { Children } from 'react'
-import { GoogleAnalytics } from '@next/third-parties/google'
 
 // ** Next Import
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { Analytics } from '@vercel/analytics/react';
 
 // ** Emotion Imports
 import createEmotionServer from '@emotion/server/create-instance'
 
 // ** Utils Imports
 import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
+import GoogleAnalytics from 'src/configs/GoogleAnalytics'
 
 class CustomDocument extends Document {
   render() {
@@ -26,8 +27,10 @@ class CustomDocument extends Document {
           <link rel='shortcut icon' href='/images/logo.png' />
         </Head>
         <body>
+          <GoogleAnalytics />
           <Main />
           <NextScript />
+          <Analytics />
         </body>
       </Html>
     )
