@@ -28,6 +28,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       isCompatible = false
     }
 
+    // @todo Get UVA value automatically from API
     if (userData?.budget && credit['Monto Maximo en UVAs'] && credit['Monto Maximo en UVAs'] * 922 < userData.budget) {
       reasons.push(
         `El monto máximo financiable de ${
@@ -46,6 +47,27 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       if (userData?.banks && !userData.banks.includes(credit.Banco)) {
         reasons.push(
           `El crédito requiere que el sueldo esté en el banco '${credit.Banco}', que no está en su lista de bancos.`
+        )
+        isCompatible = false
+      }
+    }
+
+    // Check Quota Salary Ratio
+    if (
+      userData.salary &&
+      userData.budget &&
+      userData.duration &&
+      credit['Relacion Cuota Ingreso'] &&
+      credit['Relacion Cuota Ingreso'] > 0
+    ) {
+      const cuotaMensual = calcularCuotaMensual(userData.budget, credit.Tasa, userData.duration)
+      const rci = (cuotaMensual / userData.salary) * 100
+
+      if (rci > credit['Relacion Cuota Ingreso']) {
+        reasons.push(
+          `La relación cuota/ingreso de ${rci.toFixed(2)} supera el máximo permitido de ${
+            credit['Relacion Cuota Ingreso']
+          }.`
         )
         isCompatible = false
       }

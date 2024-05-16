@@ -212,7 +212,7 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell></TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
-                      <TableCell>Cuota</TableCell>
+                      <TableCell>Primera Cuota</TableCell>
                       <TableCell>Adelanto</TableCell>
                       <TableCell></TableCell>
                     </TableRow>
@@ -237,13 +237,21 @@ const ComparisonForm = () => {
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                               {row.Nombre}
+                            </Typography>
+                            <Typography variant='caption'>Banco {row.Banco}</Typography>
+                            <div>
                               {index === 0 && (
-                                <Typography variant='caption'>
+                                <Typography variant='caption' margin='0.3em'>
                                   <Chip label='Cuota mas baja' size='small' color='primary' />
                                 </Typography>
                               )}
-                            </Typography>
-                            <Typography variant='caption'>Banco {row.Banco}</Typography>
+                              {row['Sueldo En Banco'] === "TRUE" && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip label='Tasa especial' size='small' color='secondary' />
+                                </Typography>
+                              )}
+                              {/*  */}
+                            </div>
                           </Box>
                         </TableCell>
                         <TableCell>
@@ -325,6 +333,16 @@ const ComparisonForm = () => {
                         </TableCell>
                       </TableRow>
                     ))}
+                    {compatibleCreditsResults.creditosCompatibles.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <Typography align='center' variant='caption'>
+                            No hay creditos compatibles con tus preferencias. Intenta reducir el valor del inmueble o
+                            extender la duracion.
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
