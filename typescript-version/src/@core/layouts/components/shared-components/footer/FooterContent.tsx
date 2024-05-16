@@ -26,9 +26,9 @@ const FooterContent = () => {
       </Typography>
 
       <Typography sx={{ display: { xs: 'none', md: 'block' } }} color='text.secondary'>
-        {`Comentarios y sugerencias a `}
-        <Link href='https://twitter.com/mgrabina' target='_blank' rel='noreferrer' color='inherit'>
-          @mgrabina
+        {`Comunidad, Comentarios y Sugerencias en `}
+        <Link href='https://t.me/micreditohipotecario' target='_blank' rel='noreferrer' color='inherit'>
+          Telegram
         </Link>
       </Typography>
     </Box>
