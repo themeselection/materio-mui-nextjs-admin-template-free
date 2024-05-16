@@ -38,13 +38,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (!context?.data.loaded) return
 
-    console.log('context?.data.user', context?.data.user)
-
-
     const step = context?.data.user ? getActiveStep(context?.data.user) : 0
     const link = stepLinks[step]
-
-    console.log('step', step)
 
     router.push(link)
   }, [context?.data.loaded])
