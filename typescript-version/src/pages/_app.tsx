@@ -35,6 +35,7 @@ import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV } from 'src/configs
 import { useEffect, useState } from 'react'
 import { useAsync } from 'react-async'
 import GoogleAnalytics from 'src/configs/GoogleAnalytics'
+import Script from 'next/script'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -73,6 +74,8 @@ const App = (props: ExtendedAppProps) => {
         <UserLayout>{page}</UserLayout>
       ))
 
+  const GACODE = 'G-3ZB17SX46P'
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -80,7 +83,20 @@ const App = (props: ExtendedAppProps) => {
         <meta name='description' content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`} />
         <meta name='keywords' content='Hipotecas, Creditos Hipotecarios, Argentina' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
-        <GoogleAnalytics />
+
+        {GACODE && (
+          <>
+            <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
+            <Script id='google-analytics'>
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GACODE}');
+              `}
+            </Script>
+          </>
+        )}
       </Head>
 
       <SettingsProvider>
