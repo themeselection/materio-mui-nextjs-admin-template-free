@@ -142,14 +142,14 @@ const ComparisonForm = () => {
     setValues(updatedValues)
   }, [context?.data.user])
 
-  const [email, setEmail] = useState<string>('leo@messi.com')
+  const defaultEmail = 'leo@messi.com'
+  const [email, setEmail] = useState<string>(defaultEmail)
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value)
+    context?.setData({ ...context.data, user: { ...context.data.user, email: event.target.value } })
   }
   useEffect(() => {
-    const updatedEmail = email
-
-    if (email) return
+    if (email != defaultEmail) return
     if (!context?.data.user.email) return
     setEmail(context?.data.user.email)
   }, [context?.data.user.email])

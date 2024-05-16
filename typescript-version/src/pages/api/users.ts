@@ -39,6 +39,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!body.compatibleCredits) {
       return res.status(400).json({ error: 'No compatibleCredits provided' })
     }
+    if (!body.data.email) {
+      return res.status(400).json({ error: 'No email provided' })
+    }
+
 
     const data = body.data
     const compatibleCredits = body.compatibleCredits
