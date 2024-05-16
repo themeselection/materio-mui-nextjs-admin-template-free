@@ -37,7 +37,6 @@ const Dashboard = () => {
   const [redirected, setRedirected] = useState(false)
 
   useEffect(() => {
-    console.log('context?.data.user', context?.data)
     if (redirected) return
     if (!context?.data.loaded) return
 

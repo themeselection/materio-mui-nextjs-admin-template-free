@@ -50,6 +50,8 @@ import {
   getCompatibleCredits
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
+import { SubmitUserBody } from 'src/pages/api/users'
+import { set } from 'nprogress'
 
 type ComparisonTableState = {
   budget: number
@@ -60,8 +62,45 @@ const ComparisonForm = () => {
   const router = useRouter()
   const context = useData()
 
+  const [saving, setSaving] = useState<boolean>(false)
+  const [saved, setSaved] = useState<boolean>(false)
+
   const handleClick = () => {
-    console.log('save data')
+    setSaving(true)
+
+    // Set Email
+    context?.setData({ ...context.data, user: { ...context.data.user, email } })
+
+    if (!context?.data.user) {
+      return
+    }
+
+    const body: SubmitUserBody = {
+      data: context?.data.user,
+      compatibleCredits: compatibleCreditsResults.creditosCompatibles
+    }
+
+    fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      .then(resp => {
+        if (resp.ok) {
+          console.log('Saved successfully.')
+        } else {
+          console.error('Error:', resp.statusText)
+        }
+        setSaving(false)
+        setSaved(true)
+      })
+      .catch(e => {
+        console.error('Error:', e)
+        setSaving(false)
+        setSaved(false)
+      })
   }
 
   const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
@@ -103,6 +142,18 @@ const ComparisonForm = () => {
     setValues(updatedValues)
   }, [context?.data.user])
 
+  const [email, setEmail] = useState<string>('leo@messi.com')
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
+  useEffect(() => {
+    const updatedEmail = email
+
+    if (email) return
+    if (!context?.data.user.email) return
+    setEmail(context?.data.user.email)
+  }, [context?.data.user.email])
+
   return (
     <Card>
       <CardHeader
@@ -115,7 +166,7 @@ const ComparisonForm = () => {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
                     type='number'
@@ -136,7 +187,7 @@ const ComparisonForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
                     type='number'
@@ -187,7 +238,7 @@ const ComparisonForm = () => {
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                               {row.Nombre}
                               {index === 0 && (
-                                <Typography variant='caption' style={{ margin: '1em' }}>
+                                <Typography variant='caption'>
                                   <Chip label='Cuota mas baja' size='small' color='primary' />
                                 </Typography>
                               )}
@@ -298,14 +349,40 @@ const ComparisonForm = () => {
               )}
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth type='email' label='Email' placeholder='leomessi@gmail.com' />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Button type='submit' variant='outlined' size='small' onClick={handleClick}>
-                Encender alertas de nuevos creditos y recibir informacion de productos y servicios alineados con mis
-                intereses
-              </Button>
+            <Grid container spacing={2} margin={4}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  style={{ width: '100%', height: '100%' }}
+                  type='email'
+                  label='Email'
+                  placeholder='leomessi@gmail.com'
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button
+                  type='submit'
+                  variant='outlined'
+                  onClick={handleClick}
+                  disabled={saving || saved}
+                  style={{
+                    opacity: saving ? 0.5 : 1,
+                    width: '100%',
+                    height: '100%',
+                    fontSize: '.7em',
+                    maxHeight: '100%',
+                    overflow: 'hidden'
+                  }}
+                >
+                  {saving
+                    ? 'Guardando...'
+                    : saved
+                    ? 'Guardado!'
+                    : 'Encender alertas y recibir informacion de creditos alineados con mis intereses'}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </form>

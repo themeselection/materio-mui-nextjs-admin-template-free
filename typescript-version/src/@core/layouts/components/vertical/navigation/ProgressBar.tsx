@@ -12,7 +12,7 @@ import StepLabel from '@mui/material/StepLabel'
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector'
 import { StepIconProps } from '@mui/material/StepIcon'
 import { AlertOutline, Check, FileSettingsOutline, FolderTableOutline } from 'mdi-material-ui'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
@@ -45,7 +45,7 @@ const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
   display: 'flex',
   height: 22,
-  transition: "1s",
+  transition: '1s',
   alignItems: 'center',
   ...(ownerState.active && {
     color: '#784af4' // Active color
@@ -58,10 +58,10 @@ const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({
   '& .QontoStepIcon-completedIcon:hover': {
     color: 'gray', // Completed icon color
     zIndex: 1,
-    cursor: "pointer",
-    transition: "1s",
+    cursor: 'pointer',
+    transition: '1s',
     fontSize: 18,
-    shadow: "1px 1px 1px 1px"
+    shadow: '1px 1px 1px 1px'
   },
   '& .QontoStepIcon-circle': {
     width: 8,
@@ -75,10 +75,9 @@ function QontoStepIcon(props: StepIconProps) {
   const { active, completed, className } = props
 
   return (
-      <QontoStepIconRoot ownerState={{ active }} className={className}>
-        {completed ? <Check className='QontoStepIcon-completedIcon' /> : <div className='QontoStepIcon-circle' />}
-      </QontoStepIconRoot>
-    
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? <Check className='QontoStepIcon-completedIcon' /> : <div className='QontoStepIcon-circle' />}
+    </QontoStepIconRoot>
   )
 }
 
@@ -103,13 +102,16 @@ export const getActiveStep = (data: UserData) => {
 
 export default function ProgressBar() {
   const context = useData()
+  const theme = useTheme()
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
 
   return (
-    <div style={{ padding: '3em' }}>
+    <div style={{ padding: isSmallScreen ? '1em' : '3em', width: "100%", overflow: "scroll" }}>
       <Stack sx={{ width: '100%' }} spacing={4}>
-        <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
+        <Stepper alternativeLabel={!isSmallScreen} activeStep={activeStep} connector={<QontoConnector />}>
           {steps.map((label, index) => (
             <Step key={label}>
               {activeStep >= index ? (

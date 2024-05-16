@@ -52,6 +52,7 @@
     "@mui/material": "^5.4.3",
     "@popperjs/core": "^2.11.2",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/postgres": "^0.8.0",
     "apexcharts-clevision": "3.28.5",
     "clsx": "^1.1.1",
     "mdi-material-ui": "^7.1.0",
