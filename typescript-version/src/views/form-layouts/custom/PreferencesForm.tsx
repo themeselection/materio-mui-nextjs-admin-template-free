@@ -166,45 +166,63 @@ const PreferencesForm = () => {
 
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={4}>
+                <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
                     type='number'
                     value={values.salary}
-                    label={`Sueldo en ARS ${
+                    label={`Sueldo ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
                     onChange={handleChange('salary')}
-                    placeholder='$700000'
+                    placeholder='$700.000'
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position='start'>
-                          <WalletOutline />
+                          ARS
                         </InputAdornment>
                       )
                     }}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
                     type='number'
-                    value={values.budget}
-                    label={`Presupuesto del inmueble en ARS ${
-                      context?.data.dolar ? `(${parseMoney(values.budget / context?.data.dolar, 'USD')})` : ''
-                    }`}
+                    value={Number(values.budget).toFixed(0)}
+                    label={`Presupuesto del inmueble`}
                     onChange={handleChange('budget')}
                     placeholder='$100000000'
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <WalletOutline />
-                        </InputAdornment>
-                      )
+                      startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
                     }}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6} md={3}>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
+                    label={`Presupuesto del inmueble`}
+                    onChange={e => {
+                      const value = e.target.value
+                      if (context?.data.dolar) {
+                        console.log('dolar', context.data.dolar)
+                        console.log('value', value)
+                        setValues({ ...values, budget: Number(value) * context.data.dolar })
+                        context?.setData({
+                          ...context.data,
+                          user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                        })
+                      }
+                    }}
+                    placeholder='$100000000'
+                    InputProps={{
+                      startAdornment: <InputAdornment position='start'>USD</InputAdornment>
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
                     type='number'

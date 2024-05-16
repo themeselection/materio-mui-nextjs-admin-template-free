@@ -166,28 +166,44 @@ const ComparisonForm = () => {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <TextField
                     fullWidth
                     type='number'
-                    value={values.budget}
-                    label={`Presupuesto del inmueble en ARS ${
-                      context?.data.dolar && values.budget
-                        ? `(${parseMoney(values.budget / context?.data.dolar, 'USD')} )`
-                        : ''
-                    }`}
+                    value={Number(values.budget).toFixed(0)}
+                    label={`Presupuesto del inmueble`}
                     onChange={handleChange('budget')}
                     placeholder='$100000000'
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <WalletOutline />
-                        </InputAdornment>
-                      )
+                      startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
+                    label={`Presupuesto del inmueble`}
+                    onChange={e => {
+                      const value = e.target.value
+                      if (context?.data.dolar) {
+                        console.log('dolar', context.data.dolar)
+                        console.log('value', value)
+                        setValues({ ...values, budget: Number(value) * context.data.dolar })
+                        context?.setData({
+                          ...context.data,
+                          user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                        })
+                      }
+                    }}
+                    placeholder='$100000000'
+                    InputProps={{
+                      startAdornment: <InputAdornment position='start'>USD</InputAdornment>
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
                   <TextField
                     fullWidth
                     type='number'
@@ -245,7 +261,7 @@ const ComparisonForm = () => {
                                   <Chip label='Cuota mas baja' size='small' color='primary' />
                                 </Typography>
                               )}
-                              {row['Sueldo En Banco'] === "TRUE" && (
+                              {row['Sueldo En Banco'] === 'TRUE' && (
                                 <Typography variant='caption' margin='0.3em'>
                                   <Chip label='Tasa especial' size='small' color='secondary' />
                                 </Typography>
