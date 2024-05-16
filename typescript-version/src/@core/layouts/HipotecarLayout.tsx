@@ -108,6 +108,8 @@ export const DataProvider = ({ children }: { children: any }) => {
     const savedData = localStorage.getItem('userData')
     if (savedData) {
       setData({ ...data, user: JSON.parse(savedData) })
+    } else {
+      setData({ ...data, loaded: true })
     }
   }, [])
 

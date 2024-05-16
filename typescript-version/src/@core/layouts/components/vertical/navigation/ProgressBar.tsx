@@ -81,7 +81,7 @@ function QontoStepIcon(props: StepIconProps) {
   )
 }
 
-export const steps = ['Nombre', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
+export const steps = ['Bienvenida', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
 export const stepLinks = ['/name', '/risk', '/preferences', '/comparison']
 
 export const getActiveStep = (data: UserData) => {

@@ -34,16 +34,18 @@ import { set } from 'nprogress'
 const Dashboard = () => {
   const router = useRouter()
   const context = useData()
-  const [redirected, setRedirected] = useState(false)
 
   useEffect(() => {
-    if (redirected) return
     if (!context?.data.loaded) return
+
+    console.log('context?.data.user', context?.data.user)
+
 
     const step = context?.data.user ? getActiveStep(context?.data.user) : 0
     const link = stepLinks[step]
 
-    setRedirected(true)
+    console.log('step', step)
+
     router.push(link)
   }, [context?.data.loaded])
 
