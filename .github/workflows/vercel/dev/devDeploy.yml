@@ -1,0 +1,33 @@
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - id: script
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
+            core.setOutput('ref', isPr ? context.payload.pull_request.head.ref : context.ref)
+            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.full_name)
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.script.outputs.ref }}
+          repository: ${{ steps.script.outputs.repo }}
+
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@develop
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DEPLOY_PR_FROM_FORK: true # This has some serious security risks you need be aware of

@@ -4,6 +4,7 @@ import { ChangeEvent, MouseEvent, ReactNode, useState } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import app from 'firebase/app'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -38,8 +39,10 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 interface State {
+  email: string
   password: string
   showPassword: boolean
 }
@@ -65,9 +68,14 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState<State>({
-    password: '',
+    email: 'matt4throw@gmail.com',
+    password: 'thisiscool',
     showPassword: false
   })
+
+  const [loading, setLoading] = useState(false)
+
+  const auth = getAuth()
 
   // ** Hook
   const theme = useTheme()
@@ -83,6 +91,25 @@ const LoginPage = () => {
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  const firebaseSignIn = () => {
+    signInWithEmailAndPassword(auth, values.email, values.password)
+      .then(userCredential => {
+        // Signed in
+        const user = userCredential.user
+        console.log(user)
+        router.push('/')
+      })
+      .catch(error => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode)
+        console.log(errorMessage)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -205,9 +232,9 @@ const LoginPage = () => {
               size='large'
               variant='contained'
               sx={{ marginBottom: 7 }}
-              onClick={() => router.push('/')}
+              onClick={() => firebaseSignIn()}
             >
-              Login
+              Sign in
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>

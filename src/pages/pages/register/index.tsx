@@ -37,8 +37,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import router from 'next/router'
 
 interface State {
+  email: string
   password: string
   showPassword: boolean
 }
@@ -66,7 +69,8 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
-    password: '',
+    email: 'matt4throw@gmail.com',
+    password: 'thisiscool',
     showPassword: false
   })
 
@@ -81,6 +85,25 @@ const RegisterPage = () => {
   }
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  // ** Register new Firebase user
+  const registerNewFBUser = () => {
+    const auth = getAuth()
+    createUserWithEmailAndPassword(auth, values.email, values.password)
+      .then(userCredential => {
+        // Signed in
+        const user = userCredential.user
+        // navigate to dashboard
+        router.push('/')
+
+        // ...
+      })
+      .catch(error => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        // ..
+      })
   }
 
   return (
@@ -167,8 +190,7 @@ const RegisterPage = () => {
             <Typography variant='body2'>Make your app management easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
+            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} value={values.email} />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
               <OutlinedInput
@@ -204,7 +226,14 @@ const RegisterPage = () => {
                 </Fragment>
               }
             />
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
+            <Button
+              fullWidth
+              size='large'
+              type='submit'
+              variant='contained'
+              sx={{ marginBottom: 7 }}
+              onClick={() => registerNewFBUser()}
+            >
               Sign up
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>

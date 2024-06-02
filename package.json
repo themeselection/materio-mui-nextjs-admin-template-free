@@ -1,21 +1,18 @@
 {
-  "name": "materio-mui-react-nextjs-admin-template-free",
-  "description": "Most Powerful & Comprehensive Free MUI React NextJS Admin Dashboard Template built for developers! 🚀",
+  "name": "daddi-cloudforge-assessment",
+  "description": "Daddi Cloudforge Assessment",
   "license": "MIT",
   "version": "1.0.0",
   "author": {
-    "name": "ThemeSelection",
-    "url": "https://themeselection.com/"
-  },
-  "bugs": {
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free/issues"
+    "name": "Matthew Daddi",
+    "email": "mattjdaddi@gmail.com"
   },
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free.git"
+    "url": "https://github.com/mattthrows/cloudforge_takehome.git"
   },
-  "homepage": "https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/",
+  "homepage": "https://github.com/mattthrows/cloudforge_takehome.git",
   "keywords": [
     "react",
     "javascript",
@@ -41,7 +38,9 @@
     "start": "next start",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "deployFunctions": "bash ./deploy-functions.sh",
+    "setup": "bash ./setup.sh"
   },
   "dependencies": {
     "@emotion/cache": "^11.6.0",
@@ -51,22 +50,33 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.4.3",
     "@popperjs/core": "^2.11.2",
+    "@types/node": "20.13.0",
+    "@types/react-dom": "18.3.0",
     "apexcharts-clevision": "3.28.5",
+    "autoprefixer": "10.4.19",
+    "axios": "^1.7.2",
     "clsx": "^1.1.1",
+    "eslint": "9.4.0",
+    "eslint-config-next": "14.2.3",
+    "firebase": "^10.12.2",
     "mdi-material-ui": "^7.1.0",
     "next": "12.0.4",
     "nprogress": "^0.2.0",
+    "openai": "^4.47.3",
+    "postcss": "8.4.38",
     "react": "17.0.2",
     "react-apexcharts": "^1.3.9",
     "react-datepicker": "^4.5.0",
     "react-dom": "17.0.2",
     "react-perfect-scrollbar": "^1.5.8",
-    "react-popper": "^2.2.5"
+    "react-popper": "^2.2.5",
+    "tailwindcss": "3.4.3",
+    "typescript": "5.4.5"
   },
   "devDependencies": {
     "@types/node": "16.11.11",
     "@types/nprogress": "^0.2.0",
-    "@types/react": "17.0.37",
+    "@types/react": "^17.0.37",
     "@types/react-datepicker": "^4.3.2",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.11.0",

@@ -26,11 +26,18 @@
       ],
       "apexcharts/*": [
         "./node_modules/apexcharts-clevision/*"
-      ],
+      ]
     }
   },
   "include": [
-    "src"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/firebase/firebase.js",
+    "src/firebase/signup.js",
+    "src/firebase/app/signup/page.tsx",
+    "src/configs/firebaseConfig.ts"
   ],
   "exclude": [
     "node_modules"

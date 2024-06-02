@@ -30,6 +30,13 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // ** Global css styles
 import '../../styles/globals.css'
 
+// impot firebase config
+import app from '../configs/firebaseConfig'
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
+
+// ** Get the Firestore instance
+const auth = getAuth(app)
+
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
   Component: NextPage

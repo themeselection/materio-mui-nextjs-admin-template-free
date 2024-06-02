@@ -1,0 +1,25 @@
+[debug] [2024-06-02T07:39:52.272Z] ----------------------------------------------------------------------
+[debug] [2024-06-02T07:39:52.274Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js init functions
+[debug] [2024-06-02T07:39:52.274Z] CLI Version:   13.10.2
+[debug] [2024-06-02T07:39:52.274Z] Platform:      win32
+[debug] [2024-06-02T07:39:52.274Z] Node Version:  v18.19.0
+[debug] [2024-06-02T07:39:52.275Z] Time:          Sun Jun 02 2024 02:39:52 GMT-0500 (Central Daylight Time)
+[debug] [2024-06-02T07:39:52.275Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-06-02T07:39:52.332Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-06-02T07:39:52.333Z] > authorizing via signed-in user (mattjdaddi@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\mattj\Repos\cloudforgeTakeHome
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+

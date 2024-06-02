@@ -21,6 +21,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/'
     },
     {
+      title: 'Quotes',
+      icon: GoogleCirclesExtended,
+      path: '/quotes'
+    },
+    {
       title: 'Account Settings',
       icon: AccountCogOutline,
       path: '/account-settings'
