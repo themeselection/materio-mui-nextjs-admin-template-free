@@ -1,0 +1,23 @@
+.stepperCustomDot {
+  inline-size: 20px;
+  block-size: 20px;
+  border-width: 3px;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: var(--mui-palette-primary-main);
+
+  &.activeStepperCustomDot {
+    border-width: 5px;
+    border-color: var(--mui-palette-primary-main);
+    background-color: var(--mui-palette-common-white);
+  }
+
+  &.completedStepperCustomDot {
+    background-color: var(--mui-palette-primary-main);
+    border-color: var(--mui-palette-primary-main);
+  }
+}
+
+[data-mui-color-scheme='dark'] .activeStepperCustomDot {
+  background-color: var(--mui-palette-background-default);
+}

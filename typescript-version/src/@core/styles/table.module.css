@@ -1,0 +1,45 @@
+.table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+
+  [align='right'] > * {
+    text-align: end;
+  }
+  [align='center'] > * {
+    text-align: center;
+  }
+
+  thead {
+    text-transform: uppercase;
+    color: var(--mui-palette-text-primary);
+  }
+
+  th {
+    font-weight: 500;
+    text-align: start;
+  }
+
+  tbody {
+    color: var(--mui-palette-text-secondary);
+
+    tr:not(:last-child) {
+      border-block-end: 1px solid var(--border-color);
+    }
+  }
+}
+
+.cellWithInput input {
+  inline-size: 100%;
+  background-color: transparent;
+  font-size: inherit;
+  color: inherit;
+  border-radius: var(--mui-shape-customBorderRadius-sm);
+  padding-block: 6px;
+  padding-inline: 10px;
+  margin-inline: -10px;
+
+  &:focus-visible {
+    outline: 1px solid var(--mui-palette-primary-main);
+  }
+}
