@@ -1,0 +1,50 @@
+name: Deploy - Demos
+run-name: 🚀 Deploy - Demos
+
+on: workflow_dispatch
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    env:
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - name: ⚙️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: ⚙️ Set BRAND_NAME environment variable from repo name
+        run: echo BRAND_NAME=${{ github.event.repository.name }} | cut -d '-' -f1 >> $GITHUB_ENV
+
+      - name: ⬇️ Checkout template
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.BRAND_NAME }}/nextjs-mui-free
+
+      - name: ⬇️ Checkout scripts
+        uses: actions/checkout@v4
+        with:
+          repository: themeselection/automation-scripts
+          token: ${{ secrets.GH_PAT }}
+          path: automation-scripts
+
+      - name: ⬇️ Install packages in automation-scripts dir
+        working-directory: automation-scripts/nextjs
+        run: pnpm i
+
+      - name: ⬇️ Install packages in typescript version
+        working-directory: ${{ env.BRAND_NAME }}/nextjs-mui-free/typescript-version
+        run: pnpm i
+
+      - name: ⬇️ Install netlify CLI
+        working-directory: ${{ env.BRAND_NAME }}/nextjs-mui-free/typescript-version
+        run: pnpm i -D netlify-cli
+
+      - name: 🔌 Connect to Netlify Site
+        run: netlify link
+
+      - name: 🚀 Build & Deploy
+        working-directory: ${{ env.BRAND_NAME }}/nextjs-mui-free/typescript-version
+        run: pnpm netlify deploy --dir .next --prod --build
