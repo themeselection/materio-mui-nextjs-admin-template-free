@@ -1,0 +1,92 @@
+.table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  white-space: nowrap;
+
+  [align='right'] > * {
+    text-align: end;
+  }
+  [align='center'] > * {
+    text-align: center;
+  }
+
+  thead {
+    text-transform: uppercase;
+    color: var(--mui-palette-text-primary);
+
+    th {
+      font-weight: 500;
+      font-size: 0.8125rem;
+      letter-spacing: 0.2px;
+      line-height: 1.8462;
+      text-align: start;
+      block-size: 56px;
+      background-color: var(--mui-palette-customColors-tableHeaderBg);
+      &:not(:first-of-type):not(:last-of-type) {
+        padding-block: 0.5rem;
+        padding-inline: 1rem;
+      }
+      &:first-of-type {
+        &:not(:has(input[type='checkbox'])) {
+          padding-block: 0.5rem;
+          padding-inline: 1.25rem 1rem;
+        }
+        &:has(input[type='checkbox']) {
+          padding-inline-start: 0.6875rem;
+        }
+      }
+      &:last-of-type {
+        padding-block: 0.5rem;
+        padding-inline: 1rem 1.25rem;
+      }
+    }
+  }
+
+  tbody {
+    color: var(--mui-palette-text-secondary);
+
+    th,
+    td {
+      font-size: 0.9375rem;
+      line-height: 1.4667;
+      block-size: 50px;
+      &:not(:first-of-type):not(:last-of-type) {
+        padding-block: 0.5rem;
+        padding-inline: 1rem;
+      }
+      &:first-of-type {
+        &:not(:has(input[type='checkbox'])) {
+          padding-block: 0.5rem;
+          padding-inline: 1.25rem 1rem;
+        }
+        &:has(input[type='checkbox']) {
+          padding-inline-start: 0.6875rem;
+        }
+      }
+      &:last-of-type {
+        padding-block: 0.5rem;
+        padding-inline: 1rem 1.25rem;
+      }
+    }
+
+    tr:not(:last-child) {
+      border-block-end: 1px solid var(--border-color);
+    }
+  }
+}
+
+.cellWithInput input {
+  inline-size: 100%;
+  background-color: transparent;
+  font-size: inherit;
+  color: inherit;
+  border-radius: var(--mui-shape-customBorderRadius-sm);
+  padding-block: 6px;
+  padding-inline: 10px;
+  margin-inline: -10px;
+
+  &:focus-visible {
+    outline: 1px solid var(--mui-palette-primary-main);
+  }
+}
