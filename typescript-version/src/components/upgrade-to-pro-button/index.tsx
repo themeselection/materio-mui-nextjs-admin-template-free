@@ -19,8 +19,12 @@ import styles from './styles.module.css'
 const TooltipContent = () => {
   return (
     <Card>
-      <a href='https://themeselection.com/item-page' target='_blank' className='flex'>
-        <img src='' alt='Upgrade to Pro' className='w-full' />
+      <a href='https://themeselection.com/item/materio-mui-nextjs-admin-template' target='_blank' className='flex'>
+        <img
+          src='https://cdn.jsdelivr.net/gh/themeselection/ts-assets/materio/materio-mui-nextjs-admin-template/banner/banner.png'
+          alt='Upgrade to Pro'
+          className='w-full'
+        />
       </a>
       <CardHeader title={`${themeConfig.templateName} - MUI Next.js Admin Template`} />
       <CardContent>
@@ -33,7 +37,12 @@ const TooltipContent = () => {
         <Button variant='contained' href={process.env.NEXT_PUBLIC_PRO_URL as string} target='_blank'>
           Demo
         </Button>
-        <Button variant='outlined' href='https://themeselection.com/item-page' target='_blank' className='mis-4'>
+        <Button
+          variant='outlined'
+          href='https://themeselection.com/item/materio-mui-nextjs-admin-template'
+          target='_blank'
+          className='mis-4'
+        >
           Download
         </Button>
       </CardActions>
@@ -49,7 +58,12 @@ const UpgradeToProButton = () => {
         placement='top-end'
         slotProps={{ tooltip: { style: { padding: 0, backgroundColor: 'transparent', maxInlineSize: 400 } } }}
       >
-        <a className={styles.button} role='button' href='https://themeselection.com/item-page' target='_blank'>
+        <a
+          className={styles.button}
+          role='button'
+          href='https://themeselection.com/item/materio-mui-nextjs-admin-template'
+          target='_blank'
+        >
           Upgrade to Pro
           <span className={styles.buttonInner} />
         </a>

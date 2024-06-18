@@ -1,12 +1,14 @@
 // Component Imports
 import Login from '@views/Login'
 
+// Server Action Imports
+import { getServerMode } from '@core/utils/serverHelpers'
+
 const LoginPage = () => {
-  return (
-    <div className='flex bs-full justify-center items-center'>
-      <Login />
-    </div>
-  )
+  // Vars
+  const mode = getServerMode()
+
+  return <Login mode={mode} />
 }
 
 export default LoginPage

@@ -15,7 +15,7 @@ const CardSupport = () => {
         <Typography variant='h5' className='mbe-2'>
           Support
         </Typography>
-        <Typography color='text.secondary' className='mbe-4'>
+        <Typography className='mbe-4'>
           According to us blisters are a very common thing and we come across them very often in our daily lives. It is
           a very common occurrence like cold or fever depending upon your lifestyle.
         </Typography>

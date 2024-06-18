@@ -42,12 +42,14 @@ const CardMobile = () => {
             <Typography variant='h5' className='mbe-2'>
               Apple iPhone 11 Pro
             </Typography>
-            <Typography className='mbe-2' color='text.secondary'>
+            <Typography className='mbe-2'>
               Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
             </Typography>
             <div className='flex gap-1'>
-              <Typography>Price:</Typography>
-              <Typography className='font-medium'>$899</Typography>
+              <Typography color='text.primary'>Price:</Typography>
+              <Typography className='font-medium' color='text.primary'>
+                $899
+              </Typography>
             </div>
           </CardContent>
           <CardActions className='justify-between card-actions-dense'>
@@ -58,7 +60,7 @@ const CardMobile = () => {
               {...(open && { 'aria-expanded': true, 'aria-controls': 'share-menu' })}
               onClick={handleClick}
             >
-              <i className='ri-share-line text-xl' />
+              <i className='ri-share-line' />
             </IconButton>
             <Menu
               anchorEl={anchorEl}

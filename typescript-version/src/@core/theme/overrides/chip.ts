@@ -124,7 +124,66 @@ const chip: Theme['components'] = {
           }
         }
       }
-    ]
+    ],
+    styleOverrides: {
+      root: ({ ownerState, theme }) => ({
+        ...theme.typography.body2,
+        fontWeight: theme.typography.fontWeightMedium,
+
+        '& .MuiChip-deleteIcon': {
+          ...(ownerState.size === 'small'
+            ? {
+                fontSize: '1rem',
+                marginInlineEnd: theme.spacing(1),
+                marginInlineStart: theme.spacing(-2)
+              }
+            : {
+                fontSize: '1.25rem',
+                marginInlineEnd: theme.spacing(2),
+                marginInlineStart: theme.spacing(-3)
+              })
+        },
+        '& .MuiChip-avatar, & .MuiChip-icon': {
+          '& i, & svg': {
+            ...(ownerState.size === 'small'
+              ? {
+                  fontSize: 13
+                }
+              : {
+                  fontSize: 15
+                })
+          },
+          ...(ownerState.size === 'small'
+            ? {
+                height: 16,
+                width: 16,
+                marginInlineStart: theme.spacing(1),
+                marginInlineEnd: theme.spacing(-2)
+              }
+            : {
+                height: 20,
+                width: 20,
+                marginInlineStart: theme.spacing(2),
+                marginInlineEnd: theme.spacing(-3)
+              })
+        }
+      }),
+      label: ({ ownerState, theme }) => ({
+        ...(ownerState.size === 'small'
+          ? {
+              paddingInline: theme.spacing(3)
+            }
+          : {
+              paddingInline: theme.spacing(4)
+            })
+      }),
+      iconMedium: {
+        fontSize: '1.25rem'
+      },
+      iconSmall: {
+        fontSize: '1rem'
+      }
+    }
   }
 }
 

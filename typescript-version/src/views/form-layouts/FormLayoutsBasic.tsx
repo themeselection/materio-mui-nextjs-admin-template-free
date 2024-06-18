@@ -31,7 +31,7 @@ const FormLayoutsBasic = () => {
       <CardHeader title='Basic' />
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
-          <Grid container>
+          <Grid container spacing={5}>
             <Grid item xs={12}>
               <TextField fullWidth label='Name' placeholder='John Doe' />
             </Grid>
@@ -56,6 +56,7 @@ const FormLayoutsBasic = () => {
                   endAdornment: (
                     <InputAdornment position='end'>
                       <IconButton
+                        size='small'
                         edge='end'
                         onClick={handleClickShowPassword}
                         onMouseDown={e => e.preventDefault()}
@@ -80,6 +81,7 @@ const FormLayoutsBasic = () => {
                   endAdornment: (
                     <InputAdornment position='end'>
                       <IconButton
+                        size='small'
                         edge='end'
                         onClick={handleClickShowConfirmPassword}
                         onMouseDown={e => e.preventDefault()}
@@ -98,7 +100,7 @@ const FormLayoutsBasic = () => {
                   Get Started!
                 </Button>
                 <div className='flex items-center justify-center gap-2'>
-                  <Typography>Already have an account?</Typography>
+                  <Typography color='text.primary'>Already have an account?</Typography>
                   <Link href='/' onClick={e => e.preventDefault()} className='text-primary'>
                     Log In
                   </Link>

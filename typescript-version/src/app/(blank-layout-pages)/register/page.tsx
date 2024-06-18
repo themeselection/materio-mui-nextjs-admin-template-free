@@ -1,12 +1,14 @@
 // Component Imports
 import Register from '@views/Register'
 
+// Server Action Imports
+import { getServerMode } from '@core/utils/serverHelpers'
+
 const RegisterPage = () => {
-  return (
-    <div className='flex bs-full justify-center items-center'>
-      <Register />
-    </div>
-  )
+  // Vars
+  const mode = getServerMode()
+
+  return <Register mode={mode} />
 }
 
 export default RegisterPage

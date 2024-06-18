@@ -15,7 +15,7 @@ const CardLifetimeMembership = () => {
             <Typography variant='h5' className='mbe-2'>
               Lifetime Membership
             </Typography>
-            <Typography color='text.secondary'>
+            <Typography>
               Here, I focus on a range of items and features that we use in life without giving them a second thought
               such as Coca Cola, body muscles and holding ones own breath. Though, most of these notes are not
               fundamentally necessary, they are such that you can use them for a good laugh, at a drinks party or for
@@ -28,13 +28,13 @@ const CardLifetimeMembership = () => {
                   <div className='flex'>
                     <i className='ri-lock-unlock-line text-xl text-textSecondary' />
                   </div>
-                  <Typography color='text.secondary'>Full Access</Typography>
+                  <Typography>Full Access</Typography>
                 </div>
                 <div className='flex items-center gap-2.5'>
                   <div className='flex'>
                     <i className='ri-user-3-line text-xl text-textSecondary' />
                   </div>
-                  <Typography color='text.secondary'>15 Members</Typography>
+                  <Typography>15 Members</Typography>
                 </div>
               </Grid>
               <Grid item xs={12} sm={6} className='flex flex-col max-sm:mbs-[26px] sm:pis-5 sm:border-is gap-[26px]'>
@@ -42,13 +42,13 @@ const CardLifetimeMembership = () => {
                   <div className='flex'>
                     <i className='ri-lock-unlock-line text-xl text-textSecondary' />
                   </div>
-                  <Typography color='text.secondary'>Access all Features</Typography>
+                  <Typography>Access all Features</Typography>
                 </div>
                 <div className='flex items-center gap-2.5'>
                   <div className='flex'>
                     <i className='ri-user-3-line text-xl text-textSecondary' />
                   </div>
-                  <Typography color='text.secondary'>Lifetime Free Update</Typography>
+                  <Typography>Lifetime Free Update</Typography>
                 </div>
               </Grid>
             </Grid>
@@ -62,7 +62,7 @@ const CardLifetimeMembership = () => {
                 <Typography variant='h1'>899</Typography>
                 <Typography variant='h5'>USD</Typography>
               </div>
-              <Typography color='text.secondary' className='flex flex-col text-center'>
+              <Typography className='flex flex-col text-center'>
                 <span>5 Tips For Offshore</span>
                 <span>Software Development</span>
               </Typography>

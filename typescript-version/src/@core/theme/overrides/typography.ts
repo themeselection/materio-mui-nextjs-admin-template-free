@@ -35,15 +35,15 @@ const typography: Theme['components'] = {
       },
       {
         props: { variant: 'subtitle1' },
-        style: { color: 'var(--mui-palette-text-primary)' }
+        style: { color: 'rgb(var(--mui-palette-text-primaryChannel) / 0.55)' }
       },
       {
         props: { variant: 'subtitle2' },
-        style: { color: 'var(--mui-palette-text-secondary)' }
+        style: { color: 'rgb(var(--mui-palette-text-primaryChannel) / 0.55)' }
       },
       {
         props: { variant: 'body1' },
-        style: { color: 'var(--mui-palette-text-primary)' }
+        style: { color: 'var(--mui-palette-text-secondary)' }
       },
       {
         props: { variant: 'body2' },
@@ -55,11 +55,11 @@ const typography: Theme['components'] = {
       },
       {
         props: { variant: 'caption' },
-        style: { color: 'var(--mui-palette-text-secondary)' }
+        style: { color: 'var(--mui-palette-text-disabled)', display: 'inline-block' }
       },
       {
         props: { variant: 'overline' },
-        style: { color: 'var(--mui-palette-text-secondary)' }
+        style: { color: 'var(--mui-palette-text-primary)', display: 'inline-block' }
       }
     ]
   }

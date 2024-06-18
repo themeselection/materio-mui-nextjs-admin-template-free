@@ -59,7 +59,7 @@ const Notifications = () => {
         subheader={
           <>
             We need permission from your browser to show notifications.
-            <Link className='text-primary'>Request Permission</Link>
+            <Link className='text-primary'> Request Permission</Link>
           </>
         }
       />
@@ -74,11 +74,11 @@ const Notifications = () => {
                 <th>App</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='border-be'>
               {tableData.map((data, index) => (
                 <tr key={index}>
                   <td>
-                    <Typography>{data.type}</Typography>
+                    <Typography color='text.primary'>{data.type}</Typography>
                   </td>
                   <td>
                     <Checkbox defaultChecked={data.email} />
@@ -95,8 +95,8 @@ const Notifications = () => {
           </table>
         </div>
         <CardContent>
-          <Typography>When should we send you notifications?</Typography>
-          <Grid container>
+          <Typography className='mbe-6 font-medium'>When should we send you notifications?</Typography>
+          <Grid container spacing={6}>
             <Grid item xs={12} sm={6} md={4}>
               <Select fullWidth defaultValue='online'>
                 <MenuItem value='online'>Only when I&#39;m online</MenuItem>

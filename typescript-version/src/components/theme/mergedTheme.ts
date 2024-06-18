@@ -23,7 +23,7 @@ const mergedTheme = (settings: Settings, mode: SystemMode, direction: Theme['dir
     // Write your overrides here.
   } as Theme
 
-  return deepmerge(coreTheme(settings, mode, direction), userTheme)
+  return deepmerge(coreTheme(mode, direction), userTheme)
 }
 
 export default mergedTheme

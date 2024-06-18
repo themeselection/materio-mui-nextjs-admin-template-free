@@ -7,13 +7,17 @@
   --border-color: var(--mui-palette-divider);
   --primary-color: var(--mui-palette-primary-main);
   --background-color: var(--mui-palette-background-default);
-  --background-color-rgb: var(--mui-palette-background-defaultChannel);
   --header-height: 64px;
   --header-z-index: var(--mui-zIndex-appBar);
   --footer-z-index: 10;
   --customizer-z-index: var(--mui-zIndex-drawer);
   --search-z-index: var(--mui-zIndex-tooltip);
   --drawer-z-index: var(--mui-zIndex-drawer);
+  --backdrop-color: rgb(var(--mui-mainColorChannels-light) / 0.5);
+}
+
+[data-mui-color-scheme='dark'] {
+  --backdrop-color: rgb(21 16 43 / 0.6);
 }
 
 *,

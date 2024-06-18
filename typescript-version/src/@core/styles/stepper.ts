@@ -22,18 +22,19 @@ const StepperWrapper = styled(Box)<BoxProps>(({ theme }) => {
       },
       '& .step-number': {
         ...theme.typography.h4,
-        fontWeight: 'bold',
-        marginRight: theme.spacing(2.5)
+        marginRight: theme.spacing(2)
       },
       '&:not(:has(.step-subtitle)) .step-number': {
         ...theme.typography.h6
       },
       '& .step-title': {
         ...theme.typography.body1,
+        letterSpacing: 0.15,
         fontWeight: 500
       },
       '& .step-subtitle': {
-        ...theme.typography.body2
+        ...theme.typography.body2,
+        color: 'var(--mui-palette-text-secondary)'
       },
       '& .MuiStepLabel-root.Mui-disabled': {
         '& .step-number': {
@@ -57,20 +58,17 @@ const StepperWrapper = styled(Box)<BoxProps>(({ theme }) => {
         }
       },
       '&.Mui-disabled .MuiStepConnector-line': {
-        borderColor: 'rgb(var(--mui-palette-primary-mainChannel) / 0.12)'
+        borderColor: 'var(--mui-palette-primary-lightOpacity)'
       }
     },
     '& .MuiStepper-alternativeLabel': {
       '& .MuiStepConnector-root': {
-        top: 10
+        top: 9
       },
       '& .MuiStepLabel-labelContainer': {
         display: 'flex',
         alignItems: 'center',
-        flexDirection: 'column',
-        '& > * + *': {
-          marginTop: theme.spacing(1)
-        }
+        flexDirection: 'column'
       }
     },
     '& .MuiStepper-vertical': {

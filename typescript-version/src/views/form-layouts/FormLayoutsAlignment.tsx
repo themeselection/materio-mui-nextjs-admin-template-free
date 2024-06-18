@@ -27,7 +27,7 @@ const FormLayoutsAlignment = () => {
       <CardHeader title='Form Alignment' />
       <CardContent className='flex flex-col items-center justify-center bs-[500px]'>
         <form onSubmit={e => e.preventDefault()} className='p-12 max-is-[400px] border rounded'>
-          <Grid container>
+          <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant='h5'>Sign In</Typography>
             </Grid>
@@ -45,6 +45,7 @@ const FormLayoutsAlignment = () => {
                   endAdornment: (
                     <InputAdornment position='end'>
                       <IconButton
+                        size='small'
                         edge='end'
                         onClick={handleClickShowPassword}
                         onMouseDown={e => e.preventDefault()}

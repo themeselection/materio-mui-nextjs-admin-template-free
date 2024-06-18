@@ -11,9 +11,9 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'Demo: Master - NextJS Dashboard Free',
+  title: 'Demo: Materio - NextJS Dashboard Free',
   description:
-    'Develop next-level web apps with Master Dashboard Free - NextJS. Now, updated with lightning-fast routing powered by MUI and App router.'
+    'Develop next-level web apps with Materio Dashboard Free - NextJS. Now, updated with lightning-fast routing powered by MUI and App router.'
 }
 
 const RootLayout = ({ children }: ChildrenType) => {

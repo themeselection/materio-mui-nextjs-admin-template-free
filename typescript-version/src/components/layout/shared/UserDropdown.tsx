@@ -71,7 +71,7 @@ const UserDropdown = () => {
           alt='John Doe'
           src='/images/avatars/1.png'
           onClick={handleDropdownOpen}
-          className='cursor-pointer bs-10 is-10'
+          className='cursor-pointer bs-[38px] is-[38px]'
         />
       </Badge>
       <Popper
@@ -89,40 +89,44 @@ const UserDropdown = () => {
               transformOrigin: placement === 'bottom-end' ? 'right top' : 'left top'
             }}
           >
-            <Paper elevation={8}>
+            <Paper className='shadow-lg'>
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
-                  <div className='flex items-center plb-1.5 pli-4 gap-2.5' tabIndex={-1}>
+                  <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
-                      <Typography>John Doe</Typography>
-                      <Typography>Admin</Typography>
+                      <Typography className='font-medium' color='text.primary'>
+                        John Doe
+                      </Typography>
+                      <Typography variant='caption'>Admin</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='gap-2' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-user-3-line' />
-                    <Typography>My Profile</Typography>
+                    <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
-                  <MenuItem className='gap-2' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-settings-4-line' />
-                    <Typography>Settings</Typography>
+                    <Typography color='text.primary'>Settings</Typography>
                   </MenuItem>
-                  <MenuItem className='gap-2' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-money-dollar-circle-line' />
-                    <Typography>Pricing</Typography>
+                    <Typography color='text.primary'>Pricing</Typography>
                   </MenuItem>
-                  <MenuItem className='gap-2' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-question-line' />
-                    <Typography>FAQ</Typography>
+                    <Typography color='text.primary'>FAQ</Typography>
                   </MenuItem>
-                  <div className='flex items-center plb-1.5 pli-4'>
+                  <div className='flex items-center plb-2 pli-4'>
                     <Button
                       fullWidth
                       variant='contained'
                       color='error'
+                      size='small'
                       endIcon={<i className='ri-logout-box-r-line' />}
                       onClick={e => handleDropdownClose(e, '/login')}
+                      sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
                       Logout
                     </Button>

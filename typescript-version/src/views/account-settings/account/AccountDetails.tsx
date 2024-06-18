@@ -91,12 +91,12 @@ const AccountDetails = () => {
 
   return (
     <Card>
-      <CardContent>
-        <div className='flex max-sm:flex-col items-center'>
-          <img height={120} width={120} className='rounded' src={imgSrc} alt='Profile' />
+      <CardContent className='mbe-5'>
+        <div className='flex max-sm:flex-col items-center gap-6'>
+          <img height={100} width={100} className='rounded' src={imgSrc} alt='Profile' />
           <div className='flex flex-grow flex-col gap-4'>
             <div className='flex flex-col sm:flex-row gap-4'>
-              <Button component='label' variant='contained' htmlFor='account-settings-upload-image'>
+              <Button component='label' size='small' variant='contained' htmlFor='account-settings-upload-image'>
                 Upload New Photo
                 <input
                   hidden
@@ -107,7 +107,7 @@ const AccountDetails = () => {
                   id='account-settings-upload-image'
                 />
               </Button>
-              <Button variant='outlined' color='secondary' onClick={handleFileInputReset}>
+              <Button size='small' variant='outlined' color='error' onClick={handleFileInputReset}>
                 Reset
               </Button>
             </div>
@@ -117,7 +117,7 @@ const AccountDetails = () => {
       </CardContent>
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
-          <Grid container>
+          <Grid container spacing={5}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth

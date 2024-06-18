@@ -14,9 +14,7 @@ const CardWatch = () => {
           Apple Watch
         </Typography>
         <Typography className='mbe-2'>$249.40</Typography>
-        <Typography color='text.secondary'>
-          3.1GHz 6-core 10th-generation Intel Core i5 processor, Turbo Boost up to 4.5GHz
-        </Typography>
+        <Typography>3.1GHz 6-core 10th-generation Intel Core i5 processor, Turbo Boost up to 4.5GHz</Typography>
       </CardContent>
       <Button variant='contained' fullWidth className='rounded-none'>
         Add to Cart
