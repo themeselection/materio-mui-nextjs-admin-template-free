@@ -1,65 +1,125 @@
 <p align="center"></p>
 
 <p align="center">
-   <a href="{ts_product_page_url}" target="_blank">
-      <img src="{svg_logo_url_from_current_repo}" alt="{template_name}-logo" width="60px" height="auto">
+   <a href="https://themeselection.com/item/materio-free-mui-nextjs-admin-template" target="_blank">
+      <img src="https://cdn.themeselection.com/ts-assets/materio/logo/logo.png" alt="materio-logo" width="60px" height="auto">
    </a>
 </p>
 
 <h1 align="center">
-   <a href="{ts_product_page_url}" target="_blank" align="center">
-      {template_name_titlized}
+   <a href="https://themeselection.com/item/materio-free-mui-nextjs-admin-template" target="_blank" align="center">
+      Materio - Free MUI NextJS Admin Template
    </a>
 </h1>
 
-<p align="center">{template_punchline}</p>
+<p align="center">Most Powerful & Comprehensive Free MUI NextJS Admin Dashboard Template built for developers!</p>
 
 <p align="center">
-   <a href="{licence_url_of_current_repo}">
-      <img src="https://img.shields.io/github/license/themeselection/{repo_name_from_url}" alt="license">
+   <a href="https://github.com/themeselection/materio-mui-nextjs-admin-template-free/blob/main/LICENSE">
+      <img src="https://img.shields.io/github/license/themeselection/materio-mui-nextjs-admin-template-free" alt="license">
    </a>
-   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/themeselection/{repo_name_from_url}/Deploy">
-   <a href="{repo_url}/releases">
-    <img src="https://img.shields.io/github/release/themeselection/{repo_name_from_url}.svg" alt="GitHub release">
+   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/themeselection/materio-mui-nextjs-admin-template-free/deploy-demos.yml">
+   <a href="https://github.com/themeselection/materio-mui-nextjs-admin-template-free/releases">
+    <img src="https://img.shields.io/github/release/themeselection/materio-mui-nextjs-admin-template-free.svg" alt="GitHub release">
   </a>
    <a href="https://twitter.com/Theme_Selection" target="_blank">
       <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/Theme_Selection">
    </a>
 </p>
 
-<kbd>[![Materio - Vuetify VueJS Free Admin Template Demo Screenshot]({product_demo_image_url})]({ts_product_page_url})</kbd>
+<kbd>[![Materio - Free MUI NextJS Admin Template Demo Screenshot](https://cdn.themeselection.com/ts-assets/materio/materio-mui-nextjs-admin-template-free/marketing/materio-mui-nextjs-admin-template-free-github.png)](https://themeselection.com/item/materio-free-mui-nextjs-admin-template)</kbd>
 
 ## Introduction 🚀
 
-{introduction}
+If you're a developer looking for the most Powerful & comprehensive [Free MUI NextJS Admin Dashboard Template](https://themeselection.com/item/materio-free-mui-nextjs-admin-template) built for developers, rich with features, and highly customizable, look no further than Materio. We've followed the highest industry standards to bring you the very best admin template that is not only easy to use but highly scalable. Offering ultimate convenience and flexibility, you'll be able to build whatever application you want with very little hassle.
 
-[View Demo]({direct_demo_url__NOT_PRODUCT_PAGE_URL})
+Build premium quality applications with ease. Use one of the most innovative [NextJS admin templates](https://themeselection.com/item/category/next-js-admin-template) to create eye-catching, high-quality WebApps. Your apps will be completely responsive, ensuring they'll look stunning and function flawlessly on desktops, tablets, and mobile devices.
+
+Materio provides a template with Javascript and Typescript.
+
+[View Demo](https://demos.themeselection.com/materio-mui-nextjs-admin-template-free/demo)
 
 ## Installation ⚒️
 
-{installation steps}
+Installing and running the template is super easy in Materio, please follow these steps and you should be ready to rock 🤘:
+
+1. Make sure you have installed Node.js (LTS). If Node.js is already installed in your system, make sure the installed version is LTS (and not the latest version)
+2. Navigate to the `typescript-version` or `javascript-version` folder and run the following command to install our local dependencies listed in the `package.json` file. You can use `pnpm`, `yarn` or `npm` as per your preference
+
+   > It is recommended to use pnpm for better dependency management
+
+   ```bash
+   # For pnpm (recommended)
+   pnpm install
+
+   # For yarn
+   yarn install
+
+   # For npm
+   npm install
+   ```
+
+3. Rename the `.env.example` file to `.env` file
+4. Now, you are ready to start the server with the help of the command shown below. Open [http://localhost:3000](http://localhost:3000) to check your development 🚀.
+
+   ```bash
+   # For pnpm (recommended)
+   pnpm dev
+
+   # For yarn
+   yarn dev
+
+   # For npm
+   npm run dev
+   ```
 
 ## What's Included 📦
 
-{template_includes}
+- Layouts
+  - Blank
+  - Full
+  - Boxed
+- Dashboard
+- Pages
+  - Account Settings
+  - Login
+  - Register
+  - Forgot Password
+  - Error
+  - Under Maintenance
+- Iconify Icons
+- Basic Cards
+- Form Layouts
 
 ## What's in Premium Version 💎
 
-| {template_single_word_name} Free Version        | {template_single_word_name} Premium Version       |
+| Materio Free Version        | Materio Premium Version       |
 | ----------------------------------------------- | :------------------------------------------------ |
-| [Demo]({direct_demo_url__NOT_PRODUCT_PAGE_URL}) | [Demo]({product_landing_page_url})                |
-| [Download]({ts_product_page_url})               | [Purchase]({ts_premium_product_page_url})                 |
-| Single vertical menu                            | Vertical (+ vertical collapsed) & Horizontal menu |
+| [Demo](https://demos.themeselection.com/materio-mui-nextjs-admin-template-free/demo) | [Demo](https://demos.themeselection.com/materio-mui-nextjs-admin-template/demo-1)  |
+| [Download](https://themeselection.com/item/materio-free-mui-nextjs-admin-template)   | [Purchase](https://themeselection.com/item/materio-free-mui-nextjs-admin-template) |
+| Single vertical menu                 | Vertical (+ vertical collapsed) & Horizontal menu                   |
+| Default skin                         | Default, bordered & semi-dark skin                                  |
+| 1 simple dashboard                   | 5 niche dashboards                                                  |
+| -                                    | 10 Applications including eCommerce, academy, email, chat, calendar, invoice, kanban, etc. |
+| Simple form layouts                  | Advanced form layouts, form validation & form wizard                |
+| Basic cards                          | Basic, advanced, statistics, charts, gamification & action cards    |
+| -                                    | Quick search - quickly navigate between pages (with hotkey support) |
+| Basic tables                         | Advanced tables                                                     |
+| 1 chart library                      | 2 chart libraries                                                   |
+| 6 pages                              | 35+ pages                                                           |
+| Simple navbar & footer               | Multiple navbar & footer options                                    |
+| -                                    | Authentication using NextAuth                                       |
+| -                                    | RTL (right-to-left) support                                         |
+| -                                    | Redux toolkit                                                       |
+| -                                    | Multi-lingual support                                               |
+| -                                    | Starter-kit                                                         |
+| -                                    | Customizer drawer to check options in live app                      |
+| Limited customization                | Endless customization possibilities                                 |
+| Regular support                      | Priority support                                                    |
 
 ## Documentation 📜
 
-<!-- If you have docs in wiki then use below line -->
-
-Check GitHub [Wiki]({repo_url}/wiki) of this repo
-
-<!-- If you have live docs then use below line -->
-
-Check out our live [Documentation]({live_docs_link})
+Check out our live [Documentation](https://demos.themeselection.com/materio-mui-nextjs-admin-template/documentation)
 
 ## Browser Support 🖥️
 
@@ -106,30 +166,24 @@ For free products, enjoy community support via GitHub issues. Upgrade to Premium
 
 <p>
    <!-- Figma -->
-   <a href="{pro_figma_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/0318a6c8-4f9b-4cf6-af5e-d357f909ea2b"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-figma-admin-dashboard-ui-kit" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/0318a6c8-4f9b-4cf6-af5e-d357f909ea2b"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"></picture></img></a>&nbsp;&nbsp;
    <!-- HTML -->
-   <a href="{pro_html_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/5fe77c46-2e4c-475a-8dec-e30e2badddee"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-dashboard-pro-bootstrap" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/5fe77c46-2e4c-475a-8dec-e30e2badddee"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"></picture></img></a>&nbsp;&nbsp;
    <!-- HTML + Laravel -->
-   <a href="{pro_html_laravel_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/efe420e4-9863-41b7-9eda-47ea94f21a62"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"><img width="auto" height="74px" alt="html_laravel" src="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-dashboard-pro-laravel" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/efe420e4-9863-41b7-9eda-47ea94f21a62"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"><img width="auto" height="74px" alt="html_laravel" src="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"></picture></img></a>&nbsp;&nbsp;
    <!-- HTML + Django -->
-   <a href="{pro_html_django_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/3c87d33b-1223-4aaa-a652-388dcb714c98"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"><img width="auto" height="74px" alt="html_django" src="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-dashboard-pro-django" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/3c87d33b-1223-4aaa-a652-388dcb714c98"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"><img width="auto" height="74px" alt="html_django" src="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"></picture></img></a>&nbsp;&nbsp;
    <!-- .Net Core -->
-   <a href="{pro_net_core_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/6327fd7b-9c54-4189-a852-28551ad0e002"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"><img width="auto" height="74px" alt="net_core" src="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-aspnet-core-mvc-admin-template" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/6327fd7b-9c54-4189-a852-28551ad0e002"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"><img width="auto" height="74px" alt="net_core" src="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"></picture></img></a>&nbsp;&nbsp;
    <!-- NextJS -->
-   <a href="{pro_nextjs_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/66344629-6d21-4f92-9078-f479b39cb34e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"><img width="auto" height="74px" alt="next.js" src="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"></picture></img></a>&nbsp;&nbsp;
-   <!-- React -->
-   <a href="{pro_react_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/3877046e-c652-4b3d-99e9-2e134da1d6cf"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/8c8c940e-d8f9-4213-a7f7-f8bc4968f169"><img width="auto" height="74px" alt="react" src="https://github.com/microsoft/vscode/assets/47495003/8c8c940e-d8f9-4213-a7f7-f8bc4968f169"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-mui-nextjs-admin-template" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/66344629-6d21-4f92-9078-f479b39cb34e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"><img width="auto" height="74px" alt="next.js" src="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"></picture></img></a>&nbsp;&nbsp;
    <!-- Vue -->
-   <a href="{pro_vue_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/881bbbb8-d1c9-421c-9bce-4ea43dfa9e6e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"><img width="auto" height="74px" alt="vue" src="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-vuetify-vuejs-admin-template" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/881bbbb8-d1c9-421c-9bce-4ea43dfa9e6e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"><img width="auto" height="74px" alt="vue" src="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"></picture></img></a>&nbsp;&nbsp;
    <!-- Vue + Laravel -->
-   <a href="{pro_vue_laravel_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/20b6428e-3fa5-4f80-a389-9e4cd732c2de"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"><img width="auto" height="74px" alt="vue_laravel" src="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-vuetify-vuejs-laravel-admin-template" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/20b6428e-3fa5-4f80-a389-9e4cd732c2de"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"><img width="auto" height="74px" alt="vue_laravel" src="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"></picture></img></a>&nbsp;&nbsp;
    <!-- Nuxt -->
-   <a href="{pro_nuxt_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/d9d3cf2e-4dc5-49fe-b146-b80ef010cb57"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/f18ba562-6bba-4a55-83ac-962ecefa636f"><img width="auto" height="74px" alt="nuxt" src="https://github.com/microsoft/vscode/assets/47495003/f18ba562-6bba-4a55-83ac-962ecefa636f"></picture></img></a>&nbsp;&nbsp;
-   <!-- Angular -->
-   <a href="{pro_angular_version_item_page_link_on_themeselection}" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/da7f0abe-9f83-4205-b691-bc8d2ffef59b"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/9ebeb520-442a-4047-9000-5b13d0e6c000"><img width="auto" height="74px" alt="angular" src="https://github.com/microsoft/vscode/assets/47495003/9ebeb520-442a-4047-9000-5b13d0e6c000"></picture></img></a>&nbsp;&nbsp;
+   <a href="https://themeselection.com/item/materio-vuetify-nuxtjs-admin-template" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/d9d3cf2e-4dc5-49fe-b146-b80ef010cb57"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/f18ba562-6bba-4a55-83ac-962ecefa636f"><img width="auto" height="74px" alt="nuxt" src="https://github.com/microsoft/vscode/assets/47495003/f18ba562-6bba-4a55-83ac-962ecefa636f"></picture></img></a>&nbsp;&nbsp;
 </p>
-
-<!-- Add other pro variants here. You can get the logo URL from here: https://icones.js.org/collection/logos -->
 
 ## Looking For Premium Admin Templates ?? 👀
 
