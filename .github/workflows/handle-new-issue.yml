@@ -1,0 +1,19 @@
+name: 'Handle new issue'
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  handle_new_issue:
+    runs-on: ubuntu-latest
+    name: Handle new issue
+    steps:
+      - name: Find duplicates
+        uses: wow-actions/potential-duplicates@v1.0.8
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          label: duplicate
+          comment: >
+            Potential duplicates: {{#issues}}
+              - #{{ number }} _({{ accuracy }}% Match)_
+            {{/issues}}

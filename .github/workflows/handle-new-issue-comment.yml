@@ -1,0 +1,14 @@
+name: 'Handle new issue comment'
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  handle_new_issue_comment:
+    runs-on: ubuntu-latest
+    name: Handle new issue comment
+    steps:
+      - name: Toggle awaiting-reply label
+        uses: jd-solanki/gh-action-toggle-awaiting-reply-label@v2.1.0
+        with:
+          label: awaiting-reply
