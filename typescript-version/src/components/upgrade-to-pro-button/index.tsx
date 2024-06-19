@@ -21,7 +21,7 @@ const TooltipContent = () => {
     <Card>
       <a href='https://themeselection.com/item/materio-mui-nextjs-admin-template' target='_blank' className='flex'>
         <img
-          src='https://cdn.jsdelivr.net/gh/themeselection/ts-assets/materio/materio-mui-nextjs-admin-template/banner/banner.png'
+          src='https://cdn.themeselection.com/ts-assets/materio/materio-mui-nextjs-admin-template/banner/banner.png'
           alt='Upgrade to Pro'
           className='w-full'
         />
