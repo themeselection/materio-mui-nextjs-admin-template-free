@@ -35,9 +35,30 @@ If you're a developer looking for the most Powerful & comprehensive [Free MUI Ne
 
 Build premium quality applications with ease. Use one of the most innovative [NextJS admin templates](https://themeselection.com/item/category/next-js-admin-template) to create eye-catching, high-quality WebApps. Your apps will be completely responsive, ensuring they'll look stunning and function flawlessly on desktops, tablets, and mobile devices.
 
-Materio provides a template with Javascript and Typescript.
+Materio provides a template with TypeScript and JavaScript.
 
 [View Demo](https://demos.themeselection.com/materio-mui-nextjs-admin-template-free/demo)
+
+## Features 📋
+
+- ⚡ [Next.js](https://nextjs.org) with App Router support
+- 💎 Integrated with [MUI](https://mui.com) & [Tailwind CSS](https://tailwindcss.com)
+- ✅ [TypeScript](https://www.typescriptlang.org) & JavaScript Support
+- 📏 Linter with [ESLint](https://eslint.org)
+- 💖 Code Formatter with [Prettier](https://prettier.io)
+- 🗂 VSCode configuration: Settings, Extensions and Custom Snippets
+- 💡 Absolute Imports with aliases
+- ☕ Minify HTML & CSS
+- 💨 Live reload
+- ✅ Cache busting
+- 🛠️ Easy to customize
+- 😎 SEO-friendly
+- 🚀 Production-ready
+
+## Requirements ✅
+
+- Node.js LTS version (not current version)
+- npm
 
 ## Installation ⚒️
 
@@ -120,6 +141,10 @@ Installing and running the template is super easy in Materio, please follow thes
 ## Documentation 📜
 
 Check out our live [Documentation](https://demos.themeselection.com/materio-mui-nextjs-admin-template/documentation)
+
+## Deployment 🚀
+
+Check out our [Deployment docs](https://demos.themeselection.com/materio-mui-nextjs-admin-template/documentation/docs/guide/deployment)
 
 ## Browser Support 🖥️
 
