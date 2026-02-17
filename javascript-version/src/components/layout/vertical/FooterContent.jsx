@@ -22,15 +22,15 @@ const FooterContent = () => {
     >
       <p>
         <span>{`© ${new Date().getFullYear()}, Made with `}</span>
-        <span>{`❤️`}</span>
+        <span>{``}</span>
         <span>{` by `}</span>
-        <Link href='https://themeselection.com' target='_blank' className='text-primary'>
-          ThemeSelection
+        <Link href='https://sabiaka.github.io/G3_webapp_front_2025/' target='_blank' className='text-primary'>
+          生産管理システム開発部 生産電子情報2025
         </Link>
       </p>
       {!isBreakpointReached && (
         <div className='flex items-center gap-4'>
-          <Link href='https://themeselection.com/license' target='_blank' className='text-primary'>
+          {/* <Link href='https://themeselection.com/license' target='_blank' className='text-primary'>
             License
           </Link>
           <Link href='https://themeselection.com' target='_blank' className='text-primary'>
@@ -45,7 +45,7 @@ const FooterContent = () => {
             className='text-primary'
           >
             Support
-          </Link>
+          </Link> */}
         </div>
       )}
     </div>

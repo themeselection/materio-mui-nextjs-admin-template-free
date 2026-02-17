@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G3 Webapp Front 2025 - ディレクトリ構造解析結果</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* カスタムスタイル */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #111827; /* ダークグレーの背景 */
+        }
+        .glass-card {
+            background: rgba(31, 41, 55, 0.5); /* 半透明のカード背景 */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- ヘッダーセクション -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold gradient-text mb-2">
+                G3 Webapp Front 2025
+            </h1>
+            <p class="text-lg text-gray-400">ディレクトリ構造解析結果</p>
+        </header>
+
+        <main class="space-y-8">
+
+            <!-- プロジェクト概要 -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-4 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-purple-400"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    プロジェクト概要
+                </h2>
+                <p class="text-gray-300">
+                    このサイトは <strong class="text-cyan-400">Next.js 14</strong> を使用した <strong class="text-cyan-400">React ベースの Web アプリケーション</strong> で、企業向けの管理システムやダッシュボードアプリケーションに適した設計となっています。
+                </p>
+            </section>
+
+            <!-- 主要技術スタック -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-pink-400"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20V16"></path></svg>
+                    主要技術スタック
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>フロントエンド:</strong> React 18 + Next.js 14</div>
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>UI フレームワーク:</strong> Material-UI (MUI) v5</div>
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>スタイリング:</strong> Tailwind CSS + PostCSS</div>
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>アイコン:</strong> Iconify</div>
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>チャート:</strong> ApexCharts</div>
+                    <div class="bg-gray-800/60 p-4 rounded-lg"><strong>開発ツール:</strong> ESLint, Prettier, Stylelint</div>
+                </div>
+            </section>
+
+            <!-- ディレクトリ構造 -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-green-400"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    ディレクトリ構造
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2 text-purple-300">ルートディレクトリ</h3>
+                        <pre class="bg-gray-900 rounded-lg p-4 text-sm font-mono overflow-x-auto"><code><span class="text-purple-400">javascript-version/</span>
+├── 📁 <span class="text-purple-400">.next/</span>
+├── 📁 <span class="text-purple-400">node_modules/</span>
+├── 📁 <span class="text-purple-400">src/</span>
+├── 📁 <span class="text-purple-400">public/</span>
+├── 📄 <span class="text-gray-400">package.json</span>
+├── 📄 <span class="text-gray-400">next.config.mjs</span>
+├── 📄 <span class="text-gray-400">tailwind.config.js</span>
+└── 📄 <span class="text-gray-400">.eslintrc.js</span></code></pre>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2 text-purple-300">src/app/ - App Router</h3>
+                        <pre class="bg-gray-900 rounded-lg p-4 text-sm font-mono overflow-x-auto"><code><span class="text-purple-400">app/</span>
+├── 📄 <span class="text-gray-400">layout.jsx</span>
+├── 📁 <span class="text-purple-400">(dashboard)/</span>
+│   ├── 📄 <span class="text-gray-400">page.jsx</span>
+│   └── 📁 <span class="text-purple-400">account-settings/</span>
+├── 📁 <span class="text-purple-400">(blank-layout-pages)/</span>
+│   ├── 📁 <span class="text-purple-400">login/</span>
+│   └── 📁 <span class="text-purple-400">register/</span>
+└── 📁 <span class="text-purple-400">[...not-found]/</span></code></pre>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2 text-purple-300">src/@core/ - コア機能</h3>
+                        <pre class="bg-gray-900 rounded-lg p-4 text-sm font-mono overflow-x-auto"><code><span class="text-purple-400">@core/</span>
+├── 📁 <span class="text-purple-400">components/</span>
+│   ├── 📁 <span class="text-purple-400">mui/</span>
+│   │   ├── 📄 <span class="text-gray-400">Avatar.jsx</span>
+│   │   └── 📄 <span class="text-gray-400">IconButton.jsx</span>
+│   └── 📁 <span class="text-purple-400">option-menu/</span>
+│       └── 📄 <span class="text-gray-400">index.jsx</span>
+├── 📁 <span class="text-purple-400">contexts/</span>
+│   └── 📄 <span class="text-gray-400">settingsContext.jsx</span>
+├── 📁 <span class="text-purple-400">hooks/</span>
+│   ├── 📄 <span class="text-gray-400">useImageVariant.js</span>
+│   ├── 📄 <span class="text-gray-400">useObjectCookie.js</span>
+│   └── 📄 <span class="text-gray-400">useSettings.jsx</span>
+├── 📁 <span class="text-purple-400">theme/</span>
+│   ├── 📁 <span class="text-purple-400">overrides/</span>
+│   │   └── 📄 <span class="text-gray-400">[37個のMUIコンポーネントオーバーライド]</span>
+│   ├── 📄 <span class="text-gray-400">colorSchemes.js</span>
+│   ├── 📄 <span class="text-gray-400">customShadows.js</span>
+│   ├── 📄 <span class="text-gray-400">index.js</span>
+│   ├── 📄 <span class="text-gray-400">shadows.js</span>
+│   ├── 📄 <span class="text-gray-400">spacing.js</span>
+│   └── 📄 <span class="text-gray-400">typography.js</span>
+├── 📁 <span class="text-purple-400">utils/</span>
+│   └── 📄 <span class="text-gray-400">serverHelpers.js</span>
+├── 📁 <span class="text-purple-400">svg/</span>
+│   └── 📄 <span class="text-gray-400">Logo.jsx</span>
+├── 📁 <span class="text-purple-400">tailwind/</span>
+│   └── 📄 <span class="text-gray-400">plugin.js</span>
+└── 📁 <span class="text-purple-400">styles/</span>
+    ├── 📁 <span class="text-purple-400">vertical/</span>
+    │   ├── 📄 <span class="text-gray-400">navigationCustomStyles.js</span>
+    │   ├── 📄 <span class="text-gray-400">menuItemStyles.js</span>
+    │   └── 📄 <span class="text-gray-400">menuSectionStyles.js</span>
+    ├── 📄 <span class="text-gray-400">stepper.js</span>
+    └── 📄 <span class="text-gray-400">table.module.css</span></code></pre>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2 text-purple-300">src/@layouts/ - レイアウト管理</h3>
+                        <pre class="bg-gray-900 rounded-lg p-4 text-sm font-mono overflow-x-auto"><code><span class="text-purple-400">@layouts/</span>
+├── 📁 <span class="text-purple-400">components/</span>
+│   └── 📁 <span class="text-purple-400">vertical/</span>
+│       ├── 📄 <span class="text-gray-400">Footer.jsx</span>
+│       ├── 📄 <span class="text-gray-400">LayoutContent.jsx</span>
+│       └── 📄 <span class="text-gray-400">Navbar.jsx</span>
+├── 📁 <span class="text-purple-400">styles/</span>
+│   ├── 📁 <span class="text-purple-400">shared/</span>
+│   │   └── 📄 <span class="text-gray-400">StyledMain.jsx</span>
+│   └── 📁 <span class="text-purple-400">vertical/</span>
+│       ├── 📄 <span class="text-gray-400">StyledFooter.jsx</span>
+│       └── 📄 <span class="text-gray-400">StyledHeader.jsx</span>
+├── 📁 <span class="text-purple-400">utils/</span>
+│   └── 📄 <span class="text-gray-400">layoutClasses.js</span>
+├── 📄 <span class="text-gray-400">BlankLayout.jsx</span>
+├── 📄 <span class="text-gray-400">LayoutWrapper.jsx</span>
+└── 📄 <span class="text-gray-400">VerticalLayout.jsx</span></code></pre>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2 text-purple-300">src/views/ - ページビュー</h3>
+                        <pre class="bg-gray-900 rounded-lg p-4 text-sm font-mono overflow-x-auto"><code><span class="text-purple-400">views/</span>
+├── 📁 <span class="text-purple-400">dashboard/</span>
+├── 📁 <span class="text-purple-400">account-settings/</span>
+├── 📄 <span class="text-gray-400">Login.jsx</span>
+└── 📄 <span class="text-gray-400">Register.jsx</span></code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- @core/ ディレクトリ詳細説明 -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-blue-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    @core/ ディレクトリ詳細説明
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- components/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 components/ - カスタムコンポーネント</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">mui/ - Material-UI拡張</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li><strong>Avatar.jsx:</strong> カスタマイズ可能なアバターコンポーネント（スキン、カラー、サイズ対応）</li>
+                                    <li><strong>IconButton.jsx:</strong> アイコンボタンのカスタム実装</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">option-menu/ - オプションメニュー</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li><strong>index.jsx:</strong> ドロップダウンメニューやオプション選択UI</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- contexts/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 contexts/ - React Context</h3>
+                        <div>
+                            <h4 class="font-medium text-cyan-300 mb-2">settingsContext.jsx</h4>
+                            <p class="text-sm text-gray-300 mb-2">アプリケーション全体の設定管理（テーマ、モード等）を提供するReact Context</p>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• テーマ設定の状態管理</li>
+                                <li>• Cookie ベースの設定永続化</li>
+                                <li>• ページ固有設定の一時管理</li>
+                                <li>• 設定変更の追跡機能</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- hooks/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 hooks/ - カスタムReact Hooks</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">useSettings.jsx</h4>
+                                <p class="text-sm text-gray-300">SettingsContextを使用するためのカスタムフック</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">useObjectCookie.js</h4>
+                                <p class="text-sm text-gray-300">オブジェクト形式のCookie管理フック</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">useImageVariant.js</h4>
+                                <p class="text-sm text-gray-300">画像バリアント（ダーク/ライト）の管理フック</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- theme/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 theme/ - テーマシステム</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">メインファイル</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li><strong>index.js:</strong> テーマのメイン設定（MUI + Inter フォント）</li>
+                                    <li><strong>colorSchemes.js:</strong> ダーク/ライトモードのカラーパレット</li>
+                                    <li><strong>typography.js:</strong> フォント設定とタイポグラフィ</li>
+                                    <li><strong>shadows.js:</strong> シャドウ効果の定義</li>
+                                    <li><strong>spacing.js:</strong> スペーシングシステム</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">overrides/ - MUIオーバーライド</h4>
+                                <p class="text-sm text-gray-300 mb-2">37個のMUIコンポーネントのカスタマイズ</p>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li>• Button, Card, Dialog</li>
+                                    <li>• Form components (Input, Select)</li>
+                                    <li>• Navigation (Menu, Tabs)</li>
+                                    <li>• Feedback (Alert, Snackbar)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- utils/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 utils/ - ユーティリティ関数</h3>
+                        <div>
+                            <h4 class="font-medium text-cyan-300 mb-2">serverHelpers.js</h4>
+                            <p class="text-sm text-gray-300 mb-2">サーバーサイドでの設定取得ヘルパー関数</p>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Cookie からの設定読み取り</li>
+                                <li>• テーマモードの取得</li>
+                                <li>• システムモードの判定</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- svg/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 svg/ - SVGコンポーネント</h3>
+                        <div>
+                            <h4 class="font-medium text-cyan-300 mb-2">Logo.jsx</h4>
+                            <p class="text-sm text-gray-300">アプリケーションのロゴSVGコンポーネント（レスポンシブ対応）</p>
+                        </div>
+                    </div>
+
+                    <!-- tailwind/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 tailwind/ - Tailwind CSS設定</h3>
+                        <div>
+                            <h4 class="font-medium text-cyan-300 mb-2">plugin.js</h4>
+                            <p class="text-sm text-gray-300 mb-2">Tailwind CSSとMUIの統合プラグイン</p>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• MUIテーマ変数のTailwind統合</li>
+                                <li>• カスタムカラーシステム</li>
+                                <li>• レスポンシブブレークポイント</li>
+                                <li>• カスタムシャドウとz-index</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- styles/ -->
+                    <div class="bg-gray-800/60 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 styles/ - スタイル定義</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">メインファイル</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li><strong>stepper.js:</strong> ステッパーコンポーネントのスタイル</li>
+                                    <li><strong>table.module.css:</strong> テーブルのCSSモジュール</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-cyan-300 mb-2">vertical/ - 垂直レイアウト</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li><strong>navigationCustomStyles.js:</strong> ナビゲーションのカスタムスタイル</li>
+                                    <li><strong>menuItemStyles.js:</strong> メニューアイテムのスタイル</li>
+                                    <li><strong>menuSectionStyles.js:</strong> メニューセクションのスタイル</li>
+                                </ul>
+                            </div>
+                        </div>
+                                         </div>
+                 </div>
+             </section>
+
+             <!-- @layouts/ ディレクトリ詳細説明 -->
+             <section class="glass-card rounded-2xl p-6">
+                 <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-indigo-400"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="9" y2="9"></line><line x1="15" y1="9" x2="15" y2="9"></line><line x1="9" y1="15" x2="9" y2="15"></line><line x1="15" y1="15" x2="15" y2="15"></line></svg>
+                     @layouts/ ディレクトリ詳細説明
+                 </h2>
+                 
+                 <div class="space-y-6">
+                     <!-- メインレイアウトファイル -->
+                     <div class="bg-gray-800/60 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-purple-300 mb-3">📄 メインレイアウトファイル</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <div>
+                                 <h4 class="font-medium text-cyan-300 mb-2">LayoutWrapper.jsx</h4>
+                                 <p class="text-sm text-gray-300 mb-2">レイアウトの共通ラッパーコンポーネント</p>
+                                 <ul class="text-sm text-gray-300 space-y-1">
+                                     <li>• 垂直レイアウトの基本構造</li>
+                                     <li>• Flexbox レイアウト管理</li>
+                                 </ul>
+                             </div>
+                             <div>
+                                 <h4 class="font-medium text-cyan-300 mb-2">VerticalLayout.jsx</h4>
+                                 <p class="text-sm text-gray-300 mb-2">垂直レイアウトのメインコンポーネント</p>
+                                 <ul class="text-sm text-gray-300 space-y-1">
+                                     <li>• ナビゲーション、ヘッダー、フッター配置</li>
+                                     <li>• レスポンシブ対応</li>
+                                     <li>• コンテンツエリア管理</li>
+                                 </ul>
+                             </div>
+                             <div>
+                                 <h4 class="font-medium text-cyan-300 mb-2">BlankLayout.jsx</h4>
+                                 <p class="text-sm text-gray-300 mb-2">シンプルな空白レイアウト</p>
+                                 <ul class="text-sm text-gray-300 space-y-1">
+                                     <li>• ログインページ等で使用</li>
+                                     <li>• 最小限のスタイリング</li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- components/ -->
+                     <div class="bg-gray-800/60 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 components/ - レイアウトコンポーネント</h3>
+                         <div>
+                             <h4 class="font-medium text-cyan-300 mb-2">vertical/ - 垂直レイアウトコンポーネント</h4>
+                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                 <div>
+                                     <h5 class="font-medium text-green-300 mb-1">Navbar.jsx</h5>
+                                     <p class="text-sm text-gray-300 mb-2">ヘッダーナビゲーションコンポーネント</p>
+                                     <ul class="text-sm text-gray-300 space-y-1">
+                                         <li>• ヘッダー固定/分離モード</li>
+                                         <li>• コンパクトモード対応</li>
+                                         <li>• カスタムスタイル上書き</li>
+                                     </ul>
+                                 </div>
+                                 <div>
+                                     <h5 class="font-medium text-green-300 mb-1">Footer.jsx</h5>
+                                     <p class="text-sm text-gray-300 mb-2">フッターコンポーネント</p>
+                                     <ul class="text-sm text-gray-300 space-y-1">
+                                         <li>• フッター固定/分離モード</li>
+                                         <li>• コンパクトモード対応</li>
+                                         <li>• レスポンシブ対応</li>
+                                     </ul>
+                                 </div>
+                                 <div>
+                                     <h5 class="font-medium text-green-300 mb-1">LayoutContent.jsx</h5>
+                                     <p class="text-sm text-gray-300 mb-2">メインコンテンツエリア</p>
+                                     <ul class="text-sm text-gray-300 space-y-1">
+                                         <li>• ページコンテンツ表示</li>
+                                         <li>• コンパクトモード</li>
+                                         <li>• Flexbox レイアウト</li>
+                                     </ul>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- styles/ -->
+                     <div class="bg-gray-800/60 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 styles/ - スタイル定義</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div>
+                                 <h4 class="font-medium text-cyan-300 mb-2">shared/ - 共有スタイル</h4>
+                                 <ul class="text-sm text-gray-300 space-y-1">
+                                     <li><strong>StyledMain.jsx:</strong> メインコンテンツエリアのスタイル（Emotion）</li>
+                                     <li>• レイアウトパディング設定</li>
+                                     <li>• コンパクトモード対応</li>
+                                     <li>• 最大幅制限</li>
+                                 </ul>
+                             </div>
+                             <div>
+                                 <h4 class="font-medium text-cyan-300 mb-2">vertical/ - 垂直レイアウトスタイル</h4>
+                                 <ul class="text-sm text-gray-300 space-y-1">
+                                     <li><strong>StyledHeader.jsx:</strong> ヘッダーのスタイル定義</li>
+                                     <li>• ヘッダー高さ設定</li>
+                                     <li>• ナビゲーションバー配置</li>
+                                     <li><strong>StyledFooter.jsx:</strong> フッターのスタイル定義</li>
+                                     <li>• フッター配置とパディング</li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- utils/ -->
+                     <div class="bg-gray-800/60 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-purple-300 mb-3">📁 utils/ - ユーティリティ</h3>
+                         <div>
+                             <h4 class="font-medium text-cyan-300 mb-2">layoutClasses.js</h4>
+                             <p class="text-sm text-gray-300 mb-2">レイアウト用CSSクラス定義</p>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 <div>
+                                     <h5 class="font-medium text-green-300 mb-1">垂直レイアウトクラス</h5>
+                                     <ul class="text-sm text-gray-300 space-y-1">
+                                         <li>• ルート、コンテンツラッパー</li>
+                                         <li>• ヘッダー/フッター（固定/分離）</li>
+                                         <li>• ナビゲーション、コンテンツ</li>
+                                         <li>• コンパクトモード対応</li>
+                                     </ul>
+                                 </div>
+                                 <div>
+                                     <h5 class="font-medium text-green-300 mb-1">空白レイアウトクラス</h5>
+                                     <ul class="text-sm text-gray-300 space-y-1">
+                                         <li>• シンプルなルートクラス</li>
+                                         <li>• 最小限のスタイリング</li>
+                                     </ul>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- レイアウトシステムの特徴 -->
+                     <div class="bg-gray-800/60 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-purple-300 mb-3">🎯 レイアウトシステムの特徴</h3>
+                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">モジュラー設計</div>
+                                 <div class="text-xs text-gray-300">コンポーネント単位での組み合わせ</div>
+                             </div>
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">レスポンシブ対応</div>
+                                 <div class="text-xs text-gray-300">モバイル・デスクトップ対応</div>
+                             </div>
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">テーマ統合</div>
+                                 <div class="text-xs text-gray-300">MUIテーマとの連携</div>
+                             </div>
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">カスタマイズ可能</div>
+                                 <div class="text-xs text-gray-300">スタイル上書き機能</div>
+                             </div>
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">パフォーマンス最適化</div>
+                                 <div class="text-xs text-gray-300">効率的なレンダリング</div>
+                             </div>
+                             <div class="bg-gray-700/60 p-3 rounded-lg">
+                                 <div class="text-sm font-medium text-cyan-300 mb-1">アクセシビリティ</div>
+                                 <div class="text-xs text-gray-300">セマンティックHTML</div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </section>
+
+             <!-- アプリケーションの特徴 -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-yellow-400"><path d="M12.5 22h-1a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2z"></path><path d="M16.5 2h1a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-1"></path><path d="M8.5 2h-1a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h1"></path></svg>
+                    アプリケーションの特徴
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">モダンなアーキテクチャ</div>
+                        <div class="text-sm text-gray-300">@core/ による分離された設計</div>
+                    </div>
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">コンポーネントベース</div>
+                        <div class="text-sm text-gray-300">再利用可能なUIコンポーネント</div>
+                    </div>
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">レスポンシブデザイン</div>
+                        <div class="text-sm text-gray-300">Tailwind CSS統合</div>
+                    </div>
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">テーマシステム</div>
+                        <div class="text-sm text-gray-300">ダーク/ライトモード対応</div>
+                    </div>
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">状態管理</div>
+                        <div class="text-sm text-gray-300">React Context + Hooks</div>
+                    </div>
+                    <div class="bg-gray-800/60 p-5 rounded-lg">
+                        <div class="text-lg font-semibold text-purple-300 mb-2">豊富なUI</div>
+                        <div class="text-sm text-gray-300">MUI + カスタムコンポーネント</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 開発・ビルドコマンド -->
+            <section class="glass-card rounded-2xl p-6">
+                <h2 class="flex items-center text-2xl font-bold mb-6 text-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-red-400"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    開発・ビルドコマンド
+                </h2>
+                <div class="bg-black rounded-md p-4 font-mono text-sm overflow-x-auto">
+                    <p class="mb-2"><span class="text-green-400"># 開発サーバー起動</span></p>
+                    <p class="mb-4"><span class="text-white">$</span> npm run dev</p>
+                    <p class="mb-2"><span class="text-green-400"># プロダクションビルド</span></p>
+                    <p class="mb-4"><span class="text-white">$</span> npm run build</p>
+                    <p class="mb-2"><span class="text-green-400"># コード品質チェック & フォーマット</span></p>
+                    <p><span class="text-white">$</span> npm run lint</p>
+                    <p><span class="text-white">$</span> npm run format</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- フッター -->
+        <footer class="text-center text-gray-500 text-sm mt-12">
+            <p>📅 解析日時: 2025年 | 🏢 G3 Webapp Front 2025 プロジェクト</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

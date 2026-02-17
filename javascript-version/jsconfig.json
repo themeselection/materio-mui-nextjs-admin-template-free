@@ -47,10 +47,10 @@
   },
   "include": [
     "next.config.mjs",
-    "tailwind.config.js",
+    "tailwind.config.cjs",
     "**/*.js",
     "**/*.jsx"
-  ],
+, "src/assets/iconify-icons/bundle-icons-css.cjs"  ],
   "exclude": [
     "node_modules"
   ]

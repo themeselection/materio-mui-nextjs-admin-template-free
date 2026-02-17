@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工場設定API設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        .post {
+            background-color: #22c55e;
+        }
+
+        .put {
+            background-color: #f97316;
+        }
+
+        .delete {
+            background-color: #ef4444;
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            background: rgba(51, 65, 85, .85);
+            color: #f1f5f9;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: transform .16s, box-shadow .22s, background-color .25s;
+            box-shadow: 0 2px 6px -2px rgba(15, 23, 42, .35);
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(71, 85, 105, .92);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px -4px rgba(15, 23, 42, .45);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px -4px rgba(15, 23, 42, .4);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 70%);
+        }
+
+        .copy-btn.copied svg {
+            animation: pop .4s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(.6) rotate(-20deg);
+            }
+
+            60% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">工場設定API 設計書</h1>
+                </div>
+                <a href="../index.html"
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    ← トップページに戻る
+                </a>
+            </div>
+            <div class="mt-4 p-4 bg-gray-100 border-l-4 border-gray-500 text-gray-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 工場設定ページ</p>
+                <p class="text-sm mt-1">このドキュメントは、「工場設定ページ」で利用するマスターデータ（権限、生産ライン）を管理するためのAPI仕様を定義します。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 0. DB設計 -->
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-gray-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">このAPIは以下のマスターテーブルを操作します。</p>
+
+                    <h3 class="text-lg font-semibold mt-4 mb-2">roles（権限マスタ）</h3>
+                    <pre><code class="language-sql">-- PostgreSQL 例: 管理者かどうかを boolean で管理（true=管理者, false=一般従業員）
+CREATE TABLE roles (
+        role_id SERIAL PRIMARY KEY,
+        role_name VARCHAR(50) UNIQUE NOT NULL,
+        is_admin BOOLEAN NOT NULL DEFAULT FALSE
+);</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">production_lines（ラインマスタ）</h3>
+                    <pre><code class="language-sql">CREATE TABLE production_lines (
+    line_id SERIAL PRIMARY KEY,
+    line_name VARCHAR(100) UNIQUE NOT NULL
+);</code></pre>
+                </div>
+            </section>
+
+            <!-- 1. 権限種別API -->
+            <section id="roles-api">
+                <h2 class="text-2xl font-bold border-b-2 border-gray-500 pb-2 mb-4">1. 権限種別 (Roles) API</h2>
+
+                <!-- 1.1 権限一覧取得 -->
+                <div id="get-roles" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">1.1 権限一覧取得</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/roles</span>
+                    </div>
+                    <p class="mb-4">登録されているすべてのロール（ロール名 + is_admin）を一覧で取得します。is_admin=true は「管理者」、false は「一般従業員」を表します。
+                    </p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">[
+    { "role_id": 1, "role_name": "管理画面運用", "is_admin": true },
+    { "role_id": 2, "role_name": "閲覧のみ", "is_admin": false },
+    { "role_id": 3, "role_name": "検査業務", "is_admin": false }
+]</code></pre>
+                </div>
+
+                <!-- 1.2 権限追加 -->
+                <div id="create-role" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">1.2 権限追加</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/roles</span>
+                    </div>
+                    <p class="mb-4">新しいロールを登録します（ロール名は自由入力、is_admin は true/false の二択）。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "role_name": "閲覧のみ",
+    "is_admin": false // 省略時は false
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h4>
+                    <pre><code class="language-json">{
+    "role_id": 4,
+    "role_name": "閲覧のみ",
+    "is_admin": false
+}</code></pre>
+                </div>
+
+                <!-- 1.4 権限更新（ロール名/種別の変更） -->
+                <div id="update-role" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">1.4 権限更新</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span class="font-mono text-lg font-semibold">/api/roles/{id}</span>
+                    </div>
+                    <p class="mb-4">指定ロールの「ロール名」または「is_admin（管理者かどうか）」を更新します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ（どちらか、または両方）</h4>
+                    <pre><code class="language-json">{
+    "role_name": "検査リーダー",
+    "is_admin": true // boolean
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "role_id": 3,
+    "role_name": "検査リーダー",
+    "is_admin": true
+}</code></pre>
+                    <div class="mt-4 text-sm text-slate-600">
+                        <p>バリデーション:</p>
+                        <ul class="list-disc ml-5 mt-1">
+                            <li>role_name は重複不可（409 Conflict）</li>
+                            <li>is_admin は boolean 以外（null/文字列など）は 400 Bad Request</li>
+                            <li>対象が存在しない場合は 404 Not Found</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 1.5 種別トグル（UIのワンクリック切替用） -->
+                <div id="toggle-role-type" class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">1.5 is_admin トグル</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PATCH</span>
+                        <span class="font-mono text-lg font-semibold">/api/roles/{id}/toggle</span>
+                    </div>
+                    <p class="mb-4">is_admin を true と false の間でトグルします。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "role_id": 2,
+    "role_name": "閲覧のみ",
+    "is_admin": true
+}</code></pre>
+                    <div class="mt-4 text-sm text-slate-600">
+                        <p>備考: UIの「押すたびに変わる」要求に対応する軽量API。PUTでも同様の更新は可能。</p>
+                    </div>
+                </div>
+
+            </section>
+            <!-- 1.3 権限削除 -->
+            <div id="delete-role" class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">1.3 権限削除</h3>
+                <div class="flex items-center space-x-4 mb-4">
+                    <span class="method-badge delete">DELETE</span>
+                    <span class="font-mono text-lg font-semibold">/api/roles/{id}</span>
+                </div>
+                <p class="mb-4">指定されたIDのロールを削除します。</p>
+                <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (204 No Content)</h4>
+                <p>削除が成功した場合、ボディには何も返されません。</p>
+                <div class="mt-4 text-sm text-slate-600">
+                    <p>注意:</p>
+                    <ul class="list-disc ml-5 mt-1">
+                        <li>ユーザーが紐づく等で削除不可の場合は 409 Conflict を返す（例: 外部キー制約違反）</li>
+                        <li>必要に応じてソフトデリート（is_deleted）で運用</li>
+                    </ul>
+                </div>
+            </div>
+            
+
+            <!-- 2. 工場ラインAPI -->
+            <section id="lines-api">
+                <h2 class="text-2xl font-bold border-b-2 border-gray-500 pb-2 mb-4">2. 工場ライン (Production Lines) API</h2>
+
+                <!-- 2.1 ライン一覧取得 -->
+                <div id="get-lines" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">2.1 ライン一覧取得</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/lines</span>
+                    </div>
+                    <p class="mb-4">登録されているすべての工場ラインを一覧で取得します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">[
+    { "line_id": 1, "line_name": "Aライン (組立)" },
+    { "line_id": 2, "line_name": "Bライン (塗装)" },
+    { "line_id": 3, "line_name": "検査ライン" }
+]</code></pre>
+                </div>
+
+                <!-- 2.2 ライン追加 -->
+                <div id="create-line" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">2.2 ライン追加</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/lines</span>
+                    </div>
+                    <p class="mb-4">新しい工場ラインを登録します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "line_name": "Cライン (梱包)"
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h4>
+                    <pre><code class="language-json">{
+    "line_id": 4,
+    "line_name": "Cライン (梱包)"
+}</code></pre>
+                </div>
+
+                <!-- 2.3 ライン名更新 -->
+                <div id="update-line" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">2.3 ライン名更新</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span class="font-mono text-lg font-semibold">/api/lines/{id}</span>
+                    </div>
+                    <p class="mb-4">指定されたIDの工場ラインの名前を更新します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "line_name": "Dライン (最終検査)"
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "line_id": 2,
+    "line_name": "Dライン (最終検査)"
+}</code></pre>
+                    <div class="mt-4 text-sm text-slate-600">
+                        <p>バリデーション:</p>
+                        <ul class="list-disc ml-5 mt-1">
+                            <li>line_name は重複不可（409 Conflict）</li>
+                            <li>対象が存在しない場合は 404 Not Found</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2.4 ライン削除 -->
+                <div id="delete-line" class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">2.4 ライン削除</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge delete">DELETE</span>
+                        <span class="font-mono text-lg font-semibold">/api/lines/{id}</span>
+                    </div>
+                    <p class="mb-4">指定されたIDの工場ラインを削除します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (204 No Content)</h4>
+                    <p>削除が成功した場合、ボディには何も返されません。</p>
+                </div>
+            </section>
+
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function () { const blocks = document.querySelectorAll('pre code.language-json, pre code.language-sql'); blocks.forEach(code => { const pre = code.parentElement; if (!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if (pre.querySelector('.copy-btn')) return; const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'copy-btn'; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click', async () => { const raw = code.innerText.replace(/\n+$/, ''); try { await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original = btn.innerHTML; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 1800); } catch (e) { btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(() => { btn.innerHTML = 'Copy'; }, 2000); } }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

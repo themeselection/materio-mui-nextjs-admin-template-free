@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日のお知らせAPI設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        .post {
+            background-color: #22c55e;
+        }
+
+        .put {
+            background-color: #f97316;
+        }
+
+        .delete {
+            background-color: #ef4444;
+        }
+
+        /* highlight.js用のスタイルを調整 */
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        /* Copy button (お手本のHTMLから流用) */
+        .code-block-wrapper { position: relative; }
+        .copy-btn { position:absolute; top:4px; right:6px; background:rgba(51,65,85,.85); color:#f1f5f9; font-size:12px; font-weight:600; padding:6px 12px 6px 10px; border-radius:8px; cursor:pointer; line-height:1; display:flex; align-items:center; gap:6px; backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,.08); transition:transform .16s, box-shadow .22s, background-color .25s; box-shadow:0 2px 6px -2px rgba(15,23,42,.35);} .copy-btn svg{width:16px;height:16px;} .copy-btn:hover{background:rgba(71,85,105,.92); transform:translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45);} .copy-btn:active{transform:translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4);} .copy-btn.copied{background:linear-gradient(135deg,#16a34a 0%,#15803d 70%);} .copy-btn.copied svg{animation:pop .4s ease;} @keyframes pop{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.144-6.002H3a1 1 0 01-1-1v-4a1 1 0 011-1h2.539l2.144-6.002a1.76 1.76 0 013.417.592zM19 5.882V19.24a1.76 1.76 0 003.417.592l2.144-6.002H27a1 1 0 001-1v-4a1 1 0 00-1-1h-2.539l-2.144-6.002a1.76 1.76 0 00-3.417.592z"></path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">今日のお知らせAPI 設計書</h1>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: ダッシュボード（トップページ）</p>
+                <p class="text-sm mt-1">このドキュメントは、ダッシュボードの「今日のお知らせ」機能のAPI仕様を定義します。</p>
+            </div>
+            <p class="mt-4 text-lg text-slate-600">これベースで開発ヨロ！</p>
+        </header>
+
+        <div class="space-y-12">
+
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">お知らせ機能は、単一のレコード（行）だけを持つシンプルなテーブルで管理します。</p>
+
+                    <h3 class="text-lg font-semibold mt-4 mb-2">today_message（お知らせテーブル）</h3>
+                    <pre><code class="language-sql">CREATE TABLE today_message (
+    message_id INT PRIMARY KEY DEFAULT 1,       -- 常にID=1のレコードだけを使う
+    content TEXT,                               -- お知らせの本文
+    priority INT DEFAULT 1,                       -- 重要度 (1:低い, 2:普通, 3:高い)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 最終更新日時
+);</code></pre>
+                    <p class="mt-3 text-sm text-slate-600">※DBには数値(INT)で保存し、APIがレスポンスする際に「低い」などの文字列に変換します。</p>
+                    <p class="mt-2 text-sm text-slate-600">※サーバー起動時やAPI側で、ID=1のレコードが存在しない場合のみ作成（INSERT）する処理を推奨します。</p>
+                </div>
+            </section>
+
+            <section id="get-notification">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. お知らせ取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/message</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">現在設定されている「今日のお知らせ」の内容をGETするAPI。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <p>なし。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "content": "qwer",
+    "priority": "低い",
+    "updated_at": "2025-10-27T15:00:00+09:00"
+}</code></pre>
+                    </div>
+            </section>
+
+            <section id="update-notification">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. お知らせ更新</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span class="font-mono text-lg font-semibold">/api/message</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">お知らせの内容を更新（上書き）するAPIです。リソースが「ID=1」で固定されているため、PUT で全体を更新する構成としています。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <p class="text-sm mb-2">※リクエスト（送信）時は、数値（1:低い, 2:普通, 3:高い）で送ることを推奨します。</p>
+                    <pre><code class="language-json">{
+    "content": "新しいお知らせのテキストです。",
+    "priority": 3
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <p class="text-sm mb-2">更新が成功すると、最新のデータが返却されます。</p>
+                    <pre><code class="language-json">{
+    "content": "新しいお知らせのテキストです。",
+    "priority": "高い",
+    "updated_at": "2025-10-27T15:05:00+09:00"
+}</code></pre>
+                    </div>
+            </section>
+
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        // ページ内のすべてのコードにハイライトを適用
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function(){ const blocks=document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code=>{ const pre=code.parentElement; if(!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if(pre.querySelector('.copy-btn')) return; const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click',async()=>{ const raw=code.innerText.replace(/\n+$/,''); try{ await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(()=>{btn.classList.remove('copied'); btn.innerHTML=original;},1800);}catch(e){ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(()=>{btn.innerHTML='Copy';},2000);} }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

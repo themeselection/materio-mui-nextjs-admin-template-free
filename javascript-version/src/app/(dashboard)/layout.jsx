@@ -1,6 +1,7 @@
 // Layout Imports
 import LayoutWrapper from '@layouts/LayoutWrapper'
 import VerticalLayout from '@layouts/VerticalLayout'
+import AuthGuard from '@components/AuthGuard'
 
 // Component Imports
 import Providers from '@components/Providers'
@@ -14,13 +15,15 @@ const Layout = async ({ children }) => {
 
   return (
     <Providers direction={direction}>
-      <LayoutWrapper
-        verticalLayout={
-          <VerticalLayout navigation={<Navigation />} navbar={<Navbar />} footer={<VerticalFooter />}>
-            {children}
-          </VerticalLayout>
-        }
-      />
+      <AuthGuard>
+        <LayoutWrapper
+          verticalLayout={
+            <VerticalLayout navigation={<Navigation />} navbar={<Navbar />} footer={<VerticalFooter />}>
+              {children}
+            </VerticalLayout>
+          }
+        />
+      </AuthGuard>
     </Providers>
   )
 }

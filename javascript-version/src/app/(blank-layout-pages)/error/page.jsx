@@ -1,14 +1,16 @@
 // Component Imports
-import NotFound from '@views/NotFound'
+import ErrorClient from './pageClient'
 
 // Server Action Imports
 import { getServerMode } from '@core/utils/serverHelpers'
 
-const Error = () => {
+const Error = ({ searchParams }) => {
   // Vars
   const mode = getServerMode()
+  const code = searchParams?.code || null
+  const from = searchParams?.from || null
 
-  return <NotFound mode={mode} />
+  return <ErrorClient mode={mode} code={code} from={from} />
 }
 
 export default Error

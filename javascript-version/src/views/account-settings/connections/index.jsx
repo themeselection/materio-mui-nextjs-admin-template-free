@@ -18,30 +18,30 @@ const connectedAccountsArr = [
     checked: true,
     title: 'Google',
     logo: '/images/logos/google.png',
-    subtitle: 'Calendar and Contacts'
+    subtitle: 'カレンダーと連絡先'
   },
   {
     checked: false,
     title: 'Slack',
     logo: '/images/logos/slack.png',
-    subtitle: 'Communications'
+    subtitle: 'コミュニケーション'
   },
   {
     checked: true,
     title: 'Github',
     logo: '/images/logos/github.png',
-    subtitle: 'Manage your Git repositories'
+    subtitle: 'Git リポジトリの管理'
   },
   {
     checked: true,
     title: 'Mailchimp',
-    subtitle: 'Email marketing service',
+    subtitle: 'メールマーケティングサービス',
     logo: '/images/logos/mailchimp.png'
   },
   {
     title: 'Asana',
     checked: false,
-    subtitle: 'Task Communication',
+    subtitle: 'タスク連携',
     logo: '/images/logos/asana.png'
   }
 ]
@@ -84,8 +84,8 @@ const Connections = () => {
       <Grid container>
         <Grid item xs={12} md={6}>
           <CardHeader
-            title='Connected Accounts'
-            subheader='Display content from your connected accounts on your site'
+            title='接続済みアカウント'
+            subheader='接続済みアカウントのコンテンツをサイトに表示します'
           />
           <CardContent className='flex flex-col gap-4'>
             {connectedAccountsArr.map((item, index) => (
@@ -105,7 +105,7 @@ const Connections = () => {
           </CardContent>
         </Grid>
         <Grid item xs={12} md={6}>
-          <CardHeader title='Social Accounts' subheader='Display content from social accounts on your site' />
+          <CardHeader title='ソーシャルアカウント' subheader='ソーシャルアカウントのコンテンツをサイトに表示します' />
           <CardContent className='flex flex-col gap-4'>
             {socialAccountsArr.map((item, index) => (
               <div key={index} className='flex items-center justify-between gap-4'>
@@ -120,7 +120,7 @@ const Connections = () => {
                         {item.username}
                       </Typography>
                     ) : (
-                      <Typography variant='body2'>Not Connected</Typography>
+                      <Typography variant='body2'>未接続</Typography>
                     )}
                   </div>
                 </div>

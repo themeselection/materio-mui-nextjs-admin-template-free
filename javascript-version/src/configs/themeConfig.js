@@ -10,7 +10,7 @@
  * Another way is to clear the cookie from the browser's Application/Storage tab and then reload the page.
  */
 const themeConfig = {
-  templateName: 'Materio',
+  templateName: 'MAT.io',
   settingsCookieName: 'materio-mui-next-free-demo',
   mode: 'light', // 'light', 'dark'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生産機械状況API設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get { background-color: #3b82f6; }
+        .post { background-color: #22c55e; }
+        .put { background-color: #f97316; }
+        .delete { background-color: #ef4444; }
+
+        .websocket {
+            background-color: #9333ea; /* purple */
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+    /* Copy button */
+    .code-block-wrapper { position: relative; }
+    .copy-btn { position:absolute; top:4px; right:6px; background:rgba(51,65,85,.85); color:#f1f5f9; font-size:12px; font-weight:600; padding:6px 12px 6px 10px; border-radius:8px; cursor:pointer; line-height:1; display:flex; align-items:center; gap:6px; backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,.08); transition:transform .16s, box-shadow .22s, background-color .25s; box-shadow:0 2px 6px -2px rgba(15,23,42,.35);} .copy-btn svg{width:16px;height:16px;} .copy-btn:hover{background:rgba(71,85,105,.92); transform:translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45);} .copy-btn:active{transform:translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4);} .copy-btn.copied{background:linear-gradient(135deg,#16a34a 0%,#15803d 70%);} .copy-btn.copied svg{animation:pop .4s ease;} @keyframes pop{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">生産機械状況API 設計書</h1>
+                </div>
+                <a href="../index.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    ← トップページに戻る
+                </a>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 生産機械状況ページ</p>
+                <p class="text-sm mt-1">このドキュメントは、「生産機械状況ページ」のフロントエンドとバックエンドを連携させるためのAPI仕様を定義します。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 0. DB設計 -->
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">このページは機械マスタ、状態、ログの3テーブルを想定します。</p>
+
+                    <h3 class="text-lg font-semibold mt-4 mb-2">machines（機械マスタ）</h3>
+                    <pre><code class="language-sql">CREATE TABLE machines (
+    machine_id SERIAL PRIMARY KEY,            -- 主キー: 機械ID
+    machine_name VARCHAR(100) UNIQUE NOT NULL -- 機械名称（ユニーク）
+);</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">machine_status（機械状態）</h3>
+                    <pre><code class="language-sql">CREATE TABLE machine_status (
+    machine_status_id SERIAL PRIMARY KEY,                        -- 主キー
+    machine_data_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,       -- 状態記録時刻
+    machine_id INT NOT NULL,                                     -- 対象機械ID（machines.machine_id）
+    machine_start_time TIMESTAMP NULL,                           -- 機械の起動時刻（稼働開始のタイムスタンプ）
+    today_production_count INT DEFAULT 0,                        -- 今日の累計生産数
+    machine_last_inspection DATE,                                -- 最終点検日
+    inspection_interval_days INT DEFAULT 90 NOT NULL             -- 点検間隔（日数）
+    -- ,FOREIGN KEY (machine_id) REFERENCES machines(machine_id) -- 必要なら制約を有効化
+);</code></pre>
+                    <div class="mt-2 text-sm text-slate-600">稼働時間は <code>started_at</code> 等の元データから計算配信する設計でもOKです。</div>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">machine_logs（機械エラーログ）</h3>
+                    <pre><code class="language-sql">CREATE TABLE machine_logs (
+    log_id SERIAL PRIMARY KEY,                                           -- ログID
+    machine_name VARCHAR(100) NOT NULL,                                  -- 対象機械NAME
+    unit_id INT NULL,                                                    -- 対象ユニットID (任意)
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                       -- 発生時刻
+    log_type VARCHAR(10) CHECK (log_type IN ('error','warning','info')), -- 種別
+    title VARCHAR(100) NOT NULL,                                         -- ログタイトル（コード + 概要）
+    message TEXT                                                         -- 詳細メッセージ
+);</code></pre>
+                </div>
+            </section>
+
+            <!-- 1. 機械の基本情報・稼働データ取得 -->
+            <section id="get-machine-status">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. 機械の基本情報・稼働データ取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/machines/{id}</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">ID で指定した機械の基本的な情報と、その日の稼働データをまとめて取得するAPIです。ページを開いた際の初期表示で利用します。</p>
+
+                    <div class="mt-4 p-4 bg-amber-100 border-l-4 border-amber-500 text-amber-700 rounded-r-lg">
+                        <p class="font-bold">設計メモ: 稼働時間の扱い</p>
+                        <ul class="list-disc pl-6 text-sm mt-2">
+                            <li>稼働秒数 (today_uptime_seconds) をDBに逐次保存しない。毎秒更新が必要となり負荷が高いため。</li>
+                            <li>代わりに「今日の起動日時」(<span class="font-mono">started_at</span>) を保存し、稼働時間は <span class="font-mono">started_at</span> と現在時刻の差分で算出する。</li>
+                            <li>フロントは表示更新時に差分を計算するか、バックエンド/WSが算出した値を返してもOK。いずれもソースは <span class="font-mono">started_at</span>。</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+<!-- 機械の基本情報・稼働データ取得APIの成功レスポンス例 -->
+<pre><code class="language-json">{
+    "machine_id": 1,                          // 機械ID
+    "machine_name": "半自動表層バネどめ機",     // 機械名称
+    "started_at": "2025-10-01T10:04:56Z",     // 今日の起動日時（ISO8601形式）
+    "today_uptime_seconds": 13714,            // 今日の稼働秒数（起動からの経過秒数）
+    "today_uptime_hms": "03:48:34",           // 今日の稼働時間（hh:mm:ss形式）
+    "today_production_count": 4,              // 今日の累計生産数
+    "last_inspection_date": "2025-10-01",     // 最終点検日
+    "next_inspection_date": "2025-10-11",     // 次回点検日
+    "inspection_interval_days": 10            // 点検間隔（日数）
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (404 Not Found)</h3>
+                    <pre><code class="language-json">{
+    "error": "Machine not found"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 2. 機械のエラーログ取得 -->
+            <section id="get-logs">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. 機械のエラーログ取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/machines/{id}/logs</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">指定した機械のエラーログを取得します。日付やログの種類で絞り込めるように設計します。</p>
+
+                    <div class="mt-4 p-4 bg-sky-100 border-l-4 border-sky-500 text-sky-800 rounded-r-lg">
+                        <p class="font-bold">設計メモ: エラーコード体系</p>
+                        <ul class="list-disc pl-6 text-sm mt-2">
+                            <li>コードは <span class="font-mono">E-xxx</span>（error）, <span class="font-mono">W-xxx</span>（warning）, <span class="font-mono">I-xxx</span>（info）で表記し、<span class="font-mono">title</span> は「<span class="font-mono">コード: 概要</span>」の形式で返す。</li>
+                            <li>サーバーは <span class="font-mono">log_type</span> と <span class="font-mono">title</span> のコード接頭辞を整合させる（例: <span class="font-mono">E-001</span> なら <span class="font-mono">log_type: "error"</span>）。</li>
+                            <li><span class="font-mono">unit_id</span> は対象がない場合 <span class="font-mono">null</span> にする（空文字 "" は使わない）。</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーコード一覧</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="border-b-2 p-2">コード</th>
+                                    <th class="border-b-2 p-2">ログ種別</th>
+                                    <th class="border-b-2 p-2">タイトル</th>
+                                    <th class="border-b-2 p-2">説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">E-001</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#ef4444">error</span></td>
+                                    <td class="border-b p-2">非常停止ボタン作動</td>
+                                    <td class="border-b p-2">非常停止が検知され、機械が即時停止。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">E-002</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#ef4444">error</span></td>
+                                    <td class="border-b p-2">残弾数 致命的低下</td>
+                                    <td class="border-b p-2">弾数が致命的に少なく、運転継続不可。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">E-003</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#ef4444">error</span></td>
+                                    <td class="border-b p-2">点検時期 超過</td>
+                                    <td class="border-b p-2">DBで管理する点検期限を超過。安全のため停止。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">E-099</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#ef4444">error</span></td>
+                                    <td class="border-b p-2">その他 致命的停止エラー</td>
+                                    <td class="border-b p-2">上記以外の致命的な停止原因（PLCからの致命アラーム等）。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">W-001</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#f59e0b">warning</span></td>
+                                    <td class="border-b p-2">残弾数 低下</td>
+                                    <td class="border-b p-2">弾数が少なく、補充推奨。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">W-002</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#f59e0b">warning</span></td>
+                                    <td class="border-b p-2">点検時期 間近</td>
+                                    <td class="border-b p-2">DBで管理する点検期限が近い。計画調整推奨。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">W-099</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#f59e0b">warning</span></td>
+                                    <td class="border-b p-2">その他 軽微なエラー</td>
+                                    <td class="border-b p-2">停止を伴わない軽微な異常。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">I-001</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#10b981">info</span></td>
+                                    <td class="border-b p-2">生産機械 通電（JETSON検知）</td>
+                                    <td class="border-b p-2">機械の通電（電源ON）を検知。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">I-002</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#10b981">info</span></td>
+                                    <td class="border-b p-2">PLC スタンバイ</td>
+                                    <td class="border-b p-2">PLCが待機状態になったことを通知。</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">I-003</td>
+                                    <td class="border-b p-2"><span class="method-badge get" style="background-color:#10b981">info</span></td>
+                                    <td class="border-b p-2">生産機械 シャットダウン（JETSON検知）</td>
+                                    <td class="border-b p-2">機械の電源OFF（シャットダウン）を検知。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">date</td>
+                                <td class="border-b p-2">対象の日付 (YYYY-MM-DD形式)。指定しない場合はすべて。</td>
+                                <td class="border-b p-2 font-mono">?date=2025-07-15</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">type</td>
+                                <td class="border-b p-2">ログの種類 (`error`, `warning`, `info`)。指定しない場合はすべて。</td>
+                                <td class="border-b p-2 font-mono">?type=error</td>
+                            </tr>
+                             <tr>
+                                <td class="border-b p-2 font-mono">page</td>
+                                <td class="border-b p-2">ページ番号。</td>
+                                <td class="border-b p-2 font-mono">?page=1</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">limit</td>
+                                <td class="border-b p-2">1ページあたりの件数。</td>
+                                <td class="border-b p-2 font-mono">?limit=20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "total_pages": 1,
+    "current_page": 1,
+    "logs": [
+        {
+            "log_id": 501,
+            "unit_id": 1,
+            "timestamp": "2025-07-15T10:15:32Z",
+            "log_type": "error",
+            "title": "E-001: 非常停止ボタン作動",
+            "message": "オペレーターにより緊急停止されました。"
+        },
+        {
+            "log_id": 500,
+            "unit_id": 3,
+            "timestamp": "2025-07-15T09:30:11Z",
+            "log_type": "warning",
+            "title": "W-001: 残弾数低下",
+            "message": "ホッグリングの残弾数が少なくなっています｡"
+        },
+        {
+            "log_id": 499,
+            "unit_id": null,
+            "timestamp": "2025-07-15T08:00:05Z",
+            "log_type": "info",
+            "title": "I-001: 生産機械 通電（JETSON検知）",
+            "message": ""
+        }
+    ]
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 3. リアルタイム機械状況 -->
+            <section id="realtime">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3. リアルタイム機械状況 (WebSocket)</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge websocket">WebSocket</span>
+                        <span class="font-mono text-lg font-semibold">/ws/machines/{id}</span>
+                        <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: C</span>
+                    </div>
+                    <p class="mb-4">機械のステータスや稼働データ、新しいログをリアルタイムでフロントエンドへ配信するための WebSocket 通信です。これにより画面を自動更新でき、鮮度の高い情報を提供できます。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">サーバーから送信されるメッセージ</h3>
+                    <p class="text-sm mb-2">イベントの種類 (`event`) によって、送信されるデータ (`data`) の内容が変わります。</p>
+
+                    <h4 class="font-semibold mt-4 mb-2">イベント: `status_update` (ステータス更新)</h4>
+                    <pre><code class="language-json">{
+    "event": "status_update",
+    "data": {
+        "status": "異常あり",
+        "today_uptime_seconds": 30360,
+        "today_production_count": 1521
+    }
+}</code></pre>
+                    <p class="text-xs text-slate-600 mt-2">注: <span class="font-mono">today_uptime_seconds</span> はDBに保存せず、初回GETで取得した <span class="font-mono">started_at</span> と現在時刻の差分から算出すること（サーバーで算出して配信する場合も、元データは <span class="font-mono">started_at</span>）。</p>
+
+                    <h4 class="font-semibold mt-4 mb-2">イベント: `new_log` (新規ログ発生)</h4>
+                    <pre><code class="language-json">{
+    "event": "new_log",
+    "data": {
+        "log_id": 502,
+        "timestamp": "2025-07-15T10:16:00Z",
+        "log_type": "error",
+        "title": "E-001: 非常停止ボタン作動",
+        "message": "オペレーターにより緊急停止されました。"
+    }
+}</code></pre>
+                </div>
+            </section>
+            
+
+                        <!-- 6. 点検間隔の変更 -->
+            <section id="update-inspection-interval">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">6. 点検間隔の変更</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span class="font-mono text-lg font-semibold">/api/machines/{id}/inspection-interval</span>
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: B</span>
+                    </div>
+                    <p class="mb-4">機械の点検間隔（何日ごとに点検するか）を変更するためのAPIです。「90日ごと」など柔軟な設定が可能です。</p>
+            
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <pre><code class="language-json">{
+    "interval_days": 120
+}</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <p class="text-sm mb-2">変更後の点検間隔と、それに基づいて再計算された次回点検日を返却します。</p>
+                    <pre><code class="language-json">{
+    "machine_id": 1,
+    "inspection_interval_days": 120,
+    "next_inspection_date": "2025-10-13"
+}</code></pre>
+            
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (400 Bad Request)</h3>
+                    <pre><code class="language-json">{
+    "error": "Invalid interval_days provided"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 7. 点検の完了 -->
+            <section id="complete-inspection">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">7. 点検の完了</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/machines/{id}/complete-inspection</span>
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: B</span>
+                    </div>
+                    <p class="mb-4">点検完了時にこのAPIを呼び出すと、最終点検日が当日の日付に更新されます。これにより次回点検日も自動計算され、運用負荷を軽減できます。</p>
+            
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                     <p class="text-sm mb-2">更新後の最終点検日と次回点検日を返却します。</p>
+                    <pre><code class="language-json">{
+    "machine_id": 1,
+    "last_inspection_date": "2025-09-30",
+    "next_inspection_date": "2025-12-29"
+}</code></pre>
+            
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (404 Not Found)</h3>
+                    <pre><code class="language-json">{
+    "error": "Machine not found"
+}</code></pre>
+                </div>
+            </section>
+
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function(){ const blocks=document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code=>{ const pre=code.parentElement; if(!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if(pre.querySelector('.copy-btn')) return; const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click',async()=>{ const raw=code.innerText.replace(/\n+$/,''); try{ await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(()=>{btn.classList.remove('copied'); btn.innerHTML=original;},1800);}catch(e){ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(()=>{btn.innerHTML='Copy';},2000);} }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

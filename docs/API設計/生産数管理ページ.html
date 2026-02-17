@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生産数管理API設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+        .get { background-color: #3b82f6; }
+        .post { background-color: #22c55e; }
+        
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+    /* Copy button */
+    .code-block-wrapper { position: relative; }
+    .copy-btn { position:absolute; top:4px; right:6px; background:rgba(51,65,85,.85); color:#f1f5f9; font-size:12px; font-weight:600; padding:6px 12px 6px 10px; border-radius:8px; cursor:pointer; line-height:1; display:flex; align-items:center; gap:6px; backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,.08); transition:transform .16s, box-shadow .22s, background-color .25s ease; box-shadow:0 2px 6px -2px rgba(15,23,42,.35);} .copy-btn svg{width:16px;height:16px;} .copy-btn:hover{background:rgba(71,85,105,.92); transform:translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45);} .copy-btn:active{transform:translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4);} .copy-btn.copied{background:linear-gradient(135deg,#16a34a 0%,#15803d 70%);} .copy-btn.copied svg{animation:pop .4s ease;} @keyframes pop{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">生産数管理API 設計書</h1>
+                </div>
+                <a href="../index.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    ← トップページに戻る
+                </a>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 生産数管理ページ</p>
+                <p class="text-sm mt-1">このドキュメントは、「生産数管理ページ」のグラフや表を表示するためのAPI仕様を定義します。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 0. DB設計 -->
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">生産実績の集計・一覧は <code>production_reports</code> を基本とします。</p>
+                    <pre><code class="language-sql">CREATE TABLE production_reports (
+    prodreport_id SERIAL PRIMARY KEY,              -- 自動採番
+    prodreport_date DATE NOT NULL,                 -- 日付
+    prodreport_product_name VARCHAR(100) NOT NULL, -- 製品名
+    prodreport_plan_quantity INT NOT NULL,         -- 計画数量
+    prodreport_actual_quantity INT NOT NULL,       -- 実績数量
+    prodreport_achievement_rate DECIMAL(5,2),      -- 達成率（例: 95.00）
+    prodreport_defective_quantity INT NOT NULL,    -- 不良数
+    prodreport_employee_id INT,                    -- 担当者ID
+    prodreport_remarks TEXT,                       -- 備考
+    FOREIGN KEY (prodreport_employee_id) REFERENCES employees(employee_id)
+);</code></pre>
+                    <p class="mt-2 text-sm text-slate-600">担当者名の表示は <code>employees</code> とJOINして取得します。性能要件に応じてインデックス（<code>prodreport_date</code>, <code>prodreport_product_name</code> など）を検討してください。</p>
+                </div>
+            </section>
+
+            <!-- 1. 生産サマリーデータ取得 -->
+            <section id="get-summary">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. 生産サマリーデータ取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/production/summary</span>
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: B</span>
+                    </div>
+                    <p class="mb-4">グラフや当日の進捗など、画面の上部で利用するデータをまとめて取得するAPIです。単一リクエストで主要指標を表示できるため効率的です。</p>
+                    
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">period</td>
+                                <td class="border-b p-2">グラフの表示期間を指定する (`week` or `month`)。</td>
+                                <td class="border-b p-2 font-mono">?period=week</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "today_summary": {
+        "plan": 4500,
+        "actual": 4520
+    },
+    "period_summary": {
+        "total_actual": 25860,
+        "total_defective": 228,
+        "yield_rate": 99.1,
+        "defective_reasons": [
+            { "reason": "傷", "count": 110 },
+            { "reason": "寸法不良", "count": 57 },
+            { "reason": "塗装ムラ", "count": 35 },
+            { "reason": "異物混入", "count": 26 }
+        ]
+    },
+    "daily_trends": [
+        { "date": "2025-07-29", "plan": 3000, "actual": 2960, "defective": 35 },
+        { "date": "2025-07-30", "plan": 3500, "actual": 3510, "defective": 20 },
+        { "date": "2025-07-31", "plan": 4000, "actual": 4050, "defective": 45 },
+        { "date": "2025-08-01", "plan": 4000, "actual": 3950, "defective": 30 },
+        { "date": "2025-08-02", "plan": 2500, "actual": 2480, "defective": 5 },
+        { "date": "2025-08-03", "plan": 4000, "actual": 4010, "defective": 40 },
+        { "date": "2025-08-04", "plan": 4500, "actual": 4520, "defective": 68 }
+    ]
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 2. 生産レポート一覧の取得 -->
+            <section id="get-reports">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. 生産レポート一覧の取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/production/reports</span>
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: B</span>
+                    </div>
+                    <p class="mb-4">ページ下部のテーブルに表示する、詳しい生産レポートのリストを取得するAPI。</p>
+                     <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">date</td>
+                                <td class="border-b p-2">日付 (YYYY-MM-DD形式)。</td>
+                                <td class="border-b p-2 font-mono">?date=2025-08-04</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">product_name</td>
+                                <td class="border-b p-2">製品名での部分一致検索。</td>
+                                <td class="border-b p-2 font-mono">?product_name=A-102</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">[
+    {
+        "id": 101,
+        "date": "2025-08-04",
+        "product_name": "製品A-102",
+        "plan": 2000,
+        "actual": 1980,
+        "achievement_rate": 99.0,
+        "defective": 35,
+        "employee_name": "山田 太郎"
+    },
+    {
+        "id": 102,
+        "date": "2025-08-04",
+        "product_name": "製品C-301",
+        "plan": 1500,
+        "actual": 1450,
+        "achievement_rate": 96.67,
+        "defective": 21,
+        "employee_name": "佐藤 花子"
+    }
+]</code></pre>
+                </div>
+            </section>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function(){ const blocks=document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code=>{ const pre=code.parentElement; if(!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if(pre.querySelector('.copy-btn')) return; const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click',async()=>{ const raw=code.innerText.replace(/\n+$/,''); try{ await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(()=>{btn.classList.remove('copied'); btn.innerHTML=original;},1800);}catch(e){ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(()=>{btn.innerHTML='Copy';},2000);} }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+</html>

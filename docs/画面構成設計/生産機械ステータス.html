@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生産機械状況</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                           <ion-icon name="hardware-chip-outline" class="text-white text-2xl"></ion-icon>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">生産機械状況</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <div class="bg-white rounded-xl shadow-md p-6 lg:p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    
+                    <!-- 左カラム: 機械画像とステータス -->
+                    <div class="lg:col-span-2 fade-in">
+                        <h2 class="text-3xl font-bold mb-4">自動表層バネどめ機</h2>
+                        <div class="bg-gray-200 rounded-lg overflow-hidden mb-4">
+                            <img src="images/image.png" alt="自動表層バネどめ機の画像" class="w-full h-auto object-cover">
+                        </div>
+                        <div id="machine-status-badge" class="p-4 rounded-lg text-center bg-green-100 text-green-800">
+                            <p class="text-2xl font-bold">正常に稼働中</p>
+                        </div>
+                    </div>
+
+                    <!-- 右カラム: 詳細情報とログ -->
+                    <div class="lg:col-span-3 fade-in" style="animation-delay: 0.1s;">
+                        <h3 class="text-2xl font-bold mb-4">稼働データ</h3>
+                        <!-- データグリッド -->
+                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-8">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">本日の稼働時間</p>
+                                <p class="text-3xl font-bold">8<span class="text-xl">時間</span> 25<span class="text-xl">分</span></p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">本日の生産数</p>
+                                <p class="text-3xl font-bold">1,520 <span class="text-xl">個</span></p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">最終点検日</p>
+                                <p class="text-3xl font-bold">2024/06/15</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">次回点検日</p>
+                                <p class="text-3xl font-bold">2024/09/15</p>
+                            </div>
+                        </div>
+
+                        <!-- エラーログ -->
+                        <div>
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                                <h3 class="text-2xl font-bold">エラーログ</h3>
+                                <!-- ログフィルター -->
+                                <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                                    <input type="date" id="log-date-filter" class="w-full border-gray-300 rounded-md shadow-sm text-sm">
+                                    <select id="log-type-filter" class="w-full border-gray-300 rounded-md shadow-sm text-sm">
+                                        <option value="すべて">すべて</option>
+                                        <option value="エラー">エラー</option>
+                                        <option value="警告">警告</option>
+                                        <option value="情報">情報</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="log-list" class="space-y-3 max-h-64 overflow-y-auto pr-2">
+                                <!-- エラーログ: サンプル1 -->
+                                <div class="log-item bg-red-50 p-3 rounded-md flex justify-between items-center" data-date="2025-07-15" data-type="エラー">
+                                    <div><p class="font-semibold text-red-800">E-102: トルク過負荷</p><p class="text-xs text-red-600">モーターの負荷が規定値を超えました。</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">10:15:32</span>
+                                </div>
+                                <!-- エラーログ: サンプル2 -->
+                                <div class="log-item bg-yellow-50 p-3 rounded-md flex justify-between items-center" data-date="2025-07-15" data-type="警告">
+                                    <div><p class="font-semibold text-yellow-800">W-05: 潤滑油低下</p><p class="text-xs text-yellow-600">潤滑油が規定レベルを下回っています。</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">09:30:11</span>
+                                </div>
+                                <!-- エラーログ: サンプル3 -->
+                                <div class="log-item bg-gray-100 p-3 rounded-md flex justify-between items-center" data-date="2025-07-15" data-type="情報">
+                                    <div><p class="font-semibold text-gray-800">I-001: 起動シーケンス完了</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">08:00:05</span>
+                                </div>
+                                <!-- 追加サンプル -->
+                                <div class="log-item bg-red-50 p-3 rounded-md flex justify-between items-center" data-date="2025-07-14" data-type="エラー">
+                                    <div><p class="font-semibold text-red-800">E-201: センサー接続エラー</p><p class="text-xs text-red-600">センサー#3との通信がタイムアウトしました。</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">2025/07/14 15:45:01</span>
+                                </div>
+                                <div class="log-item bg-yellow-50 p-3 rounded-md flex justify-between items-center" data-date="2025-07-14" data-type="警告">
+                                    <div><p class="font-semibold text-yellow-800">W-02: フィルター交換時期</p><p class="text-xs text-yellow-600">エアフィルターの交換を推奨します。</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">2025/07/14 11:20:45</span>
+                                </div>
+                                <div class="log-item bg-gray-100 p-3 rounded-md flex justify-between items-center" data-date="2025-07-14" data-type="情報">
+                                    <div><p class="font-semibold text-gray-800">I-002: 生産完了 (Lot-24B)</p></div>
+                                    <span class="text-sm text-gray-500 whitespace-nowrap">2025/07/14 17:30:00</span>
+                                </div>
+                            </div>
+                             <div id="no-log-results" class="hidden text-center py-12">
+                                <ion-icon name="sad-outline" class="text-5xl text-gray-400 mx-auto"></ion-icon>
+                                <p class="mt-4 text-lg font-medium text-gray-600">該当するログが見つかりませんでした。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="bg-white mt-8 py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2024 生産管理システム. All Rights Reserved.
+            </div>
+        </footer>
+
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateFilter = document.getElementById('log-date-filter');
+            const typeFilter = document.getElementById('log-type-filter');
+            const logItems = document.querySelectorAll('.log-item');
+            const noResultsDiv = document.getElementById('no-log-results');
+
+            function filterLogs() {
+                const dateValue = dateFilter.value;
+                const typeValue = typeFilter.value;
+                let visibleCount = 0;
+
+                logItems.forEach(item => {
+                    const itemDate = item.dataset.date;
+                    const itemType = item.dataset.type;
+
+                    const dateMatch = !dateValue || itemDate === dateValue;
+                    const typeMatch = typeValue === 'すべて' || itemType === typeValue;
+
+                    if (dateMatch && typeMatch) {
+                        item.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                noResultsDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            dateFilter.addEventListener('input', filterLogs);
+            typeFilter.addEventListener('change', filterLogs);
+        });
+    </script>
+</body>
+</html>

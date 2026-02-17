@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生産数管理</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bar-grow {
+            animation: grow 0.5s ease-out forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes grow {
+            from {
+                transform: scaleY(0);
+            }
+
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1.5s ease-out forwards;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                            <ion-icon name="stats-chart-outline" class="text-white text-2xl"></ion-icon>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">生産数管理</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr;
+                            ダッシュボードに戻る</a>
+                        <button
+                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- 左側コンテンツ -->
+                <div class="lg:col-span-3 flex flex-col gap-6">
+                    <!-- 生産推移グラフ -->
+                    <div class="bg-white p-6 rounded-xl shadow-md fade-in flex-grow flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold">生産推移</h2>
+                            <div id="chart-toggle" class="flex space-x-1 bg-gray-200 p-1 rounded-lg">
+                                <button data-period="week"
+                                    class="chart-btn bg-white text-indigo-600 px-3 py-1 rounded-md text-sm font-semibold">週間</button>
+                                <button data-period="month"
+                                    class="chart-btn text-gray-600 px-3 py-1 rounded-md text-sm font-semibold">月間</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-end items-center space-x-4 text-sm mb-2">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-sky-300 rounded-sm mr-2"></div>計画数
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-indigo-500 rounded-sm mr-2"></div>実績数
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-1 bg-red-500 mr-2"></div>不良率
+                            </div>
+                        </div>
+                        <div id="combo-chart-container" class="mt-4 relative flex-grow min-h-[20rem]">
+                            <!-- SVGグラフはJSで描画 -->
+                        </div>
+                    </div>
+                    <!-- 下段グラフ -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-md p-6 fade-in">
+                            <h3 class="font-bold mb-2 text-lg">期間内 良品率</h3>
+                            <div class="flex items-center">
+                                <div id="yield-chart-container" class="relative w-32 h-32 flex-shrink-0"></div>
+                                <div class="ml-6">
+                                    <p class="text-sm"><span class="font-semibold">総生産数:</span> <span
+                                            id="yield-total">0</span></p>
+                                    <p class="text-sm"><span class="font-semibold">不良品:</span> <span id="yield-fail"
+                                            class="text-red-600">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-md p-6 fade-in">
+                            <h3 class="font-bold mb-2 text-lg">期間内 不良品内訳</h3>
+                            <div id="fail-reasons-container" class="space-y-3 text-sm">
+                                <!-- 不良品内訳はJSで描画 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 右側: 今日の進捗 -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md fade-in flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 flex-shrink-0">今日の進捗</h2>
+                    <!-- PC表示 (縦長) -->
+                    <div class="hidden lg:flex flex-col items-center justify-between flex-grow pt-4">
+                        <div class="text-center w-full">
+                            <p class="text-lg font-semibold">生産計画</p>
+                            <p id="today-plan-lg" class="text-4xl font-bold">0</p>
+                        </div>
+                        <div class="relative w-20 flex-grow bg-gray-200 rounded-full my-4">
+                            <div id="today-progress-bar-lg"
+                                class="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-full transition-all duration-500"
+                                style="height: 0%;"></div>
+                        </div>
+                        <div id="today-progress-text-lg" class="text-5xl font-bold mb-4">0%</div>
+                        <div class="text-center w-full">
+                            <p class="text-lg font-semibold">実績</p>
+                            <p id="today-actual-lg" class="text-4xl font-bold text-indigo-600">0</p>
+                        </div>
+                    </div>
+                    <!-- スマホ表示 (横長) -->
+                    <div class="lg:hidden">
+                        <div class="flex justify-between items-baseline mb-2">
+                            <div>
+                                <p class="font-semibold">実績</p>
+                                <p id="today-actual-sm" class="text-2xl font-bold text-indigo-600">0</p>
+                            </div>
+                            <div>
+                                <p class="text-right font-semibold">計画</p>
+                                <p id="today-plan-sm" class="text-2xl font-bold">0</p>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-6">
+                            <div id="today-progress-bar-sm"
+                                class="bg-gradient-to-r from-blue-500 to-cyan-400 h-6 rounded-full text-center text-white font-bold flex items-center justify-center"
+                                style="width: 0%;">
+                                <span id="today-progress-text-sm">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- テーブル -->
+            <div class="mt-6 bg-white rounded-xl shadow-md p-6 fade-in" style="animation-delay: 0.1s;">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">生産レポート一覧</h2>
+                    <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                        <input type="date" id="filter-date" class="border-gray-300 rounded-md shadow-sm">
+                        <input type="text" id="filter-name" placeholder="製品名で検索"
+                            class="border-gray-300 rounded-md shadow-sm">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3">日付</th>
+                                <th class="px-6 py-3">製品名</th>
+                                <th class="px-6 py-3">計画数</th>
+                                <th class="px-6 py-3">実績数</th>
+                                <th class="px-6 py-3 min-w-[200px]">達成率</th>
+                                <th class="px-6 py-3">不良数</th>
+                                <th class="px-6 py-3">担当者</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-table-body"></tbody>
+                    </table>
+                    <div id="no-results" class="hidden text-center py-12">
+                        <ion-icon name="sad-outline" class="text-5xl text-gray-400 mx-auto"></ion-icon>
+                        <p class="mt-4 text-lg font-medium text-gray-600">該当するレポートが見つかりませんでした。</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sampleData = [
+                { date: '2025-08-04', name: '製品A-102', plan: 2000, actual: 1980, defective: 35, employee: '山田 太郎', defective_details: [{ reason: '傷', count: 20 }, { reason: '寸法不良', count: 15 }] },
+                { date: '2025-08-04', name: '製品C-301', plan: 1500, actual: 1450, defective: 21, employee: '佐藤 花子', defective_details: [{ reason: '塗装ムラ', count: 15 }, { reason: '異物混入', count: 6 }] },
+                { date: '2025-08-04', name: '製品B-205', plan: 1000, actual: 1090, defective: 12, employee: '鈴木 一郎', defective_details: [{ reason: '傷', count: 12 }] },
+                { date: '2025-08-03', name: '製品A-102', plan: 2000, actual: 2010, defective: 40, employee: '山田 太郎', defective_details: [{ reason: '傷', count: 25 }, { reason: '寸法不良', count: 15 }] },
+                { date: '2025-08-02', name: '製品D-401', plan: 500, actual: 480, defective: 5, employee: '高橋 次郎', defective_details: [{ reason: '傷', count: 5 }] },
+                { date: '2025-08-01', name: '製品A-102', plan: 2000, actual: 1950, defective: 30, employee: '山田 太郎', defective_details: [{ reason: '傷', count: 18 }, { reason: '寸法不良', count: 12 }] },
+                { date: '2025-07-31', name: '製品A-102', plan: 2000, actual: 2050, defective: 45, employee: '山田 太郎', defective_details: [{ reason: '傷', count: 30 }, { reason: '寸法不良', count: 15 }] },
+                { date: '2025-07-30', name: '製品C-301', plan: 1500, actual: 1510, defective: 20, employee: '佐藤 花子', defective_details: [{ reason: '塗装ムラ', count: 20 }] },
+                { date: '2025-07-29', name: '製品B-205', plan: 1000, actual: 980, defective: 15, employee: '鈴木 一郎', defective_details: [{ reason: '傷', count: 15 }] },
+            ];
+
+            const tableBody = document.getElementById('report-table-body');
+            const filterDate = document.getElementById('filter-date');
+            const filterName = document.getElementById('filter-name');
+            const noResultsDiv = document.getElementById('no-results');
+            const chartToggle = document.getElementById('chart-toggle');
+
+            function renderTable(data) {
+                tableBody.innerHTML = '';
+                if (data.length === 0) {
+                    noResultsDiv.style.display = 'block';
+                    return;
+                }
+                noResultsDiv.style.display = 'none';
+
+                data.forEach(item => {
+                    const achievementRate = ((item.actual / item.plan) * 100).toFixed(2);
+                    const defectiveRate = item.actual > 0 ? ((item.defective / item.actual) * 100).toFixed(2) : 0;
+
+                    let rateColor = 'bg-green-500';
+                    if (achievementRate < 90) rateColor = 'bg-red-500';
+                    else if (achievementRate < 100) rateColor = 'bg-yellow-500';
+
+                    const row = `
+                        <tr class="report-row bg-white border-b" data-date="${item.date}" data-name="${item.name.toLowerCase()}">
+                            <td class="px-6 py-4 font-medium">${item.date}</td>
+                            <td class="px-6 py-4 font-bold">${item.name}</td>
+                            <td class="px-6 py-4">${item.plan.toLocaleString()}</td>
+                            <td class="px-6 py-4 font-semibold">${item.actual.toLocaleString()}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mr-2"><div class="${rateColor} h-4 rounded-full" style="width: ${Math.min(achievementRate, 100)}%"></div></div>
+                                    <span class="font-bold w-16 text-right">${achievementRate}%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="${defectiveRate > 2 ? 'text-red-600 font-bold' : ''}">${item.defective.toLocaleString()}</span>
+                                <span class="text-xs text-gray-500"> (${defectiveRate}%)</span>
+                            </td>
+                            <td class="px-6 py-4">${item.employee}</td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            function filterData() {
+                const dateValue = filterDate.value;
+                const nameValue = filterName.value.toLowerCase();
+
+                const filteredData = sampleData.filter(item => {
+                    const dateMatch = !dateValue || item.date === dateValue;
+                    const nameMatch = item.name.toLowerCase().includes(nameValue);
+                    return dateMatch && nameMatch;
+                });
+
+                renderTable(filteredData);
+            }
+
+            function createDonutChart(containerId, percentage, colorClass) {
+                const container = document.getElementById(containerId);
+                const strokeDasharray = `${percentage}, 100`;
+                container.innerHTML = `
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" />
+                        <path class="${colorClass}" stroke-dasharray="${strokeDasharray}" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-3xl font-bold">${percentage.toFixed(1)}%</span>
+                    </div>
+                `;
+            }
+
+            function renderCharts(period = 'week') {
+                const today = new Date('2025-08-04');
+                const todayString = today.toISOString().split('T')[0];
+                let dataForChart = [];
+
+                if (period === 'week') {
+                    const oneWeekAgo = new Date(today);
+                    oneWeekAgo.setDate(today.getDate() - 6);
+                    dataForChart = sampleData.filter(d => new Date(d.date) >= oneWeekAgo && new Date(d.date) <= today);
+                } else { // month
+                    const oneMonthAgo = new Date(today);
+                    oneMonthAgo.setMonth(today.getMonth() - 1);
+                    dataForChart = sampleData.filter(d => new Date(d.date) >= oneMonthAgo && new Date(d.date) <= today);
+                }
+
+                // 複合グラフ
+                const groupedData = dataForChart.reduce((acc, curr) => {
+                    const date = curr.date;
+                    if (!acc[date]) {
+                        acc[date] = { plan: 0, actual: 0, defective: 0 };
+                    }
+                    acc[date].plan += curr.plan;
+                    acc[date].actual += curr.actual;
+                    acc[date].defective += curr.defective;
+                    return acc;
+                }, {});
+
+                const sortedDates = Object.keys(groupedData).sort((a, b) => new Date(a) - new Date(b));
+                const maxVal = Math.max(...Object.values(groupedData).map(d => Math.max(d.plan, d.actual)));
+                const maxDefectiveRate = Math.max(...Object.values(groupedData).map(d => d.actual > 0 ? (d.defective / d.actual * 100) : 0)) || 10;
+
+                const comboChartContainer = document.getElementById('combo-chart-container');
+                const width = comboChartContainer.clientWidth;
+                const height = comboChartContainer.clientHeight;
+                const padding = 40;
+
+                const bars = sortedDates.map((date, i) => {
+                    const x = (i / sortedDates.length) * (width - padding) + (padding / 2);
+                    const barWidth = (width - padding) / sortedDates.length * 0.6;
+
+                    const planHeight = (groupedData[date].plan / maxVal) * (height - padding * 2);
+                    const actualHeight = (groupedData[date].actual / maxVal) * (height - padding * 2);
+
+                    return `
+                        <rect x="${x - barWidth / 2}" y="${height - padding - planHeight}" width="${barWidth / 2}" height="${planHeight}" fill="#7dd3fc" class="bar-grow" />
+                        <rect x="${x}" y="${height - padding - actualHeight}" width="${barWidth / 2}" height="${actualHeight}" fill="#6366f1" class="bar-grow" />
+                    `;
+                }).join('');
+
+                const pointsDefective = sortedDates.map((date, i) => {
+                    const x = (i / sortedDates.length) * (width - padding) + (padding / 2);
+                    const rate = groupedData[date].actual > 0 ? (groupedData[date].defective / groupedData[date].actual * 100) : 0;
+                    const y = height - (rate / maxDefectiveRate * (height - padding * 2)) - padding;
+                    return `${x},${y}`;
+                }).join(' ');
+
+                const labels = sortedDates.map((date, i) => {
+                    const x = (i / sortedDates.length) * (width - padding) + (padding / 2);
+                    const dateObj = new Date(date);
+                    const label = `${dateObj.getMonth() + 1}/${dateObj.getDate()}`;
+                    return `<text x="${x}" y="${height - 25}" text-anchor="middle" font-size="12" fill="#6b7280">${label}</text>`;
+                }).join('');
+
+                comboChartContainer.innerHTML = `
+                    <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+                        <g class="bars">${bars}</g>
+                        <polyline class="chart-line" fill="none" stroke="#ef4444" stroke-width="3" points="${pointsDefective}" />
+                        <g class="labels">${labels}</g>
+                        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="#e5e7eb" />
+                        <text x="${width - padding + 5}" y="${padding}" font-size="12" fill="#ef4444">${maxDefectiveRate.toFixed(0)}%</text>
+                        <text x="${width - padding + 5}" y="${height - padding}" font-size="12" fill="#ef4444">0%</text>
+                    </svg>`;
+
+                // ドーナツグラフと不良品内訳
+                const totalActual = dataForChart.reduce((sum, d) => sum + d.actual, 0);
+                const totalDefective = dataForChart.reduce((sum, d) => sum + d.defective, 0);
+                const totalPass = totalActual - totalDefective;
+                const yieldRate = totalActual > 0 ? (totalPass / totalActual) * 100 : 0;
+
+                createDonutChart('yield-chart-container', yieldRate, 'text-green-500');
+                document.getElementById('yield-total').textContent = totalActual.toLocaleString();
+                document.getElementById('yield-fail').textContent = totalDefective.toLocaleString();
+
+                // 不良品内訳
+                const failReasonsContainer = document.getElementById('fail-reasons-container');
+                if (totalDefective > 0) {
+                    const reasonCounts = dataForChart.flatMap(d => d.defective_details || []).reduce((acc, curr) => {
+                        acc[curr.reason] = (acc[curr.reason] || 0) + curr.count;
+                        return acc;
+                    }, {});
+                    const sortedReasons = Object.entries(reasonCounts).sort(([, a], [, b]) => b - a);
+                    failReasonsContainer.innerHTML = sortedReasons.map(([reason, count]) => {
+                        const percentage = ((count / totalDefective) * 100).toFixed(0);
+                        return `
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium text-gray-700">${reason}</span>
+                                    <span class="text-gray-500">${count}件</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-red-500 h-2.5 rounded-full" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    failReasonsContainer.innerHTML = `<p class="text-gray-500 text-center">不良品はありませんでした。</p>`;
+                }
+
+                // 本日の進捗グラフ
+                const todayData = sampleData.filter(d => d.date === todayString);
+                const todayPlan = todayData.reduce((sum, d) => sum + d.plan, 0);
+                const todayActual = todayData.reduce((sum, d) => sum + d.actual, 0);
+                const todayProgress = todayPlan > 0 ? (todayActual / todayPlan) * 100 : 0;
+
+                document.getElementById('today-progress-bar-lg').style.height = `${Math.min(todayProgress, 100)}%`;
+                document.getElementById('today-progress-text-lg').textContent = `${todayProgress.toFixed(1)}%`;
+                document.getElementById('today-plan-lg').textContent = todayPlan.toLocaleString();
+                document.getElementById('today-actual-lg').textContent = todayActual.toLocaleString();
+
+                document.getElementById('today-progress-bar-sm').style.width = `${Math.min(todayProgress, 100)}%`;
+                document.getElementById('today-progress-text-sm').textContent = `${todayProgress.toFixed(1)}%`;
+                document.getElementById('today-plan-sm').textContent = todayPlan.toLocaleString();
+                document.getElementById('today-actual-sm').textContent = todayActual.toLocaleString();
+            }
+
+            chartToggle.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    chartToggle.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('bg-white', 'text-indigo-600');
+                        btn.classList.add('text-gray-600');
+                    });
+                    e.target.classList.add('bg-white', 'text-indigo-600');
+                    e.target.classList.remove('text-gray-600');
+                    renderCharts(e.target.dataset.period);
+                }
+            });
+
+            filterDate.addEventListener('input', filterData);
+            filterName.addEventListener('input', filterData);
+
+            // 初期表示
+            renderTable(sampleData);
+            setTimeout(() => renderCharts('week'), 100);
+        });
+    </script>
+
+</body>
+
+</html>

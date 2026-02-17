@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工場設定</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">工場設定</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- 権限種別管理 -->
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex items-center gap-2">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                            <ion-icon name="shield-checkmark-outline" class="text-2xl"></ion-icon>
+                        </span>
+                        <span>権限種別管理</span>
+                    </h2>
+                    <div class="space-y-4">
+                        <div id="roles-list" class="space-y-2">
+                            <!-- 権限リストはJSで動的に生成 -->
+                        </div>
+                        <div class="flex items-center gap-2 pt-2">
+                            <input type="text" id="new-role-input" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="ロール名を入力 (例: 閲覧のみ)">
+                            <button type="button" id="new-role-type-toggle" class="px-3 py-2 border rounded-md text-sm bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 transition">
+                                <span class="inline-flex items-center gap-1">
+                                    <ion-icon name="person-outline" class="text-base"></ion-icon>
+                                    <span>一般従業員</span>
+                                </span>
+                            </button>
+                            <button id="add-role-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                                <ion-icon name="add-outline" class="text-xl"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 工場ライン管理 -->
+                <div class="bg-white p-6 rounded-xl shadow-md fade-in" style="animation-delay: 0.1s;">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex items-center gap-2">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                            <!-- ベルトコンベア風アイコン -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                                <rect x="3" y="14" width="18" height="4" rx="2"></rect>
+                                <circle cx="7" cy="18" r="1.5"></circle>
+                                <circle cx="17" cy="18" r="1.5"></circle>
+                                <rect x="6" y="8" width="4" height="4" rx="1"></rect>
+                                <rect x="12" y="8" width="4" height="4" rx="1"></rect>
+                            </svg>
+                        </span>
+                        <span>工場ライン管理</span>
+                    </h2>
+                    <div class="space-y-4">
+                        <div id="lines-list" class="space-y-2">
+                            <!-- 工場ラインリストはJSで動的に生成 -->
+                        </div>
+                        <div class="flex space-x-2 pt-2">
+                            <input type="text" id="new-line-input" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="新しいライン名 (例: Cライン)">
+                            <button id="add-line-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                                <ion-icon name="add-outline" class="text-xl"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- フッター -->
+        <footer class="bg-white mt-8 py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2024 生産管理システム. All Rights Reserved.
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- サンプルデータ ---
+            const permissionTypes = ['管理者', '一般従業員'];
+            let roles = [
+                { name: '管理画面運用', type: '管理者' },
+                { name: '閲覧のみ', type: '一般従業員' }
+            ];
+            let lines = ['Aライン (組立)', 'Bライン (塗装)', '検査ライン'];
+
+            // --- DOM要素 ---
+            const rolesList = document.getElementById('roles-list');
+            const newRoleInput = document.getElementById('new-role-input');
+            const newRoleTypeToggle = document.getElementById('new-role-type-toggle');
+            let newRoleType = '一般従業員';
+
+            const updateNewRoleTypeButton = () => {
+                const isAdmin = newRoleType === '管理者';
+                newRoleTypeToggle.className = `w-44 justify-center px-3 py-2 border rounded-md text-sm transition ${isAdmin ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}`;
+                newRoleTypeToggle.innerHTML = `<span class="inline-flex items-center justify-center gap-1">${isAdmin
+                    ? '<ion-icon name="shield-checkmark-outline" class="text-base"></ion-icon><span>管理者</span>'
+                    : '<ion-icon name="person-outline" class="text-base"></ion-icon><span>一般従業員</span>'}</span>`;
+            };
+            if (newRoleTypeToggle) {
+                newRoleTypeToggle.addEventListener('click', () => {
+                    newRoleType = newRoleType === '管理者' ? '一般従業員' : '管理者';
+                    updateNewRoleTypeButton();
+                });
+                updateNewRoleTypeButton();
+            }
+            const addRoleButton = document.getElementById('add-role-button');
+
+            const linesList = document.getElementById('lines-list');
+            const newLineInput = document.getElementById('new-line-input');
+            const addLineButton = document.getElementById('add-line-button');
+
+            // --- ライン行生成（クリック編集対応） ---
+            const createLineItem = (index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-md';
+
+                const left = document.createElement('div');
+                left.className = 'flex items-center';
+
+                const iconWrap = document.createElement('span');
+                iconWrap.className = 'inline-flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-500 mr-3';
+                // ベルトコンベアSVG
+                const svgNS = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(svgNS, 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2');
+                svg.setAttribute('stroke-linecap', 'round');
+                svg.setAttribute('stroke-linejoin', 'round');
+                svg.setAttribute('class', 'h-5 w-5');
+                const rectBelt = document.createElementNS(svgNS, 'rect');
+                rectBelt.setAttribute('x', '3'); rectBelt.setAttribute('y', '14'); rectBelt.setAttribute('width', '18'); rectBelt.setAttribute('height', '4'); rectBelt.setAttribute('rx', '2');
+                const wheel1 = document.createElementNS(svgNS, 'circle'); wheel1.setAttribute('cx', '7'); wheel1.setAttribute('cy', '18'); wheel1.setAttribute('r', '1.5');
+                const wheel2 = document.createElementNS(svgNS, 'circle'); wheel2.setAttribute('cx', '17'); wheel2.setAttribute('cy', '18'); wheel2.setAttribute('r', '1.5');
+                const box1 = document.createElementNS(svgNS, 'rect'); box1.setAttribute('x', '6'); box1.setAttribute('y', '8'); box1.setAttribute('width', '4'); box1.setAttribute('height', '4'); box1.setAttribute('rx', '1');
+                const box2 = document.createElementNS(svgNS, 'rect'); box2.setAttribute('x', '12'); box2.setAttribute('y', '8'); box2.setAttribute('width', '4'); box2.setAttribute('height', '4'); box2.setAttribute('rx', '1');
+                svg.appendChild(rectBelt); svg.appendChild(wheel1); svg.appendChild(wheel2); svg.appendChild(box1); svg.appendChild(box2);
+                iconWrap.appendChild(svg);
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'text-gray-700 cursor-text';
+                nameSpan.textContent = lines[index];
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.className = 'hidden text-gray-800 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md text-sm px-2 py-1';
+                nameInput.placeholder = 'ライン名';
+
+                left.appendChild(iconWrap);
+                left.appendChild(nameSpan);
+                left.appendChild(nameInput);
+
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'flex items-center gap-2';
+
+                const editButton = document.createElement('button');
+                editButton.className = 'text-gray-400 hover:text-indigo-500 transition';
+                editButton.innerHTML = '<ion-icon name="pencil-outline" class="text-lg"></ion-icon>';
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'text-gray-400 hover:text-red-500 transition';
+                deleteButton.innerHTML = '<ion-icon name="trash-outline" class="text-xl"></ion-icon>';
+
+                const saveButton = document.createElement('button');
+                saveButton.className = 'hidden text-gray-400 hover:text-green-500 transition';
+                saveButton.innerHTML = '<ion-icon name="checkmark-outline" class="text-xl"></ion-icon>';
+
+                const cancelButton = document.createElement('button');
+                cancelButton.className = 'hidden text-gray-400 hover:text-red-500 transition';
+                cancelButton.innerHTML = '<ion-icon name="close-outline" class="text-xl"></ion-icon>';
+
+                buttonsDiv.appendChild(editButton);
+                buttonsDiv.appendChild(deleteButton);
+                buttonsDiv.appendChild(saveButton);
+                buttonsDiv.appendChild(cancelButton);
+
+                deleteButton.onclick = () => {
+                    lines.splice(index, 1);
+                    renderLines();
+                };
+
+                // --- 編集モードのロジック ---
+                let editing = false;
+                const enterEdit = () => {
+                    if (editing) return;
+                    editing = true;
+                    nameInput.value = lines[index];
+                    nameSpan.classList.add('hidden');
+                    nameInput.classList.remove('hidden');
+                    editButton.classList.add('hidden');
+                    deleteButton.classList.add('hidden');
+                    saveButton.classList.remove('hidden');
+                    cancelButton.classList.remove('hidden');
+                    setTimeout(() => { nameInput.focus(); nameInput.select(); }, 0);
+                };
+
+                const exitEdit = () => {
+                    editing = false;
+                    nameSpan.classList.remove('hidden');
+                    nameInput.classList.add('hidden');
+                    editButton.classList.remove('hidden');
+                    deleteButton.classList.remove('hidden');
+                    saveButton.classList.add('hidden');
+                    cancelButton.classList.add('hidden');
+                };
+
+                const saveEdit = () => {
+                    const newName = nameInput.value.trim();
+                    if (!newName) { exitEdit(); return; }
+                    const duplicate = lines.some((l, i) => i !== index && l === newName);
+                    if (duplicate) { exitEdit(); return; } // 重複は保存しない
+                    lines[index] = newName;
+                    nameSpan.textContent = newName;
+                    exitEdit();
+                };
+
+                editButton.addEventListener('click', enterEdit);
+                cancelButton.addEventListener('click', exitEdit);
+                saveButton.addEventListener('click', saveEdit);
+
+                nameInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') saveEdit();
+                    if (e.key === 'Escape') exitEdit();
+                });
+                nameInput.addEventListener('blur', exitEdit);
+
+                div.appendChild(left);
+                div.appendChild(buttonsDiv);
+                return div;
+            };
+
+            // --- 権限管理 ---
+            const createRoleItem = (role) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-md';
+
+                // 左側: アイコン + ロール名
+                const left = document.createElement('div');
+                left.className = 'flex items-center';
+
+                const iconWrap = document.createElement('span');
+                iconWrap.className = 'inline-flex h-8 w-8 items-center justify-center rounded-md bg-white text-gray-500 mr-3';
+                const icon = document.createElement('ion-icon');
+                icon.setAttribute('name', 'shield-outline');
+                icon.className = 'text-xl';
+                iconWrap.appendChild(icon);
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'text-gray-800 font-medium';
+                nameSpan.textContent = role.name;
+
+                // 編集用インプット（初期は非表示）
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.className = 'hidden text-gray-800 font-medium focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md text-sm px-2 py-1';
+                nameInput.placeholder = 'ロール名';
+
+                left.appendChild(iconWrap);
+                left.appendChild(nameSpan);
+                left.appendChild(nameInput);
+
+                // 右側: 種別トグル + ボタン
+                const right = document.createElement('div');
+                right.className = 'flex items-center gap-3';
+
+                const typeToggle = document.createElement('button');
+                typeToggle.type = 'button';
+                const applyTypeStyle = () => {
+                    const isAdmin = role.type === '管理者';
+                    typeToggle.className = `w-32 justify-center px-3 py-1.5 border rounded-md text-sm transition ${isAdmin ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'}`;
+                    typeToggle.innerHTML = isAdmin
+                        ? '<span class="inline-flex items-center justify-center gap-1"><ion-icon name="shield-checkmark-outline" class="text-base"></ion-icon><span>管理者</span></span>'
+                        : '<span class="inline-flex items-center justify-center gap-1"><ion-icon name="person-outline" class="text-base"></ion-icon><span>一般従業員</span></span>';
+                };
+                typeToggle.addEventListener('click', () => {
+                    role.type = role.type === '管理者' ? '一般従業員' : '管理者';
+                    applyTypeStyle();
+                });
+                applyTypeStyle();
+
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'flex items-center gap-2';
+
+                const editButton = document.createElement('button');
+                editButton.className = 'text-gray-400 hover:text-indigo-500 transition';
+                editButton.innerHTML = '<ion-icon name="pencil-outline" class="text-lg"></ion-icon>';
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'text-gray-400 hover:text-red-500 transition';
+                deleteButton.innerHTML = '<ion-icon name="trash-outline" class="text-xl"></ion-icon>';
+
+                const saveButton = document.createElement('button');
+                saveButton.className = 'hidden text-gray-400 hover:text-green-500 transition';
+                saveButton.innerHTML = '<ion-icon name="checkmark-outline" class="text-xl"></ion-icon>';
+
+                const cancelButton = document.createElement('button');
+                cancelButton.className = 'hidden text-gray-400 hover:text-red-500 transition';
+                cancelButton.innerHTML = '<ion-icon name="close-outline" class="text-xl"></ion-icon>';
+
+                buttonsDiv.appendChild(editButton);
+                buttonsDiv.appendChild(deleteButton);
+                buttonsDiv.appendChild(saveButton);
+                buttonsDiv.appendChild(cancelButton);
+
+                // --- 編集モードのロジック ---
+                let editing = false;
+                const enterEdit = () => {
+                    if (editing) return;
+                    editing = true;
+                    nameInput.value = role.name;
+                    nameSpan.classList.add('hidden');
+                    nameInput.classList.remove('hidden');
+                    typeToggle.classList.add('hidden');
+                    editButton.classList.add('hidden');
+                    deleteButton.classList.add('hidden');
+                    saveButton.classList.remove('hidden');
+                    cancelButton.classList.remove('hidden');
+                    setTimeout(() => { nameInput.focus(); nameInput.select(); }, 0);
+                };
+
+                const exitEdit = () => {
+                    editing = false;
+                    nameSpan.classList.remove('hidden');
+                    nameInput.classList.add('hidden');
+                    typeToggle.classList.remove('hidden');
+                    editButton.classList.remove('hidden');
+                    deleteButton.classList.remove('hidden');
+                    saveButton.classList.add('hidden');
+                    cancelButton.classList.add('hidden');
+                };
+
+                const saveEdit = () => {
+                    const newName = nameInput.value.trim();
+                    if (!newName) { exitEdit(); return; }
+                    const duplicate = roles.some(r => r !== role && r.name === newName);
+                    if (duplicate) { exitEdit(); return; }
+                    role.name = newName;
+                    nameSpan.textContent = newName;
+                    exitEdit();
+                };
+
+                editButton.addEventListener('click', enterEdit);
+                cancelButton.addEventListener('click', exitEdit);
+                saveButton.addEventListener('click', saveEdit);
+
+                nameInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') saveEdit();
+                    if (e.key === 'Escape') exitEdit();
+                });
+                nameInput.addEventListener('blur', exitEdit);
+
+                deleteButton.onclick = () => {
+                    roles = roles.filter(r => r !== role);
+                    renderRoles();
+                };
+
+                right.appendChild(typeToggle);
+                right.appendChild(buttonsDiv);
+
+                div.appendChild(left);
+                div.appendChild(right);
+                return div;
+            };
+
+            const renderRoles = () => {
+                rolesList.innerHTML = '';
+                roles.forEach(role => {
+                    const item = createRoleItem(role);
+                    rolesList.appendChild(item);
+                });
+            };
+
+            addRoleButton.addEventListener('click', () => {
+                const name = newRoleInput.value.trim();
+                const type = newRoleType;
+                const exists = roles.some(r => r.name === name);
+                if (name && !exists) {
+                    roles.push({ name, type });
+                    renderRoles();
+                    newRoleInput.value = '';
+                    newRoleType = '一般従業員';
+                    updateNewRoleTypeButton();
+                }
+            });
+
+            // --- 工場ライン管理 ---
+            const renderLines = () => {
+                linesList.innerHTML = '';
+                for (let i = 0; i < lines.length; i++) {
+                    const item = createLineItem(i);
+                    linesList.appendChild(item);
+                }
+            };
+
+            addLineButton.addEventListener('click', () => {
+                const newLine = newLineInput.value.trim();
+                if (newLine && !lines.includes(newLine)) {
+                    lines.push(newLine);
+                    renderLines();
+                    newLineInput.value = '';
+                }
+            });
+
+            // --- 初期化 ---
+            renderRoles();
+            renderLines();
+        });
+    </script>
+
+</body>
+</html>

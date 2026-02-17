@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証・アカウント作成 API設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .post {
+            background-color: #22c55e;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        /* language-http が highlight.js で着色されない場合のフォールバック */
+        pre code.language-http:not(.hljs) {
+            display:block;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background:#1e293b; /* slate-800 */
+            color:#e2e8f0; /* slate-200 */
+            font-size: 0.875rem;
+            line-height:1.4;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+            position:relative;
+        }
+        pre code.language-http:not(.hljs)::before {
+            content:'HTTP';
+            position:absolute;
+            top:6px; right:10px;
+            font-size:10px;
+            letter-spacing:.5px;
+            background:#334155;
+            color:#cbd5e1;
+            padding:2px 6px;
+            border-radius:4px;
+        }
+        /* Copy button */
+        .code-block-wrapper { position: relative; }
+        .copy-btn {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            background: rgba(51,65,85,.85); /* slate-600 */
+            color: #f1f5f9; /* slate-50 */
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,.08);
+            transition: transform .16s ease, box-shadow .22s ease, background-color .25s ease;
+            box-shadow: 0 2px 6px -2px rgba(15,23,42,.35);
+        }
+        .copy-btn svg { width: 16px; height: 16px; }
+        .copy-btn:hover { background: rgba(71,85,105,.92); transform: translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45); }
+        .copy-btn:active { transform: translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4); }
+        .copy-btn.copied { background: linear-gradient(135deg,#16a34a 0%,#15803d 70%); }
+        .copy-btn.copied svg { animation: pop .4s ease; }
+        @keyframes pop { 0%{transform:scale(.6) rotate(-20deg);} 60%{transform:scale(1.15);} 100%{transform:scale(1);} }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z">
+                        </path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">認証・アカウント作成 API 設計書</h1>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 全てのページのログイン・ログアウト・アカウント作成機能</p>
+                <p class="text-sm mt-1">このドキュメントは、アプリケーション全体の認証機能を実装するためのAPI仕様を定義します。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 0. DB設計 -->
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">認証まわりは以下の3テーブルが基本です。ユーザーは <code>employees</code> に格納し、権限や担当ラインは列で管理します（将来的に正規化する場合は <code>roles</code> / <code>production_lines</code> の参照に切替）。</p>
+
+                    <h3 class="text-lg font-semibold mt-4 mb-2">roles（権限マスタ）</h3>
+                    <pre><code class="language-sql">CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,            -- 自動採番
+    role_name VARCHAR(50) UNIQUE NOT NULL  -- 権限名（例:"管理者"や"一般"）
+);</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">production_lines（ラインマスタ）</h3>
+                    <pre><code class="language-sql">CREATE TABLE production_lines (
+    line_id SERIAL PRIMARY KEY,            -- 自動採番
+    line_name VARCHAR(100) UNIQUE NOT NULL -- ライン名（例:"ラインA"や"ラインB"）
+);</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">employees（ユーザー）</h3>
+                    <pre><code class="language-sql">CREATE TABLE employees (
+    employee_id SERIAL PRIMARY KEY,               -- 自動採番
+    employee_name VARCHAR(100) NOT NULL,          -- 氏名
+    employee_user_id VARCHAR(50) UNIQUE NOT NULL, -- ログインID
+    employee_password VARCHAR(255) NOT NULL,      -- パスワード（ハッシュ推奨）
+    employee_is_active BOOLEAN DEFAULT TRUE,      -- 有効/無効
+    employee_role_id INTEGER NOT NULL,           -- 権限ID（roles.role_id）
+    employee_line_id INTEGER NOT NULL,           -- 担当ラインID（production_lines.line_id）
+    employee_special_notes TEXT,                  -- 特記事項
+    employee_color_code CHAR(6)                   -- カラーコード（例:"FF0000"）
+    -- 将来的に roles / production_lines と外部キーで結ぶなら以下を有効化
+    -- ,FOREIGN KEY (employee_role_name) REFERENCES roles(role_name)
+    -- ,FOREIGN KEY (employee_line_name) REFERENCES production_lines(line_name)
+);</code></pre>
+
+                    <p class="mt-3 text-sm text-slate-600">レスポンス例にある <code>user</code> オブジェクトは <code>employees</code> からの抽出です。ハッシュ化とユニーク制約のエラー処理（409）を合わせて実装してください。</p>
+                </div>
+            </section>
+
+            <!-- 1. ログイン -->
+            <section id="login">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. ログイン</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/auth/login</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">ユーザーIDとパスワードを送信し、ユーザーを認証するAPIです。成功すると、後続の通信で使用するアクセストークンが返却されます。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <pre><code class="language-json">{
+    "employee_user_id": "hana.kato",
+    "password": "P@ssw0rd2025"
+}</code></pre>
+                    <p class="text-xs text-slate-500 mt-2">※ アカウント作成（register）サンプルと同じ値に統一。コピペしてそのまま試せるようにしています。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <p class="text-sm mb-2">アクセストークンとログインしたユーザーの情報を返します。このトークンはフロントエンドで保存し、認証が必要なAPIを呼び出す際にヘッダーへ付与してください。
+                    </p>
+                    <pre><code class="language-json">{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6NCwiZW1wbG95ZWVfdXNlcl9pZCI6InIub3NoaXlhbWEiLCJyb2xlX2lkIjoxLCJyb2xlX25hbWUiOiLnrqHnkIbogIUiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNzU5Mjk2NDEzLCJleHAiOjE3NTk5MDEyMTN9.-_8-eCEvD4O9sS_val5rlZRzxh7BXIUYATdQrgEnPRg",
+    "user": {
+        "employee_id": 4,
+        "employee_name": "押山 凜太朗",
+        "role_id": 1,
+        "role_name": "管理者",
+        "is_admin": true
+    }
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (401 Unauthorized)</h3>
+                    <pre><code class="language-json">{
+    "error": "Invalid user ID or password"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 2. アカウント作成 -->
+            <section id="register">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. アカウント作成</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/auth/register</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">新しい従業員アカウントを作成するAPIです。ユーザーIDやパスワード、氏名などの情報を送信します。成功すると、新規に作成されたユーザー情報が返却されます。</p>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <pre><code class="language-json">{
+    "employee_user_id": "hana.kato",
+    "password": "P@ssw0rd2025",
+    "employee_name": "加藤花",
+    "employee_role_id": 2,
+    "employee_line_id": 1,
+    "employee_special_notes": "夜勤中心",
+    "employee_color_code": "FF8800"
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h3>
+                    <p class="text-sm mb-2">ユーザー登録が成功したメッセージと、作成されたユーザー情報を返します。（パスワードは返却しません。）</p>
+                    <pre><code class="language-json">{
+    "message": "ユーザー登録が完了しました",
+    "user": {
+        "employee_id": 6,
+        "employee_user_id": "tanaka.misaki",
+        "employee_name": "田中 美咲"
+    }
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (400 Bad Request)</h3>
+                    <p class="text-sm mb-2">ユーザーID、パスワード、氏名のいずれかが不足している場合にこのエラーを返します。</p>
+                    <pre><code class="language-json">{
+    "error": "必要な情報が不足しています"
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (409 Conflict)</h3>
+                    <p class="text-sm mb-2">送信された `employee_user_id` が既に使用されている場合に返すエラーです。</p>
+                    <pre><code class="language-json">{
+    "error": "そのユーザーIDは既に使用されています"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 3. ログアウト -->
+            <section id="logout">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3. ログアウト</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/auth/logout</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">サーバー側でセッションを無効にするためのAPIです。このエンドポイントを呼び出す際は、ログイン時に受け取ったアクセストークンをヘッダーに付与して送信する必要があります。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストヘッダー</h3>
+                    <pre><code class="language-http" data-type="header">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "message": "Successfully logged out"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 4. ログイン状態チェック -->
+            <section id="check-session">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">4. ログイン状態チェック</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/auth/me</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">ユーザーが今ログインしてるか確認するためのAPI。ページをリロードしたときとかに、セッションが有効かチェックするのに使うと便利</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストヘッダー</h3>
+                    <pre><code class="language-http">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <p class="text-sm mb-2">トークンが有効なら、ログインしてるユーザーの情報を返す。</p>
+                    <pre><code class="language-json">{
+    "employee_id": 4,
+    "employee_name": "押山 凜太朗",
+    "role_id": 1,
+    "role_name": "管理者",
+    "is_admin": true,
+    "employee_color_code": "84CC16"
+}</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (401 Unauthorized)</h3>
+                    <p class="text-sm mb-2">トークンが無効、または期限切れの場合はこのエラーを返します。その際はログイン画面へ遷移させる処理を実装してください。</p>
+                    <pre><code class="language-json">{
+    "error": "Unauthorized"
+}</code></pre>
+                </div>
+            </section>
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+        // language-http が未ハイライトの場合は手動で .hljs を付与して共通スタイル適用
+        document.querySelectorAll('code.language-http').forEach(el=>{
+            if(!el.classList.contains('hljs')){
+                el.classList.add('hljs');
+            }
+        });
+        // Add copy buttons to JSON / HTTP / SQL code blocks
+        (function() {
+            const blocks = document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql');
+            blocks.forEach(code => {
+                const pre = code.parentElement;
+                if (!pre.classList.contains('code-block-wrapper')) {
+                    pre.classList.add('code-block-wrapper');
+                }
+                // Avoid duplicate buttons
+                if (pre.querySelector('.copy-btn')) return;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'copy-btn';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>';
+                btn.addEventListener('click', async () => {
+                    const raw = code.innerText.replace(/\n+$/, '');
+                    try {
+                        await navigator.clipboard.writeText(raw);
+                        btn.classList.add('copied');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>';
+            setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 1800);
+                    } catch (e) {
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>';
+            setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 2000);
+                    }
+                });
+                pre.appendChild(btn);
+            });
+        })();
+    </script>
+</body>
+
+</html>

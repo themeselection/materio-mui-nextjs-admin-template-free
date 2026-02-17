@@ -19,7 +19,8 @@ const NavSearch = () => {
       <IconButton className='text-textPrimary'>
         <i className='ri-search-line' />
       </IconButton>
-      <div className='whitespace-nowrap select-none text-textDisabled'>Search ⌘K</div>
+      <div className='whitespace-nowrap select-none text-textDisabled'>検索（未実装）
+      </div>
     </div>
   )
 }

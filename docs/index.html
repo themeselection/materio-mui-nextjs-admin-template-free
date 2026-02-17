@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API設計書 - トップページ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/heroicons@2.0.18/24/outline/esm/index.js"></script>
+    <script src="sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .api-card {
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .api-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .method-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15em 0.5em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 60px;
+            text-align: center;
+        }
+
+        .get { background-color: #3b82f6; }
+        .post { background-color: #22c55e; }
+        .put { background-color: #f97316; }
+        .delete { background-color: #ef4444; }
+        .websocket { background-color: #9333ea; }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-12 text-center">
+            <h1 class="text-5xl font-bold text-slate-900 mb-4">API設計書</h1>
+            <div class="max-w-3xl mx-auto">
+                <p class="text-xl text-slate-600 mb-6">
+                    製造管理システムのフロントエンドとバックエンドを連携させるためのAPI仕様書
+                </p>
+                <div class="p-6 bg-gradient-to-r from-indigo-100 to-purple-100 border-l-4 border-indigo-500 text-indigo-700 rounded-lg">
+                    <p class="font-bold text-lg mb-2">📋 設計書の構成</p>
+                    <p class="text-sm">各ページの機能に応じて、必要なAPIエンドポイントとリクエスト/レスポンス形式を定義しています。</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="mb-12 p-6 bg-white rounded-lg shadow-md border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">関連リンク</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <a href="https://docs.google.com/spreadsheets/d/1pnXHkgMfV0NFhZOiv1bbli-hKbWklDPdHapWW3xhdgU/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="block p-4 bg-green-100 rounded-lg hover:bg-green-200 transition-colors group">
+                    <h3 class="font-bold text-green-800">📝 タスク管理シート</h3>
+                    <p class="text-sm text-green-700 mt-1">Google スプレッドシート</p>
+                </a>
+                <a href="https://github.com/sabiaka/G3_webapp_front_2025" target="_blank" rel="noopener noreferrer" class="block p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors group">
+                    <h3 class="font-bold text-white">💻 フロントエンドリポジトリ</h3>
+                    <p class="text-sm text-gray-300 mt-1">GitHub (Next.js)</p>
+                </a>
+                <a href="https://github.com/sabiaka/G3_webapp_back_2025" target="_blank" rel="noopener noreferrer" class="block p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors group">
+                    <h3 class="font-bold text-white">🗄️ バックエンドリポジトリ</h3>
+                    <p class="text-sm text-gray-300 mt-1">GitHub (NestJS)</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- 認証系 -->
+            <a href="API設計/ログイン・認証系.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">認証・ログイン</h3>
+                    </div>
+                    <span class="method-badge post">POST</span>
+                </div>
+                <p class="text-slate-600 mb-4">ログイン・ログアウト・セッション管理のAPI仕様</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• ログイン認証</div>
+                    <div>• ログアウト処理</div>
+                    <div>• セッション確認</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 生産数管理 -->
+            <a href="API設計/生産数管理ページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">生産数管理</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">生産実績の取得とPLC・検査機からのデータ受信</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 生産サマリー取得</div>
+                    <div>• PLC情報受信</div>
+                    <div>• 検査結果受信</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 画像検査ステータス -->
+            <a href="API設計/画像検査ステータス.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">画像検査ステータス</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge websocket">WS</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">画像検査結果の取得とリアルタイム更新</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 検査サマリー取得</div>
+                    <div>• 検査ログ取得</div>
+                    <div>• リアルタイム更新</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 従業員管理 -->
+            <a href="API設計/従業員リストページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">従業員管理</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                        <span class="method-badge put">PUT</span>
+                        <span class="method-badge delete">DEL</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">従業員情報のCRUD操作</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 従業員一覧取得</div>
+                    <div>• 従業員追加・編集</div>
+                    <div>• 従業員削除</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 生産機械ステータス -->
+            <a href="API設計/生産機械ステータス.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">生産機械ステータス</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge websocket">WS</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">機械の稼働状況とエラーログの監視</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 機械情報取得</div>
+                    <div>• エラーログ取得</div>
+                    <div>• リアルタイム監視</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 製造出荷指示 -->
+            <a href="API設計/製造出荷指示.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">製造出荷指示</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                        <span class="method-badge put">PUT</span>
+                        <span class="method-badge delete">DEL</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">製造指示の管理と出荷指示の処理</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 指示一覧取得</div>
+                    <div>• 指示作成・編集</div>
+                    <div>• 指示削除</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 部品在庫管理 -->
+            <a href="API設計/部品在庫管理.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">部品在庫管理</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                        <span class="method-badge put">PUT</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">部品の在庫管理とQRコードによる入出庫</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• ラック情報取得</div>
+                    <div>• 部品検索・移動</div>
+                    <div>• QRコード処理</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- PLC・Jetson通信 -->
+            <a href="API設計/PLC,Jetson通信.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">PLC・Jetson通信</h3>
+                    </div>
+                    <span class="method-badge post">POST</span>
+                </div>
+                <p class="text-slate-600 mb-4">生産機械と画像検査システムからのデータ受信</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• PLC情報送信</div>
+                    <div>• 画像検査結果送信</div>
+                    <div>• リアルタイムデータ</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 工場設定 -->
+            <a href="API設計/工場設定.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">工場設定</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                        <span class="method-badge delete">DEL</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">権限やラインなど、工場全体のマスターデータを管理します。</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 権限種別管理</div>
+                    <div>• 工場ライン管理</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+            <!-- 今日のおしらせ -->
+            <a href="API設計/今日のおしらせ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">今日のおしらせ</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge put">PUT</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">今日の予定やお知らせを表示します。</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• お知らせ取得</div>
+                    <div>• お知らせ更新</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+<!-- 日報 -->
+            <a href="API設計/日報.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-slate-900">日報</h3>
+                    </div>
+                    <div class="flex space-x-1">
+                        <span class="method-badge get">GET</span>
+                        <span class="method-badge post">POST</span>
+                        <span class="method-badge put">PUT</span>
+                        <span class="method-badge delete">DELETE</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mb-4">日報の作成、更新を行う</p>
+                <div class="space-y-2 text-sm text-slate-500 mb-4">
+                    <div>• 日報一覧取得</div>
+                    <div>• 特定の日報取得</div>
+                    <div>• 日報追加</div>
+                    <div>• 特定の日報取得</div>
+                    <div>• 日報削除</div>
+                </div>
+                <span class="mt-2 inline-flex bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-indigo-700">
+                    詳細を見る →
+                </span>
+            </a>
+
+
+
+
+        </div>
+
+        <!-- 画面構成設計セクション -->
+        <div class="mt-20 mb-12">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">画面構成設計</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- トップページ -->
+                <a href="画面構成設計/トップページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">トップページ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">システム全体の概要とナビゲーション</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• ダッシュボード表示</div>
+                        <div>• メニューナビゲーション</div>
+                        <div>• システム概要</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 生産数管理ページ -->
+                <a href="画面構成設計/生産数管理ページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">生産数管理ページ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">生産実績の表示と管理</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 生産サマリー表示</div>
+                        <div>• 実績データ管理</div>
+                        <div>• グラフ・チャート</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 画像検査ステータス -->
+                <a href="画面構成設計/画像検査ステータス.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">画像検査ステータス</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">画像検査結果の表示と監視</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 検査結果表示</div>
+                        <div>• リアルタイム更新</div>
+                        <div>• エラー監視</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 従業員名簿ページ -->
+                <a href="画面構成設計/従業員名簿ページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">従業員名簿ページ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">従業員情報の管理と表示</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 従業員一覧表示</div>
+                        <div>• 情報編集・追加</div>
+                        <div>• 検索・フィルタ</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 生産機械ステータス -->
+                <a href="画面構成設計/生産機械ステータス.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">生産機械ステータス</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">機械の稼働状況とエラー監視</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 機械情報表示</div>
+                        <div>• エラーログ表示</div>
+                        <div>• リアルタイム監視</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 製造出荷指示周知ページ -->
+                <a href="画面構成設計/製造出荷指示周知ページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">製造出荷指示周知</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">製造指示と出荷指示の管理</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 指示一覧表示</div>
+                        <div>• 指示作成・編集</div>
+                        <div>• 進捗管理</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 部品在庫管理 -->
+                <a href="画面構成設計/部品在庫管理.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">部品在庫管理</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">部品の在庫管理とQRコード処理</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• ラック情報表示</div>
+                        <div>• 部品検索・移動</div>
+                        <div>• QRコード処理</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 生産機械サイネージ -->
+                <a href="画面構成設計/生産機械サイネージ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">生産機械サイネージ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">生産現場での情報表示</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 生産状況表示</div>
+                        <div>• アラート表示</div>
+                        <div>• 現場情報</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 日報一覧ページ -->
+                <a href="画面構成設計/日報一覧ページ.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">日報一覧ページ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">日報の管理と表示</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 日報一覧表示</div>
+                        <div>• 日報作成・編集</div>
+                        <div>• 検索・フィルタ</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- 工場設定ページ -->
+                <a href="画面構成設計/工場設定.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">工場設定ページ</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">権限やラインなど工場全体の設定</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 権限種別管理</div>
+                        <div>• 工場ライン管理</div>
+                        <div>• その他設定</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-blue-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- 補足Tipsセクション -->
+        <div class="mt-20 mb-12">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">補足Tips</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- 認証のやり方 -->
+                <a href="補足Tips/認証のやり方.html" class="api-card group block bg-white p-6 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">認証のやり方</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">認証システムの実装方法とベストプラクティス</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• 認証フロー設計</div>
+                        <div>• セキュリティ対策</div>
+                        <div>• 実装例</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-emerald-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+                <!-- QRコード設計 -->
+                <a href="補足Tips/QRコード設計.html" class="api-card group block bg-white p-8 rounded-lg shadow-md border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-slate-900">QRコード設計</h3>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mb-4">QRコードの設計と実装方法</p>
+                    <div class="space-y-2 text-sm text-slate-500 mb-4">
+                        <div>• QRコード仕様</div>
+                        <div>• データ形式</div>
+                        <div>• 実装例</div>
+                    </div>
+                    <span class="mt-2 inline-flex bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors group-hover:bg-emerald-700">
+                        詳細を見る →
+                    </span>
+                </a>
+
+            </div>
+        </div>
+
+        <footer class="text-center text-slate-500 mt-16 py-8 border-t border-slate-200">
+            <p class="text-lg font-semibold mb-2">API設計書</p>
+            <p class="text-sm">製造管理システムのフロントエンド開発のためのAPI仕様</p>
+            <p class="text-xs mt-4">&copy; 2024 API Design by Gemini. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>

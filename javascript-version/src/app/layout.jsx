@@ -3,14 +3,15 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // Style Imports
 import '@/app/globals.css'
+import './(dashboard)/parts-inventory/parts-inventory.css'
 
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'Demo: Materio - NextJS Dashboard Free',
+  title: 'MAT.io - 生産管理アプリケーション',
   description:
-    'Develop next-level web apps with Materio Dashboard Free - NextJS. Now, updated with lightning-fast routing powered by MUI and App router.'
+    '関東能力開発大学校 ボンネルコイルマットレス開発課題の生産管理Webアプリケーション'
 }
 
 const RootLayout = ({ children }) => {

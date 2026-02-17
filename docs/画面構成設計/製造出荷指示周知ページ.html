@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>製造出荷指示</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-enter {
+            animation: modal-enter-animation 0.3s ease-out forwards;
+        }
+        @keyframes modal-enter-animation {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* 完了カードのスタイル */
+        .completed-card {
+            opacity: 0.6;
+        }
+        /* 文字サイズ拡大用のスタイル */
+        .text-large h1, .text-large h2, .text-large h3, .text-large h4,
+        .text-large p, .text-large div, .text-large span, .text-large label,
+        .text-large button, .text-large select, .text-large input {
+             font-size: 1.1em !important;
+        }
+        .text-large .text-2xl { font-size: 1.75rem !important; }
+        .text-large .text-xl { font-size: 1.4rem !important; }
+        .text-large .text-sm { font-size: 1rem !important; }
+
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                           <ion-icon name="list-outline" class="text-white text-2xl"></ion-icon>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">製造出荷指示</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- 文字サイズ変更スイッチ -->
+                        <div class="flex items-center space-x-2">
+                            <ion-icon name="text-outline" class="text-xl text-gray-500"></ion-icon>
+                            <label for="font-size-toggle" class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="font-size-toggle" class="hidden">
+                                    <div class="toggle-bg w-12 h-7 bg-gray-200 rounded-full shadow-inner transition-colors duration-300"></div>
+                                    <div class="dot absolute w-5 h-5 bg-white rounded-full shadow left-1 top-1 transition-transform duration-300"></div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="h-6 w-px bg-gray-200"></div>
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- フィルターバー -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div class="md:col-span-1">
+                        <label for="filter-text" class="block text-sm font-medium text-gray-700">品名 / 配送先 / 備考</label>
+                        <input type="text" id="filter-text" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="マット, 西川仕様, 至急など">
+                    </div>
+                    <div>
+                        <label for="filter-line" class="block text-sm font-medium text-gray-700">担当ライン</label>
+                        <select id="filter-line" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="すべて">すべて</option>
+                            <option>マット</option>
+                            <option>ボトム</option>
+                            <option>その他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-completed" class="block text-sm font-medium text-gray-700">完了状態</label>
+                         <select id="filter-completed" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="すべて">すべて</option>
+                            <option value="not-completed">未完了のみ</option>
+                            <option value="completed">完了のみ</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 指示カードリスト -->
+            <div id="instruction-card-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- サンプルデータ 1 -->
+                <div class="instruction-card fade-in bg-white rounded-xl shadow-md flex flex-col transition-all duration-300" data-line="マット" data-content="マット 1200x1950x240 sd gm/be 1.9 西川仕様 西川アイロンシール 匠 フラワー ホテル 両面張り 至急対応">
+                    <div class="p-5 border-b border-gray-200 flex justify-between items-start">
+                        <div>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-cyan-100 text-cyan-800">マット</span>
+                            <h3 class="text-xl font-bold text-gray-900 mt-2">マット <span class="text-base text-gray-600 font-normal">/ 1200x1950x240 / SD</span></h3>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <label class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" class="completion-checkbox hidden">
+                                    <div class="toggle-bg w-12 h-7 bg-gray-200 rounded-full shadow-inner transition-colors duration-300"></div>
+                                    <div class="dot absolute w-5 h-5 bg-white rounded-full shadow left-1 top-1 transition-transform duration-300"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700 font-semibold text-sm">完了</div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow space-y-4 text-sm">
+                        <div>
+                            <h4 class="font-bold text-gray-500 mb-2">仕様</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">カラー:</p><p class="font-medium text-gray-800">GM/BE</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">バネ:</p><p class="font-medium text-gray-800">1.9</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">同梱品:</p><p class="font-medium text-gray-800">西川仕様 / 西川アイロンシール</p></div>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-gray-500 mb-2">配送情報</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送方法:</p><p class="font-medium text-gray-800">匠</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送先:</p><p class="font-medium text-gray-800">フラワー / ホテル / 両面張り</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">備考:</p><p class="font-bold text-red-600">至急対応</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-gray-50 rounded-b-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-gray-500">数量:</span>
+                            <span class="text-2xl font-bold text-indigo-600">1</span>
+                        </div>
+                        <button class="font-medium text-indigo-600 hover:underline flex items-center">
+                            編集 <ion-icon name="create-outline" class="ml-1"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- サンプルデータ 2 -->
+                <div class="instruction-card fade-in bg-white rounded-xl shadow-md flex flex-col transition-all duration-300 completed-card" style="animation-delay: 0.05s;" data-line="マット" data-content="マット 1200x1950x200 平 gm/be 1.9 路線 グリーン ホテル仕上">
+                    <div class="p-5 border-b border-gray-200 flex justify-between items-start">
+                        <div>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-cyan-100 text-cyan-800">マット</span>
+                            <h3 class="text-xl font-bold text-gray-900 mt-2">マット <span class="text-base text-gray-600 font-normal">/ 1200x1950x200 / 平</span></h3>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                             <label class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" class="completion-checkbox hidden" checked>
+                                    <div class="toggle-bg w-12 h-7 bg-indigo-500 rounded-full shadow-inner transition-colors duration-300"></div>
+                                    <div class="dot absolute w-5 h-5 bg-white rounded-full shadow left-1 top-1 transition-transform duration-300 translate-x-full"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700 font-semibold text-sm">完了</div>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="p-5 flex-grow space-y-4 text-sm">
+                        <div>
+                            <h4 class="font-bold text-gray-500 mb-2">仕様</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">カラー:</p><p class="font-medium text-gray-800">GM/BE</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">バネ:</p><p class="font-medium text-gray-800">1.9</p></div>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-gray-500 mb-2">配送情報</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送方法:</p><p class="font-medium text-gray-800">路線</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送先:</p><p class="font-medium text-gray-800">グリーン / ホテル仕上</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-gray-50 rounded-b-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-gray-500">数量:</span>
+                            <span class="text-2xl font-bold text-indigo-600">1</span>
+                        </div>
+                        <button class="font-medium text-indigo-600 hover:underline flex items-center">
+                            編集 <ion-icon name="create-outline" class="ml-1"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- サンプルデータ 3 -->
+                <div class="instruction-card fade-in bg-white rounded-xl shadow-md flex flex-col transition-all duration-300" style="animation-delay: 0.1s;" data-line="ボトム" data-content="サポート 80巾 5col 福岡県小郡 アマゾン アマゾン直送便">
+                    <div class="p-5 border-b border-gray-200 flex justify-between items-start">
+                        <div>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-orange-100 text-orange-800">ボトム</span>
+                            <h3 class="text-xl font-bold text-gray-900 mt-2">サポート <span class="text-base text-gray-600 font-normal">/ 80巾</span></h3>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                           <label class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" class="completion-checkbox hidden">
+                                    <div class="toggle-bg w-12 h-7 bg-gray-200 rounded-full shadow-inner transition-colors duration-300"></div>
+                                    <div class="dot absolute w-5 h-5 bg-white rounded-full shadow left-1 top-1 transition-transform duration-300"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700 font-semibold text-sm">完了</div>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="p-5 flex-grow space-y-4 text-sm">
+                        <div>
+                            <h4 class="font-bold text-gray-500 mb-2">仕様</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">カラー:</p><p class="font-medium text-gray-800">5col</p></div>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-gray-500 mb-2">配送情報</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送先:</p><p class="font-medium text-gray-800">福岡県小郡</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">備考:</p><p class="font-medium text-gray-800">アマゾン直送便</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-gray-50 rounded-b-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-gray-500">数量:</span>
+                            <span class="text-2xl font-bold text-indigo-600">1</span>
+                        </div>
+                        <button class="font-medium text-indigo-600 hover:underline flex items-center">
+                            編集 <ion-icon name="create-outline" class="ml-1"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- サンプルデータ 4 -->
+                <div class="instruction-card fade-in bg-white rounded-xl shadow-md flex flex-col transition-all duration-300" style="animation-delay: 0.15s;" data-line="その他" data-content="ピロー スタンダード white 保証書 路線 サンプル出荷">
+                    <div class="p-5 border-b border-gray-200 flex justify-between items-start">
+                        <div>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-gray-200 text-gray-800">その他</span>
+                            <h3 class="text-xl font-bold text-gray-900 mt-2">ピロー <span class="text-base text-gray-600 font-normal">/ スタンダード</span></h3>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                           <label class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" class="completion-checkbox hidden">
+                                    <div class="toggle-bg w-12 h-7 bg-gray-200 rounded-full shadow-inner transition-colors duration-300"></div>
+                                    <div class="dot absolute w-5 h-5 bg-white rounded-full shadow left-1 top-1 transition-transform duration-300"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700 font-semibold text-sm">完了</div>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="p-5 flex-grow space-y-4 text-sm">
+                        <div>
+                            <h4 class="font-bold text-gray-500 mb-2">仕様</h4>
+                            <div class="space-y-1">
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">カラー:</p><p class="font-medium text-gray-800">White</p></div>
+                                <div class="flex"><p class="w-20 text-gray-500 shrink-0">同梱品:</p><p class="font-medium text-gray-800">保証書</p></div>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-gray-500 mb-2">配送情報</h4>
+                             <div class="space-y-1">
+                               <div class="flex"><p class="w-20 text-gray-500 shrink-0">配送方法:</p><p class="font-medium text-gray-800">路線</p></div>
+                               <div class="flex"><p class="w-20 text-gray-500 shrink-0">備考:</p><p class="font-medium text-gray-800">サンプル出荷</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-gray-50 rounded-b-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-gray-500">数量:</span>
+                            <span class="text-2xl font-bold text-indigo-600">5</span>
+                        </div>
+                        <button class="font-medium text-indigo-600 hover:underline flex items-center">
+                            編集 <ion-icon name="create-outline" class="ml-1"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="no-results" class="hidden text-center py-12">
+                <ion-icon name="sad-outline" class="text-5xl text-gray-400 mx-auto"></ion-icon>
+                <p class="mt-4 text-lg font-medium text-gray-600">該当する指示が見つかりませんでした。</p>
+                <p class="text-sm text-gray-500">検索条件を変更して、もう一度お試しください。</p>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="bg-white mt-8 py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2024 生産管理システム. All Rights Reserved.
+            </div>
+        </footer>
+
+        <!-- フローティング追加ボタン -->
+        <button id="add-instruction-button" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-10">
+            <ion-icon name="add-outline" class="text-4xl"></ion-icon>
+        </button>
+
+    </div>
+
+    <!-- 追加・編集モーダル -->
+    <div id="instruction-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-30 p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl modal-enter">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-xl font-bold">新規 製造指示</h2>
+                <button id="modal-close-button" class="text-gray-400 hover:text-gray-600">
+                    <ion-icon name="close-outline" class="text-3xl"></ion-icon>
+                </button>
+            </div>
+            <form id="instruction-form">
+                <div class="p-6 max-h-[70vh] overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <div>
+                            <label for="form-line" class="block text-sm font-medium text-gray-700">担当ライン</label>
+                            <select id="form-line" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option>マット</option>
+                                <option>ボトム</option>
+                                <option>その他</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="form-quantity" class="block text-sm font-medium text-gray-700">数量</label>
+                            <input type="number" id="form-quantity" value="1" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="form-product-name" class="block text-sm font-medium text-gray-700">品名</label>
+                            <input type="text" id="form-product-name" placeholder="例: マット" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-size" class="block text-sm font-medium text-gray-700">サイズ</label>
+                            <input type="text" id="form-size" placeholder="例: 1200x1950x240 / SD" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-color" class="block text-sm font-medium text-gray-700">カラー</label>
+                            <input type="text" id="form-color" placeholder="例: GM/BE" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                         <div>
+                            <label for="form-spring" class="block text-sm font-medium text-gray-700">バネ</label>
+                            <input type="text" id="form-spring" placeholder="例: 1.9" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-included-items" class="block text-sm font-medium text-gray-700">同梱品</label>
+                            <input type="text" id="form-included-items" placeholder="例: 西川仕様" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-shipping-method" class="block text-sm font-medium text-gray-700">配送方法</label>
+                            <input type="text" id="form-shipping-method" placeholder="例: 匠" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                         <div>
+                            <label for="form-destination" class="block text-sm font-medium text-gray-700">配送先</label>
+                            <input type="text" id="form-destination" placeholder="例: フラワー / ホテル" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="form-remarks" class="block text-sm font-medium text-gray-700">備考</label>
+                            <textarea id="form-remarks" rows="2" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="特記事項など"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-gray-50 rounded-b-xl flex justify-end space-x-4">
+                    <button type="button" id="modal-cancel-button" class="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">キャンセル</button>
+                    <button type="submit" id="modal-save-button" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cardList = document.getElementById('instruction-card-list');
+            const fontSizeToggle = document.getElementById('font-size-toggle');
+            const rootElement = document.documentElement;
+
+            const filterTextInput = document.getElementById('filter-text');
+            const filterLineSelect = document.getElementById('filter-line');
+            const filterCompletedSelect = document.getElementById('filter-completed');
+            
+            const modal = document.getElementById('instruction-modal');
+            const openModalButton = document.getElementById('add-instruction-button');
+            const closeModalButton = document.getElementById('modal-close-button');
+            const cancelButton = document.getElementById('modal-cancel-button');
+            const instructionForm = document.getElementById('instruction-form');
+            const noResultsDiv = document.getElementById('no-results');
+
+            function filterCards() {
+                const textFilter = filterTextInput.value.toLowerCase();
+                const lineFilter = filterLineSelect.value;
+                const completedFilter = filterCompletedSelect.value;
+                const instructionCards = document.querySelectorAll('.instruction-card');
+                let visibleCount = 0;
+
+                instructionCards.forEach(card => {
+                    const content = card.dataset.content.toLowerCase();
+                    const line = card.dataset.line;
+                    const isCompleted = card.classList.contains('completed-card');
+
+                    const textMatch = content.includes(textFilter);
+                    const lineMatch = lineFilter === 'すべて' || line === lineFilter;
+                    
+                    let completedMatch = true;
+                    if (completedFilter === 'completed') {
+                        completedMatch = isCompleted;
+                    } else if (completedFilter === 'not-completed') {
+                        completedMatch = !isCompleted;
+                    }
+
+                    if (textMatch && lineMatch && completedMatch) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                noResultsDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            filterTextInput.addEventListener('input', filterCards);
+            filterLineSelect.addEventListener('change', filterCards);
+            filterCompletedSelect.addEventListener('change', filterCards);
+
+            cardList.addEventListener('change', (event) => {
+                const checkbox = event.target;
+                if (checkbox.classList.contains('completion-checkbox')) {
+                    const card = checkbox.closest('.instruction-card');
+                    const toggleBg = checkbox.nextElementSibling;
+                    const dot = toggleBg.nextElementSibling;
+
+                    if (checkbox.checked) {
+                        card.classList.add('completed-card');
+                        toggleBg.classList.remove('bg-gray-200');
+                        toggleBg.classList.add('bg-indigo-500');
+                        dot.classList.add('translate-x-full');
+                    } else {
+                        card.classList.remove('completed-card');
+                        toggleBg.classList.add('bg-gray-200');
+                        toggleBg.classList.remove('bg-indigo-500');
+                        dot.classList.remove('translate-x-full');
+                    }
+                    filterCards();
+                }
+            });
+
+            fontSizeToggle.addEventListener('change', (event) => {
+                const toggleBg = event.target.nextElementSibling;
+                const dot = toggleBg.nextElementSibling;
+
+                if(event.target.checked) {
+                    rootElement.classList.add('text-large');
+                    toggleBg.classList.remove('bg-gray-200');
+                    toggleBg.classList.add('bg-indigo-500');
+                    dot.classList.add('translate-x-full');
+                } else {
+                    rootElement.classList.remove('text-large');
+                    toggleBg.classList.add('bg-gray-200');
+                    toggleBg.classList.remove('bg-indigo-500');
+                    dot.classList.remove('translate-x-full');
+                }
+            });
+
+            // モーダル関連の処理
+            function openModal() { modal.classList.remove('hidden'); }
+            function closeModal() { modal.classList.add('hidden'); }
+
+            openModalButton.addEventListener('click', openModal);
+            closeModalButton.addEventListener('click', closeModal);
+            cancelButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            instructionForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // ここでデータを保存する処理を実装します。
+                // 今回はコンソールにログを出力するだけにします。
+                const formData = new FormData(instructionForm);
+                const data = Object.fromEntries(formData.entries());
+                console.log('保存データ:', data);
+                alert('新しい指示が保存されました！(コンソールを確認)');
+                // 実際にはここで新しいカードをDOMに追加する処理も必要
+                closeModal();
+                instructionForm.reset();
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 5分ごとに自動でページをリフレッシュ -->
+    <meta http-equiv="refresh" content="300">
+    <title>工場ダッシュボード</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* スクロールバーを非表示にする */
+            overflow: hidden;
+        }
+        /* エヴァ風アラートのアニメーション */
+        .alert-bg {
+            background-image: repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 25px, #1f2937 25px, #1f2937 50px);
+        }
+        .alert-flash {
+            animation: flash 1s infinite;
+        }
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col">
+
+    <!-- ヘッダー: 時計とタイトル -->
+    <header class="p-4 md:p-6 flex-shrink-0">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <h1 class="text-5xl font-black tracking-wider">工場ダッシュボード</h1>
+                <!-- デバッグ用ボタン -->
+                <div class="flex items-center space-x-2 pt-2">
+                    <button id="debug-error-btn" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md">デバッグ: エラー発生</button>
+                    <button id="debug-warning-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black text-xs px-3 py-1 rounded-md">デバッグ: 警告発生</button>
+                    <button id="debug-normal-btn" class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded-md">デバッグ: 正常化</button>
+                </div>
+            </div>
+            <div id="clock" class="text-5xl font-bold text-right">
+                <p id="time" class="tracking-widest">11:52</p>
+                <p id="date" class="text-2xl mt-1">2025/07/14 (Mon)</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ: 2カラムレイアウト -->
+    <main class="flex-grow grid grid-cols-1 xl:grid-cols-2 gap-6 p-4 md:p-6 overflow-hidden">
+        
+        <!-- 左カラム: 生産機械状況 -->
+        <div class="flex flex-col overflow-hidden bg-gray-800 rounded-2xl p-6">
+            <h2 class="text-4xl font-bold mb-4 flex-shrink-0">機械状況</h2>
+            <div class="flex-grow flex flex-col space-y-6">
+                <!-- 機械名とステータス -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-3xl font-bold">自動表層バネどめ機</h3>
+                    <span id="machine-status" class="px-4 py-2 text-xl font-semibold rounded-full bg-green-500 text-green-900">正常</span>
+                </div>
+                <!-- データグリッド -->
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">本日の稼働時間</p>
+                        <p class="text-5xl font-black">8<span class="text-3xl">h</span> 25<span class="text-3xl">m</span></p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">本日の生産数</p>
+                        <p class="text-5xl font-black">1,520</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">最終点検日</p>
+                        <p class="text-4xl font-bold">2024/06/15</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">次回点検日</p>
+                        <p class="text-4xl font-bold">2024/09/15</p>
+                    </div>
+                </div>
+                <!-- エラーログ -->
+                <div class="flex-grow flex flex-col overflow-hidden">
+                    <h3 class="text-2xl font-bold mb-2">最新エラーログ</h3>
+                    <div id="error-log-list" class="space-y-2 text-lg overflow-y-auto">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-md">
+                            <div><p class="font-semibold text-gray-300">I-001: 起動シーケンス完了</p></div>
+                            <span class="text-sm text-gray-400 whitespace-nowrap">08:00:05</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右カラム: 画像検査ステータス -->
+        <div class="flex flex-col overflow-hidden bg-gray-800 rounded-2xl p-6">
+            <h2 class="text-4xl font-bold mb-4 flex-shrink-0">画像検査</h2>
+            <div class="flex-grow flex flex-col space-y-6">
+                <!-- 全体ステータス -->
+                <div class="text-center">
+                    <p class="text-2xl text-green-400 font-bold">システム正常</p>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mt-2"><div class="bg-green-500 h-2.5 rounded-full" style="width: 100%"></div></div>
+                </div>
+                <!-- ライブカメラフィード -->
+                <div class="bg-black rounded-lg aspect-video flex items-center justify-center"><p class="text-gray-500 text-lg">LIVE CAMERA FEED</p></div>
+                <!-- 主要メトリクス -->
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-900 p-4 rounded-lg"><p class="text-lg text-gray-400">良品率</p><p class="text-5xl font-black text-green-400">99.8%</p></div>
+                    <div class="bg-gray-900 p-4 rounded-lg"><p class="text-lg text-gray-400">検査総数</p><p class="text-5xl font-black">1,250</p></div>
+                </div>
+                <!-- ログ -->
+                <div class="flex-grow overflow-y-auto">
+                    <h3 class="text-2xl font-bold mb-2">最新検査ログ</h3>
+                    <div class="space-y-2 text-lg">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-md"><p>ID: A-102-1250</p><p>11:55:12</p><span class="font-bold text-green-400">PASS</span></div>
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-md"><p>ID: A-102-1249</p><p>11:55:08</p><span class="font-bold text-green-400">PASS</span></div>
+                        <div class="flex justify-between items-center bg-red-900/50 p-3 rounded-md"><p>ID: A-102-1248</p><p>11:55:04</p><span class="font-bold text-red-400">FAIL</span></div>
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-md"><p>ID: A-102-1247</p><p>11:55:01</p><span class="font-bold text-green-400">PASS</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- エヴァ風アラート画面 -->
+    <div id="evangelion-alert" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="alert-bg w-full h-full absolute inset-0 opacity-20"></div>
+        <div class="text-center z-10">
+            <h2 class="text-9xl md:text-[12rem] font-black text-red-500 alert-flash tracking-widest" style="line-height: 1;">警告</h2>
+            <div class="mt-8 bg-black/80 p-6 rounded-lg border-4 border-yellow-400">
+                <p id="alert-error-code" class="text-6xl font-bold text-yellow-400">モータートルク異常</p>
+                <p id="alert-error-message" class="text-3xl mt-4 text-white">モーターの負荷が規定値を超えました。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 時計の表示を更新する関数
+        function updateClock() {
+            const now = new Date();
+            const timeElement = document.getElementById('time');
+            const dateElement = document.getElementById('date');
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
+
+            timeElement.textContent = `${hours}:${minutes}`;
+            dateElement.textContent = `${year}/${month}/${day} (${week})`;
+            
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        // 1秒ごとに時計を更新
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // エヴァ風アラートのロジック
+        const alertScreen = document.getElementById('evangelion-alert');
+        const alertErrorCode = document.getElementById('alert-error-code');
+        const alertErrorMessage = document.getElementById('alert-error-message');
+        const errorLogList = document.getElementById('error-log-list');
+        const machineStatus = document.getElementById('machine-status');
+
+        function showErrorAlert(code, message) {
+            alertErrorCode.textContent = code;
+            alertErrorMessage.textContent = message;
+            alertScreen.classList.remove('hidden');
+
+            // 5秒後にアラートを非表示
+            setTimeout(() => {
+                alertScreen.classList.add('hidden');
+            }, 5000);
+        }
+
+        function addErrorLog(code, message, type) {
+            const time = updateClock();
+            let bgColor, textColor, titleColor;
+
+            if (type === 'error') {
+                bgColor = 'bg-red-900/50';
+                textColor = 'text-red-400';
+                titleColor = 'text-red-300';
+            } else if (type === 'warning') {
+                bgColor = 'bg-yellow-900/50';
+                textColor = 'text-yellow-400';
+                titleColor = 'text-yellow-300';
+            } else { // info
+                bgColor = 'bg-gray-900';
+                textColor = 'text-gray-400';
+                titleColor = 'text-gray-300';
+            }
+
+            const logEntry = `
+                <div class="flex justify-between items-center ${bgColor} p-3 rounded-md">
+                    <div>
+                        <p class="font-semibold ${titleColor}">${code}</p>
+                        ${message ? `<p class="text-sm ${textColor}">${message}</p>` : ''}
+                    </div>
+                    <span class="text-sm text-gray-400 whitespace-nowrap">${time}</span>
+                </div>
+            `;
+            errorLogList.insertAdjacentHTML('afterbegin', logEntry);
+        }
+
+        // エラー発生のシミュレーション用データ
+        const sampleErrors = [
+            { code: 'モータートルク異常', message: 'モーターの負荷が規定値を超えました。', type: 'error' },
+            { code: 'フェンス内異物検知', message: '安全フェンス内で異物を検知しました。', type: 'error' },
+            { code: '非常停止ボタン取り扱い', message: '非常停止ボタンが押されました。', type: 'warning' }
+        ];
+
+        // デバッグ用ボタンのイベントリスナー
+        const debugErrorBtn = document.getElementById('debug-error-btn');
+        const debugWarningBtn = document.getElementById('debug-warning-btn');
+        const debugNormalBtn = document.getElementById('debug-normal-btn');
+
+        debugErrorBtn.addEventListener('click', () => {
+            const error = sampleErrors.filter(e => e.type === 'error')[Math.floor(Math.random() * 2)];
+            if (error) {
+                machineStatus.textContent = 'エラー';
+                machineStatus.className = 'px-4 py-2 text-xl font-semibold rounded-full bg-red-500 text-red-900';
+                addErrorLog(error.code, error.message, error.type);
+                showErrorAlert(error.code, error.message);
+            }
+        });
+
+        debugWarningBtn.addEventListener('click', () => {
+            const warning = sampleErrors.find(e => e.type === 'warning');
+            if (warning) {
+                machineStatus.textContent = '警告';
+                machineStatus.className = 'px-4 py-2 text-xl font-semibold rounded-full bg-yellow-500 text-yellow-900';
+                addErrorLog(warning.code, warning.message, warning.type);
+            }
+        });
+        
+        debugNormalBtn.addEventListener('click', () => {
+             machineStatus.textContent = '正常';
+             machineStatus.className = 'px-4 py-2 text-xl font-semibold rounded-full bg-green-500 text-green-900';
+             addErrorLog('I-003: 状態リセット', '手動で正常状態に復帰しました。', 'info');
+        });
+
+    </script>
+
+</body>
+</html>

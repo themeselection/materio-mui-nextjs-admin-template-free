@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証・API通信の知見まとめ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-slate-900">認証とAPI通信、完全理解しよ！💖</h1>
+            <p class="mt-2 text-lg text-slate-600">アクセストークンからHTTPメソッド、WebSocketまで、大事なこと全部まとめといたよん！</p>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 1. アクセストークン、どこに保存する？ -->
+            <section id="token-storage">
+                <h2 class="text-2xl font-bold border-b-2 border-pink-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="key-outline" class="mr-3 text-2xl text-pink-500"></ion-icon>
+                    1. アクセストークン、どこに保存する？
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6">ログインしたらもらえる「アクセストークン」。これ、フロントのどこに保存しとくのがイケてるのか？って話。選択肢は主に2つ！</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- HttpOnly Cookie -->
+                        <div class="border-2 border-green-500 rounded-lg p-4 bg-green-50">
+                            <h3 class="text-xl font-bold text-green-800 mb-2">🏆 HttpOnly Cookie (こっちが優勝！)</h3>
+                            <p class="text-green-700">サーバー側で設定する特別なCookie。JavaScriptから盗み見できないから、セキュリティ的にマジ最強！</p>
+                            <ul class="mt-4 space-y-2 text-sm">
+                                <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> 悪意のあるスクリプト攻撃
+                                    (XSS) にちょー強い！</li>
+                                <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> プロはこっちを使ってること多め。
+                                </li>
+                                <li class="flex items-start"><span class="text-gray-500 mr-2">⚠</span> サーバー側の設定がちょい必要。
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- localStorage -->
+                        <div class="border rounded-lg p-4 bg-gray-50">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">🤔 localStorage (お手軽だけど…)</h3>
+                            <p class="text-gray-700">ブラウザにサクッとデータを保存できる機能。実装は楽だけど、セキュリティ面がちょい心配かも。</p>
+                            <ul class="mt-4 space-y-2 text-sm">
+                                <li class="flex items-start"><span class="text-green-500 mr-2">✔</span>
+                                    JavaScriptで読み書きが超かんたん！</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❌</span>
+                                    XSS攻撃でトークンが盗まれるリスクがある。</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❌</span> 大事な情報は入れないのがお約束。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg">
+                        <p class="font-bold">結論：セキュリティをガチるなら、めんどくさくても `HttpOnly Cookie` を使うのが絶対おすすめ！</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. API通信の流れ -->
+            <section id="api-flow">
+                <h2 class="text-2xl font-bold border-b-2 border-cyan-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="git-compare-outline" class="mr-3 text-2xl text-cyan-500"></ion-icon>
+                    2. API通信のウラ側、こーなってる！
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6">「毎回API叩くたびに認証？」って思うかもだけど、実はそーじゃない！アクセストークンは「通行証」みたいなもん。一回もらっちゃえば、あとはそれを見せるだけ！</p>
+
+                    <ol class="space-y-4">
+                        <li class="flex items-start">
+                            <div
+                                class="flex-shrink-0 bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">
+                                1</div>
+                            <div>
+                                <h4 class="font-bold">ログイン (最初の一回だけ！)</h4>
+                                <p class="text-sm text-gray-600">IDとパスワードで `/api/auth/login` を叩く。ここで本人確認！</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div
+                                class="flex-shrink-0 bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">
+                                2</div>
+                            <div>
+                                <h4 class="font-bold">「通行証」をGET！</h4>
+                                <p class="text-sm text-gray-600">認証が成功したら、サーバーから「アクセストークン (通行証)」がもらえる。これをフロントで大事に保存しとく。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div
+                                class="flex-shrink-0 bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">
+                                3</div>
+                            <div>
+                                <h4 class="font-bold">APIを叩く (通行証を見せる！)</h4>
+                                <p class="text-sm text-gray-600">認証が必要なAPI (従業員リスト取得とか) を叩くとき、リクエストヘッダーに「Authorization:
+                                    Bearer [通行証]」を付けて送る。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div
+                                class="flex-shrink-0 bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">
+                                4</div>
+                            <div>
+                                <h4 class="font-bold">サーバーがチェック → OK！</h4>
+                                <p class="text-sm text-gray-600">サーバーは通行証を見て「お、有効なやつね！OK！」って判断して、データを返してくれる。</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 3. フロントエンド実装の流れ -->
+            <section id="frontend-impl">
+                <h2 class="text-2xl font-bold border-b-2 border-purple-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="code-slash-outline" class="mr-3 text-2xl text-purple-500"></ion-icon>
+                    3. じゃ、フロントはどう書くの？
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6">以上のことをふまえて、フロントエンドの実装はこんな感じの流れでやるとイケてる！</p>
+                    <ul class="list-disc list-inside space-y-3">
+                        <li><span class="font-bold">ログイン処理:</span> ユーザーが入力したID/パスで `/api/auth/login` を叩く。</li>
+                        <li><span class="font-bold">トークン保存:</span> 返ってきたアクセストークンを `HttpOnly Cookie` に保存してもらう (サーバー側で設定)。
+                        </li>
+                        <li><span class="font-bold">API通信設定:</span> `axios` みたいなライブラリで、全てのリクエストに自動で `Authorization`
+                            ヘッダーが付くように設定しとくと神。</li>
+                        <li><span class="font-bold">ログイン状態維持:</span> ページをリロードしたとき、`/api/auth/me`
+                            を叩いてログイン状態をチェック。ダメだったらログイン画面に強制送還！</li>
+                        <li><span class="font-bold">ログアウト処理:</span> ログアウトボタンが押されたら `/api/auth/logout`
+                            を叩く。成功したら、フロント側でもログイン状態を解除する。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 4. HTTPメソッドってなに？ -->
+            <section id="http-methods">
+                <h2 class="text-2xl font-bold border-b-2 border-orange-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="rocket-outline" class="mr-3 text-2xl text-orange-500"></ion-icon>
+                    4. GET, POST… HTTPメソッドってなに？
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6">APIを叩くときに指定する `GET` とか `POST` とかっていうのは、「サーバーに何をさせたいか」を伝えるための命令みたいなもん！代表的なやつを覚えとけばOK！
+                    </p>
+                    <div class="space-y-4">
+                        <!-- GET -->
+                        <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                            <h4 class="font-bold text-lg text-blue-800">GET: 「これちょーだい！」 (取得)</h4>
+                            <p class="text-sm text-blue-700 mt-1">サーバーから情報を<span
+                                    class="font-bold">もらう</span>ときに使う。例：従業員リストの表示、特定の商品情報の表示とか。見るだけだから、データが変わることはないよ。
+                            </p>
+                        </div>
+                        <!-- POST -->
+                        <div class="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                            <h4 class="font-bold text-lg text-green-800">POST: 「これ追加しといて！」 (新規作成)</h4>
+                            <p class="text-sm text-green-700 mt-1">サーバーに新しいデータを<span
+                                    class="font-bold">作る</span>ときにお願いする。例：新しい従業員の登録、ブログの新規投稿とか。</p>
+                        </div>
+                        <!-- PUT -->
+                        <div class="p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-r-lg">
+                            <h4 class="font-bold text-lg text-yellow-800">PUT: 「これで全部上書きしといて！」 (更新)</h4>
+                            <p class="text-sm text-yellow-700 mt-1">既存のデータを<span
+                                    class="font-bold">まるっと全部</span>新しい情報に置き換えるときに使う。例：従業員情報の全体的な変更とか。</p>
+                        </div>
+                        <!-- DELETE -->
+                        <div class="p-4 border-l-4 border-red-500 bg-red-50 rounded-r-lg">
+                            <h4 class="font-bold text-lg text-red-800">DELETE: 「これ消しといて！」 (削除)</h4>
+                            <p class="text-sm text-red-700 mt-1">データを<span
+                                    class="font-bold">消す</span>ときにお願いする。そのまんまだね！例：従業員の削除、投稿の削除とか。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. WebSocketってなに？ -->
+            <section id="websocket">
+                <h2 class="text-2xl font-bold border-b-2 border-teal-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="flash-outline" class="mr-3 text-2xl text-teal-500"></ion-icon>
+                    5. リアルタイム通信の神！WebSocketって何？
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6">機械の状況とか、検査結果をリアルタイムで画面に反映したいときに出てくるのがこいつ！HTTP通信とはちょっと違う、特別な通信方法だよ。</p>
+                    <div class="p-4 border-l-4 border-teal-500 bg-teal-50 rounded-r-lg">
+                        <h4 class="font-bold text-lg text-teal-800">WebSocket: 「ずっと電話繋いどこ！」 (双方向通信)</h4>
+                        <p class="text-sm text-teal-700 mt-1">普通のHTTP通信が「手紙のやり取り（一回ずつ完結）」だとしたら、WebSocketは<span
+                                class="font-bold">「ずーっと繋ぎっぱなしの電話」</span>みたいな感じ！</p>
+                        <ul class="mt-3 list-disc list-inside space-y-2 text-sm text-teal-700">
+                            <li>一回接続したら、サーバーからもフロントからも、好きなタイミングでデータを送りあえる！</li>
+                            <li>だから、サーバー側で「あ、新しい検査結果でた！」ってなったら、すぐにフロントに教えられる。</li>
+                            <li>チャットアプリとか、リアルタイムのゲームとか、株価の更新とか、そーゆーので使われてるイケてる技術！</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+</body>
+
+</html>

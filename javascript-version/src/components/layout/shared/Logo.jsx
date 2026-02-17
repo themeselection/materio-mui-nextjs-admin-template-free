@@ -16,7 +16,7 @@ const LogoText = styled.span`
   font-weight: 600;
   letter-spacing: 0.15px;
   text-transform: uppercase;
-  margin-inline-start: 10px;
+  margin-inline-start: 6px;
 `
 
 const Logo = ({ color }) => {

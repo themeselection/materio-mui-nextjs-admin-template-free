@@ -1,0 +1,61 @@
+@import "compass/css3";
+
+$border: dotted 10px black;
+
+body {
+  padding: 0;
+  margin: 0;
+  background-size: 120% auto;
+  background-image: url(http://www.zekefilm.org/wp-content/uploads/2013/07/Neon-Genesis-1.jpg);
+}
+
+.eva-warning {
+  margin-top: 10%;
+  background-color: red;
+  overflow: hidden;
+  box-shadow: 0 0 10px black;
+  opacity: 0.75;
+  
+  &:before, &:after {
+    float: left;
+    clear: both;
+    content: ' ';
+    width: 100%;
+    background-color: red;
+    box-shadow: 0 0 0 1px black;
+  }
+  
+  &:before {
+    border-top: $border;
+    transform: skew(-50deg);
+    padding-bottom: 1px;
+  }
+  
+  &:after {
+    border-bottom: $border;
+    transform: skew(50deg);
+    padding-top: 1px;
+  }
+}
+
+.eva-warning__message {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: Arial, Helvetica;
+  font-size: 2.5em;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  25% {
+    color: transparent;
+    background-color: red;
+  }
+  
+  50% {
+    background-color: black; 
+  }
+}

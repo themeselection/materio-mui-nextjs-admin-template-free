@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像検査API設計書（なんとまた仕様変更）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        .websocket {
+            background-color: #9333ea;
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Copy button */
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            background: rgba(51, 65, 85, .85);
+            color: #f1f5f9;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: transform .16s, box-shadow .22s, background-color .25s;
+            box-shadow: 0 2px 6px -2px rgba(15, 23, 42, .35);
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(71, 85, 105, .92);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px -4px rgba(15, 23, 42, .45);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px -4px rgba(15, 23, 42, .4);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 70%);
+        }
+
+        .copy-btn.copied svg {
+            animation: pop .4s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(.6) rotate(-20deg);
+            }
+
+            60% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">画像検査API 設計書（Re:仕様変更）</h1>
+                </div>
+                <a href="../index.html"
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    ← トップページに戻る
+                </a>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 画像検査ステータス</p>
+                <p class="text-sm mt-1">このドキュメントは、「画像検査ステータス」ページの最新フロント実装に合わせたAPI/DB設計を定義します。WebSocket は廃止し、<strong>軽量な
+                        GET ポーリング</strong>で変更検知→ フロントは必要なデータを GET で再取得する方式に変更しました。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 0. 改訂概要 -->
+            <section id="changelog" class="mb-12">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">改訂概要</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md space-y-3 text-slate-700">
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li>リアルタイム更新: WebSocket →
+                            <strong>軽量GETポーリング</strong>に変更（サーバは直近イベントID/名前を公開。フロントは数秒おきに比較し、変化時のみデータAPIを再取得）。</li>
+                        <li>DBスキーマ: 単一テーブルから <strong>ロット</strong>＋<strong>カメラショット</strong>
+                            の2層構造へ再設計。1ロット内の同一カメラの複数ショットを保存可能。</li>
+                        <li>API整備: クエリは <code>section</code> と <code>date</code> を基本に統一。<code>summary</code> と
+                            <code>lots</code> を中核に、任意で <code>lot-shots</code> や <code>dates</code> を追加。</li>
+                        <li>ショット詳細: 4K / FHD ごとにエンドポイントを分割し、<code>c4k_seq</code>（DB 列:
+                            <code>c4k_seq</code>）・<code>fhd_seq</code> で新たな撮影シーケンスを識別。</li>
+                        <li>ステータス表記: サーバは <code>PASS/FAIL</code> を返却。フロントの UI 表示（OK/NG 等）はフロント側でマッピング。</li>
+                        <li>画像命名: <code>{lot_id}_{camera_id}-{seq}.jpg</code> を推奨（例:
+                            <code>MAT-10001_B-spring01-02.jpg</code>）。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="camera-config" class="mb-12">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">カメラ構成と命名規則</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-6 text-slate-600">
+                        検査システムは複数のカメラで構成されます。各カメラには、その物理的な位置と役割を示す一意のIDが割り当てられます。カメラIDは通常、<code>{層}-{役割}-{番号}</code>
+                        という形式で命名されます。
+                    </p>
+                    <div class="flex justify-center items-center p-4 border border-slate-200 rounded-lg bg-slate-50">
+                        <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-lg">
+                            <style>
+                                .title {
+                                    font-size: 28px;
+                                    font-weight: bold;
+                                    font-family: 'Noto Sans JP', sans-serif;
+                                    fill: #334155;
+                                }
+
+                                .label {
+                                    font-size: 18px;
+                                    font-family: 'Inter', sans-serif;
+                                    fill: #1e293b;
+                                }
+
+                                .camera-body {
+                                    fill: #f1f5f9;
+                                    stroke: #475569;
+                                    stroke-width: 4;
+                                }
+
+                                .camera-lens {
+                                    fill: #94a3b8;
+                                    stroke: #475569;
+                                    stroke-width: 3;
+                                }
+
+                                .mattress {
+                                    fill: #e2e8f0;
+                                    stroke: #94a3b8;
+                                    stroke-width: 2;
+                                }
+
+                                .line {
+                                    stroke: #64748b;
+                                    stroke-width: 2;
+                                }
+                            </style>
+                            <text x="300" y="40" text-anchor="middle" class="title">A層検査カメラ</text>
+
+                            <!-- Mattress -->
+                            <path d="M 100 270 L 150 240 L 450 240 L 500 270 L 450 300 L 150 300 Z" class="mattress" />
+                            <text x="300" y="280" text-anchor="middle" class="label"
+                                style="font-size: 22px;">マットレス</text>
+
+                            <!-- Center Camera: A-main01 -->
+                            <g transform="translate(275, 100)">
+                                <rect x="0" y="0" width="50" height="70" rx="5" class="camera-body" />
+                                <path d="M 10 70 L 40 70 L 45 85 L 5 85 Z" class="camera-lens" />
+                                <line x1="25" y1="0" x2="25" y2="-20" class="line" />
+                                <!-- <line x1="25" y2="-20" x2="150" y2="-20" class="line" /> -->
+                                <text x="-15" y="-30" class="label">A-main01</text>
+                            </g>
+
+                            <!-- Left Camera: A-stitch01 -->
+                            <g transform="translate(120, 150) rotate(-30)">
+                                <rect x="0" y="0" width="40" height="60" rx="5" class="camera-body" />
+                                <path d="M 5 60 L 35 60 L 40 75 L 0 75 Z" class="camera-lens" />
+                                <line x1="20" y1="0" x2="20" y2="-20" class="line" />
+                                <!-- <line x1="20" y2="-20" x2="120" y2="-20" class="line" /> -->
+                                <text x="-100" y="20" class="label" transform="rotate(30)">A-stitch01</text>
+                            </g>
+
+                            <!-- Right Camera: A-stitch02 -->
+                            <g transform="translate(480, 150) rotate(30)">
+                                <rect x="-40" y="0" width="40" height="60" rx="5" class="camera-body" />
+                                <path d="M -35 60 L -5 60 L 0 75 L -40 75 Z" class="camera-lens" />
+                                <line x1="-20" y1="0" x2="-20" y2="-20" class="line" />
+                                <text x="100" y="20" class="label" text-anchor="end"
+                                    transform="rotate(-30)">A-stitch02</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- バネどめ検査カメラ構成図 -->
+                    <div
+                        class="mt-8 flex justify-center items-center p-4 border border-slate-200 rounded-lg bg-slate-50">
+                        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-3xl">
+                            <g transform="translate(50, 0)">
+                                <style>
+                                    .title {
+                                        font-size: 28px;
+                                        font-weight: bold;
+                                        font-family: 'Noto Sans JP', sans-serif;
+                                        fill: #3730a3;
+                                    }
+
+                                    .label {
+                                        font-size: 16px;
+                                        font-family: 'Inter', sans-serif;
+                                        fill: #312e81;
+                                    }
+
+                                    .camera-box {
+                                        fill: #e0e7ff;
+                                        stroke: #4338ca;
+                                        stroke-width: 6;
+                                        rx: 20;
+                                    }
+
+                                    .camera-label {
+                                        font-size: 24px;
+                                        font-weight: bold;
+                                        fill: #4338ca;
+                                        text-anchor: middle;
+                                        dominant-baseline: central;
+                                    }
+
+                                    .center-box {
+                                        fill: #e0e7ff;
+                                        stroke: #4338ca;
+                                        stroke-width: 6;
+                                        rx: 20;
+                                    }
+
+                                    .center-label {
+                                        font-size: 26px;
+                                        font-weight: bold;
+                                        fill: #4338ca;
+                                        text-anchor: middle;
+                                        dominant-baseline: central;
+                                    }
+
+                                    .line {
+                                        stroke: #4f46e5;
+                                        stroke-width: 2;
+                                    }
+                                </style>
+                                <text x="300" y="40" text-anchor="middle" class="title">バネどめ検査カメラ</text>
+
+                                <!-- Center Box -->
+                                <rect x="120" y="180" width="360" height="150" class="center-box" />
+                                <text x="300" y="255" class="center-label">押し上げ部</text>
+
+                                <!-- Camera 1 (Left) -->
+                                <g>
+                                    <rect x="40" y="160" width="70" height="190" class="camera-box" />
+                                    <text x="75" y="255" class="camera-label">1</text>
+                                    <!-- <line x1="40" y1="255" x2="-20" y2="255" class="line" /> -->
+                                    <text x="115" y="380" text-anchor="end" class="label">B-spring01</text>
+                                </g>
+
+                                <!-- Camera 2 (Top-Left) -->
+                                <g>
+                                    <rect x="140" y="90" width="150" height="70" class="camera-box" />
+                                    <text x="215" y="125" class="camera-label">2</text>
+                                    <line x1="215" y1="90" x2="215" y2="70" class="line" />
+                                    <line x1="215" y1="70" x2="120" y2="70" class="line" />
+                                    <text x="110" y="70" text-anchor="end" class="label">B-spring02</text>
+                                </g>
+
+                                <!-- Camera 3 (Top-Right) -->
+                                <g>
+                                    <rect x="310" y="90" width="150" height="70" class="camera-box" />
+                                    <text x="385" y="125" class="camera-label">3</text>
+                                    <line x1="385" y1="90" x2="385" y2="70" class="line" />
+                                    <line x1="385" y1="70" x2="480" y2="70" class="line" />
+                                    <text x="490" y="70" class="label">B-spring03</text>
+                                </g>
+
+                                <!-- Camera 4 (Right) -->
+                                <g>
+                                    <rect x="490" y="160" width="70" height="190" class="camera-box" />
+                                    <text x="525" y="255" class="camera-label">4</text>
+                                    <!-- <line x1="560" y1="255" x2="620" y2="255" class="line" /> -->
+                                    <text x="480" y="380" class="label">B-spring04</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. データベーススキーマ -->
+            <section id="db-schema">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. データベーススキーマ（刷新）</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4 text-slate-600">PostgreSQLを想定。1ロット内で同一カメラの複数ショットを保持し、ロット単位の集計を容易にします。</p>
+                    <div class="code-block-wrapper">
+                        <pre><code class="language-sql">
+-- ロット（製品ID等に相当）
+CREATE TABLE inspection_lots (
+    id BIGSERIAL PRIMARY KEY,                                       -- ロット内部ID（連番）
+    lot_id VARCHAR(64) NOT NULL,                                    -- ロットID（製品ID等、例: 'MAT-10001'）
+    section_code VARCHAR(32) NOT NULL,                              -- セクション内部コード（例: 'spring'）
+    captured_at TIMESTAMP WITH TIME ZONE NOT NULL,                  -- 検査代表時刻（最初/最後のいずれか）
+    UNIQUE (lot_id)                                                 -- ロットIDは一意
+);
+
+-- カメラショット（1ロット内で複数可、同一camera_idで複数行OK）
+CREATE TABLE inspection_camera_shots (
+    id BIGSERIAL PRIMARY KEY,                                                   -- ショット内部ID（連番）
+    lot_id_ref BIGINT NOT NULL REFERENCES inspection_lots(id) ON DELETE CASCADE,-- ロット参照ID
+    camera_id VARCHAR(64) NOT NULL,                                             -- カメラID（例: 'B-spring01', 'A-main01'）
+    c4k_seq VARCHAR(32) NULL,                                                   -- 4K撮影シーケンスID（例: "A-4"｜JSONキー: "c4k_seq"）
+    fhd_seq VARCHAR(32) NULL,                                                   -- FHD撮影シーケンスID（例: "D-5"）
+    status VARCHAR(16) NOT NULL CHECK (status IN ('PASS','FAIL','MISSING')),    -- 判定ステータス
+    details TEXT NULL,                                                          -- 不良理由等（PASS時はNULL推奨）
+    image_path TEXT NULL,                                                       -- 画像パス（MISSING時はNULL可）
+    shot_seq INT NULL,                                                          -- 同一カメラ内の通番（1..n）※4K/FHD毎に任意
+    captured_at TIMESTAMP WITH TIME ZONE NULL                                   -- ショット撮影時刻
+);
+</code></pre>
+                    </div>
+                    <p class="mt-2 text-sm text-slate-600">備考:
+                        ロットの総合判定はビューやアプリ側で算出（<strong>同一camera_idで1つでもFAILがあればNG</strong> ルール）。4K/FHD 系列は DB 上では
+                        <code>c4k_seq</code>・<code>fhd_seq</code> で保持し、API レイヤでは
+                        <code>c4k_seq</code>・<code>fhd_seq</code> として返却します。必要ならマテリアライズドビューやトリガで日次集計を保持。</p>
+                </div>
+            </section>
+
+            <!-- 2. 検査サマリー取得 -->
+            <section id="api-summary">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. 検査サマリー取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/inspections/summary</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">指定したセクション＋日付の検査サマリー（総数、良品/不良品数、不良原因）を取得します。ダッシュボードの統計表示で使用。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">section</td>
+                                <td class="border-b p-2">検査セクション（内部コード）。例: <code>spring</code>（バネ留め）,
+                                    <code>alayer</code>（A層）。</td>
+                                <td class="border-b p-2 font-mono">?section=alayer</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">date</td>
+                                <td class="border-b p-2">対象の日付 (YYYY-MM-DD形式)。指定しない場合は本日。</td>
+                                <td class="border-b p-2 font-mono">?date=2024-07-15</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+  "section": "alayer",
+  "date": "2025-10-01",
+  "total_count": 150,
+  "pass_count": 145,
+  "fail_count": 5,
+  "pass_rate": 97,
+  "fail_reasons": [
+    { "reason": "位置ずれ", "count": 3 },
+    { "reason": "糸ほつれ", "count": 1 },
+    { "reason": "異物混入", "count": 1 }
+  ]
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 3. 検査ロット取得 -->
+            <section id="get-logs">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3. 検査ロット取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/inspections/lots</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">
+                        ロット単位で検査結果を取得。各ロットはセクション内の全撮影結果を内包し、ページネーション対応。セクションに応じて集約単位が変わります。
+                        <strong>spring</strong> など従来通りのセクションはカメラ単位で <code>cameras</code> を返し、<strong>同一camera_idで1つでもFAILがあればロットNG</strong>。<br>
+                        <strong>alayer</strong> セクションは代わりに 4K シーケンス単位で <code>four_k_sequences</code> を返し、<strong>同一<code>c4k_seq</code>のいずれかがFAILならそのシーケンス全体をFAIL</strong>、シーケンスに1つでも FAIL があればロットも FAIL です。<br>
+                        さらに <strong>代表ファイルパス</strong>（通常はそのロットで最初に撮れた画像）をフルパスで返却し、フロントはカードや一覧のサムネイルとして利用できます。パスは検査後画像が存在するかで切り替え:<code>/imageDB/afterTest//{fileName}</code>（検査後あり）/<code>/imageDB/beforeTest//{fileName}</code>（検査前のみ）。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">section</td>
+                                <td class="border-b p-2">検査セクション（内部コード）。例: <code>spring</code>（バネ留め）,
+                                    <code>alayer</code>（A層）。</td>
+                                <td class="border-b p-2 font-mono">?section=spring</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">date</td>
+                                <td class="border-b p-2">対象の日付 (YYYY-MM-DD形式)。指定しない場合は本日。</td>
+                                <td class="border-b p-2 font-mono">?date=2025-10-01</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">page</td>
+                                <td class="border-b p-2">ページ番号。</td>
+                                <td class="border-b p-2 font-mono">?page=1</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">limit</td>
+                                <td class="border-b p-2">1ページあたりの件数。</td>
+                                <td class="border-b p-2 font-mono">?limit=50</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "total_pages": 1,
+    "current_page": 1,
+    "lots": [
+        {
+            "lot_id": "MAT-10001",                      // ロットID（製品ID等に相当）
+            "section": "spring",                        // spring 系は従来どおり camera 単位
+            "captured_at": "2025-10-01T17:47:53.427Z",  // 代表時刻（最初/最後のいずれかでOK）
+            "pass": false,                               // 全カメラ PASS のときのみ true
+            "representative_image": "/imageDB/beforeTest//MAT-10001_B-spring01_A-1_A-1.png", // 検査前のみ存在時のフルパス
+            "cameras": [
+                { "camera_id": "B-spring01", "status": "FAIL"},
+                { "camera_id": "B-spring02", "status": "FAIL"},
+                { "camera_id": "B-spring03", "status": "PASS"},
+                { "camera_id": "B-spring04", "status": "PASS"}
+            ]
+        },
+        {
+            "lot_id": "LOLL-10001",                      // ロットID（製品ID等に相当）
+            "section": "alayer",                        // alayer は 4K シーケンス単位
+            "captured_at": "2025-10-01T17:47:53.427Z",
+            "pass": false,                               // 4K シーケンスのいずれかが FAIL なら false
+            "representative_image": "/imageDB/afterTest//LOLL-10001_A-main01_A-1_A-1.png", // 検査後画像がある場合
+            "four_k_sequences": [
+                { "c4k_seq": "A-1", "status": "FAIL" },
+                { "c4k_seq": "A-2", "status": "PASS" }
+            ]
+        }
+    ]
+}</code></pre>
+
+                    <div class="mt-4 text-sm text-slate-600 space-y-2">
+                        <p>備考:</p>
+                        <ul class="list-disc pl-6 space-y-1">
+                            <li>spring 系セクションなどは従来どおり <code>cameras</code> 配列を返す。<code>alayer</code> は <code>four_k_sequences</code> 配列のみ返し、シーケンス単位の FAIL を判定する。</li>
+                            <li>シーケンスの判定は同一 <code>c4k_seq</code> 内に FAIL が1つでもあれば当該シーケンスを FAIL とみなす。<code>alayer</code> ロットの <code>pass</code> は配列中に FAIL が存在するかで決まる。</li>
+                            <li>フロントは <code>camera_id</code> や <code>c4k_seq</code> をそのまま表示（別名は不要）。</li>
+                            <li>ステータスは <code>PASS/FAIL</code> を返す。UI上の <code>OK/NG</code> などはフロント側で変換。</li>
+                            <li><code>representative_image</code> は指定ロット内の最初に撮影されたショットのフルパス（該当なしは <code>null</code>）を返す。検査後画像があるときは <code>/imageDB/afterTest//</code> ルート、検査前しか無い場合は <code>/imageDB/beforeTest//</code> ルートを必ず使用する。</li>
+                            <li>画像ファイル名は <strong>lot_id</strong> と <strong>camera_id</strong> を含め、通番を付与する形式を推奨:
+                                <code>{lot_id}_{camera_id}-{seq}.jpg</code>（例:
+                                <code>MAT-10001_B-spring01-02.jpg</code>）。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3.1 ロット詳細（ショット一覧） -->
+            <section id="lot-shots">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3.1 ロット詳細（ショット一覧）ばねどめ検査用</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/inspections/lots/{lot_id}/shots</span>
+                        <span class="bg-slate-500 text-white px-3 py-1 rounded-full text-sm font-bold">任意</span>
+                    </div>
+                    <p class="mb-4">ロット内の全ショットを返却します（同一カメラ複数ショットあり）。詳細モーダル等で使用。</p>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">パスパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">lot_id</td>
+                                <td class="border-b p-2">対象ロットID（パスで指定）</td>
+                                <td class="border-b p-2 font-mono">/api/inspections/lots/MAT-10001/shots</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス</h3>
+                    <pre><code class="language-json">{
+  "lot_id": "MAT-10001",
+  "shots": [
+    { "camera_id": "B-spring01", "status": "FAIL", "details": "角度規定外", "image_path": "MAT-10001_B-spring01-01.jpg" },
+    { "camera_id": "B-spring01", "status": "PASS", "details": null, "image_path": "MAT-10001_B-spring01-02.jpg" },
+    { "camera_id": "B-spring02", "status": "PASS", "details": null, "image_path": "MAT-10001_B-spring02-01.jpg" }
+  ]
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 3.1 ロット詳細（ショット一覧 4K / FHD） -->
+            <section id="lot-shots">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3.1 ロット詳細（ショット一覧: 4K / FHD）A層検査用
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md space-y-8">
+                    <p class="text-slate-600">ショット一覧は <strong>撮影種別（4K/FHD）ごとにエンドポイントを分離</strong> しました。UI
+                        では必要な種別のみリクエストし、各ショットの <code>c4k_seq</code>（DB列: <code>c4k_seq</code>）/ <code>fhd_seq</code>
+                        を用いて表示順や紐付けを制御します。</p>
+
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="method-badge get">GET</span>
+                            <span class="font-mono text-lg font-semibold">/api/inspections/lots/{lot_id}/shots/4K</span>
+                            <span class="bg-slate-500 text-white px-3 py-1 rounded-full text-sm font-bold">任意</span>
+                        </div>
+                        <p class="mb-4">指定ロットの 4K ショットのみを返却します。4K シーケンス（<code>c4k_seq</code>）単位で <strong>重複を排除</strong>
+                            し、同一 <code>c4k_seq</code> を持つ行が複数あっても API では 1 件として返却します（最新ショット等、実装側で優先順位を定義）。</p>
+                        <h3 class="text-lg font-semibold mt-6 mb-2">パスパラメータ</h3>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="border-b-2 p-2">パラメータ</th>
+                                    <th class="border-b-2 p-2">説明</th>
+                                    <th class="border-b-2 p-2">例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">lot_id</td>
+                                    <td class="border-b p-2">対象ロットID（パスで指定）</td>
+                                    <td class="border-b p-2 font-mono">/api/inspections/lots/MAT-10001/shots/4K</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス例</h3>
+                        <pre><code class="language-json">{
+    "lot_id": "MAT-10001",
+    "summary": {
+        "total": 2,
+        "ok_count": 1,
+        "ng_count": 1,
+        "ok_rate": 50,
+        "ng_rate": 50
+    },
+    "shots": [
+        {
+            "camera_id": "B-spring01",
+            "c4k_seq": "A-4",
+            "shot_seq": 2,
+            "status": "PASS",
+            "details": null,
+            "image_path": "MAT-10001_B-spring01-4k-02.jpg"
+        },
+        {
+            "camera_id": "B-spring01",
+            "c4k_seq": "A-5",
+            "shot_seq": 1,
+            "status": "FAIL",
+            "details": "角度規定外",
+            "image_path": "MAT-10001_B-spring01-4k-03.jpg"
+        }
+    ]
+}</code></pre>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="method-badge get">GET</span>
+                            <span
+                                class="font-mono text-lg font-semibold">/api/inspections/lots/{lot_id}/shots/FHD/{c4k_seq}</span>
+                            <span class="bg-slate-500 text-white px-3 py-1 rounded-full text-sm font-bold">任意</span>
+                        </div>
+                        <p class="mb-4">指定ロット内で、<strong>特定の <code>c4k_seq</code> に紐づく FHD ショットのみ</strong> を返却します。4K
+                            詳細ビューから FHD 連番を掘り下げる用途を想定しています。</p>
+                        <h3 class="text-lg font-semibold mt-6 mb-2">パスパラメータ</h3>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="border-b-2 p-2">パラメータ</th>
+                                    <th class="border-b-2 p-2">説明</th>
+                                    <th class="border-b-2 p-2">例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">lot_id</td>
+                                    <td class="border-b p-2">対象ロットID（パスで指定）</td>
+                                    <td class="border-b p-2 font-mono">/api/inspections/lots/MAT-10001/shots/FHD/A-4
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-b p-2 font-mono">c4k_seq</td>
+                                    <td class="border-b p-2">連動させたい 4K シーケンスID。該当する FHD ショットのみを抽出。</td>
+                                    <td class="border-b p-2 font-mono">/api/inspections/lots/MAT-10001/shots/FHD/A-4
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス例</h3>
+                        <pre><code class="language-json">{
+  "lot_id": "MAT-10001",
+  "c4k_seq": "A-4",
+  "summary": {
+    "total": 2,
+    "ok_count": 1,
+    "ng_count": 1,
+    "ok_rate": 50,
+    "ng_rate": 50
+  },
+
+  "shots": [
+    {
+      "camera_id": "B-spring02",
+      "fhd_seq": "D-5",
+      "shot_seq": null,
+      "status": "PASS",
+      "details": null,
+      "image_path": "MAT-10001_B-spring02-fhd-01.jpg"
+    },
+    {
+      "camera_id": "B-spring02",
+      "fhd_seq": "D-5",
+      "shot_seq": 2,
+      "status": "FAIL",
+      "details": "位置ずれ",
+      "image_path": "MAT-10001_B-spring02-fhd-02.jpg"
+    }
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="text-sm text-slate-600 space-y-1">
+                        <p>備考:</p>
+                        <ul class="list-disc pl-6 space-y-1">
+                            <li>4K シーケンスは DB 上は <code>c4k_seq</code>、API レスポンスでは <code>c4k_seq</code> として返します。FHD シーケンスは
+                                <code>fhd_seq</code> のままです。該当しないショットでは NULL を返して構いません。</li>
+                            <li>4K エンドポイントは <code>c4k_seq</code> ごとにユニークなショットのみ返却するため、クライアント側で重複除外を行う必要はありません。</li>
+                            <li><code>shot_seq</code> はカメラ＋種別の任意通番。旧 API 互換のため NULL 許容。</li>
+                            <li>4K/FHD を両方表示する UI は <code>/shots/4K</code> で候補を表示し、選択された <code>c4k_seq</code> を使って
+                                <code>/shots/FHD/{c4k_seq}</code> を呼び出す作りにすると整合を保ちやすいです。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3.2 利用可能日付一覧 -->
+            <section id="available-dates">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3.2 利用可能日付一覧</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/inspections/sections/{section}/dates</span>
+                        <span class="bg-slate-500 text-white px-3 py-1 rounded-full text-sm font-bold">任意</span>
+                    </div>
+                    <p class="mb-4">指定セクションのデータが存在する日付一覧（降順）を返します。</p>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">パスパラメータ</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">section</td>
+                                <td class="border-b p-2">検査セクション（内部コード）</td>
+                                <td class="border-b p-2 font-mono">/api/inspections/sections/spring/dates</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス</h3>
+                    <pre><code class="language-json">{
+  "section": "spring",
+  "dates": ["2025-10-02", "2025-10-01", "2025-09-30"]
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 4. 変更検知（シンプルGETポーリング） -->
+            <section id="realtime-polling">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">4. 変更検知（シンプルGETポーリング）</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md space-y-6">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="method-badge get">GET</span>
+                            <span class="font-mono text-lg font-semibold">/api/inspections/events/latest</span>
+                            <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度:
+                                A</span>
+                        </div>
+                        <p class="mb-4">直近の変更イベントの情報を返します。フロントは数秒おきにポーリングし、値が変化した時だけ <code>/summary</code> や
+                            <code>/lots</code> を再取得します。</p>
+                        <h3 class="text-lg font-semibold mt-6 mb-2">レスポンス</h3>
+                        <pre><code class="language-json">{ "event": "lots.changed" }</code></pre>
+                    </div>
+
+
+
+                    <div>
+                        <h3 class="text-lg font-semibold">フロント側の利用例</h3>
+                        <ul class="list-disc pl-6 text-slate-700 text-sm space-y-2">
+                            <li>間隔: 2〜5秒程度（環境と要件に合わせる）</li>
+                            <li>検知: 直近取得した値と比較し、変更ありのみデータAPIを再取得</li>
+                            <li>負荷対策: 連続変化時はデバウンス/スロットリングを実施</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2025 API Design. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function () { const blocks = document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code => { const pre = code.parentElement; if (!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if (pre.querySelector('.copy-btn')) return; const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'copy-btn'; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click', async () => { const raw = code.innerText.replace(/\n+$/, ''); try { await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original = btn.innerHTML; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 1800); } catch (e) { btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(() => { btn.innerHTML = 'Copy'; }, 2000); } }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

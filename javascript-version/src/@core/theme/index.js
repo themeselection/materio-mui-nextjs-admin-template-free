@@ -1,5 +1,8 @@
-// Next Imports
-import { Inter } from 'next/font/google'
+// Note:
+// Google Fonts を next/font/google で取得すると開発サーバー起動時やビルド時に
+// Node 側から外部ネットワークへフェッチが発生します。
+// プロキシ環境下では失敗しやすいため、ここでは next/font/google の使用を避け、
+// ローカル指定のフォントファミリーに切り替えます。
 
 // Theme Options Imports
 import overrides from './overrides'
@@ -9,7 +12,22 @@ import shadows from './shadows'
 import customShadows from './customShadows'
 import typography from './typography'
 
-const inter = Inter({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800', '900'] })
+// 外部フェッチを伴わない安全なフォントファミリーを定義
+// （必要に応じてグローバル <link> で Google Fonts を読み込めばブラウザー側で適用されます）
+const safeInterFontFamily = [
+  'Inter',
+  'Noto Sans JP',
+  'sans-serif',
+  '-apple-system',
+  'BlinkMacSystemFont',
+  '"Segoe UI"',
+  'Roboto',
+  '"Helvetica Neue"',
+  'Arial',
+  '"Apple Color Emoji"',
+  '"Segoe UI Emoji"',
+  '"Segoe UI Symbol"'
+].join(',')
 
 const theme = (mode, direction) => {
   return {
@@ -28,7 +46,9 @@ const theme = (mode, direction) => {
       }
     },
     shadows: shadows(mode),
-    typography: typography(inter.style.fontFamily),
+
+  // next/font を使わずにフォントファミリーを直接指定
+  typography: typography(safeInterFontFamily),
     customShadows: customShadows(mode),
     mainColorChannels: {
       light: '46 38 61',

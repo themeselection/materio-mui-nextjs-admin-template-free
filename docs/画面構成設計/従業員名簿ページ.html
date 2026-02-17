@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>従業員名簿</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-enter {
+            animation: modal-enter-animation 0.3s ease-out forwards;
+        }
+        @keyframes modal-enter-animation {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">従業員名簿</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- 検索・フィルターバー -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="md:col-span-1 lg:col-span-2">
+                        <label for="search" class="block text-sm font-medium text-gray-700">氏名で検索</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <ion-icon name="search-outline" class="text-gray-400"></ion-icon>
+                            </div>
+                            <input type="text" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="山田 太郎">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-700">担当</label>
+                        <select id="department" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="all">すべて</option>
+                            <option value="組立">組立</option>
+                            <option value="塗装">塗装</option>
+                            <option value="検査">検査</option>
+                            <option value="管理">管理</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">在籍状況</label>
+                        <select id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="all">すべて</option>
+                            <option value="在籍中">在籍中</option>
+                            <option value="退職済">退職済</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 従業員リスト -->
+            <div id="employee-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 従業員カードはJSで動的に生成・管理することを想定 -->
+            </div>
+            <div id="no-results" class="hidden text-center py-12">
+                <ion-icon name="sad-outline" class="text-5xl text-gray-400 mx-auto"></ion-icon>
+                <p class="mt-4 text-lg font-medium text-gray-600">該当する従業員が見つかりませんでした。</p>
+                <p class="text-sm text-gray-500">検索条件を変更して、もう一度お試しください。</p>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="bg-white mt-8 py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2024 生産管理システム. All Rights Reserved.
+            </div>
+        </footer>
+
+        <!-- フローティング追加ボタン -->
+        <button id="add-employee-button" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-10">
+            <ion-icon name="add-outline" class="text-4xl"></ion-icon>
+        </button>
+
+    </div>
+
+    <!-- 従業員追加・編集モーダル -->
+    <div id="employee-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-30 p-4">
+        <div id="modal-content" class="bg-white rounded-xl shadow-2xl w-full max-w-3xl modal-enter">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-xl font-bold">従業員追加・編集</h2>
+                <button id="modal-close-button" class="text-gray-400 hover:text-gray-600">
+                    <ion-icon name="close-outline" class="text-3xl"></ion-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- 左側: アイコンプレビューとカラーピッカー -->
+                    <div class="md:col-span-1 flex flex-col items-center">
+                        <div id="icon-preview" class="w-32 h-32 rounded-full flex items-center justify-center text-white text-5xl font-bold mb-4" style="background-color: #4f46e5;">
+                            <span id="icon-initials">押山</span>
+                        </div>
+                        <p class="text-center font-bold text-lg" id="preview-name">押山 漢太朗</p>
+                        <p class="text-center text-sm text-gray-500" id="preview-id">r.oshiyama</p>
+                        <div class="mt-6 w-full">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">色を選択</label>
+                            <div id="color-palette" class="grid grid-cols-8 gap-2">
+                                <!-- カラーパレットの色はJSで設定 -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 右側: 入力フォーム -->
+                    <div class="md:col-span-2 grid grid-cols-2 gap-x-6 gap-y-4">
+                        <div>
+                            <label for="form-name" class="block text-sm font-medium text-gray-700">名前 (フルネーム)</label>
+                            <input type="text" id="form-name" value="押山 漢太朗" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-role" class="block text-sm font-medium text-gray-700">役職</label>
+                            <input type="text" id="form-role" value="一般" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-id" class="block text-sm font-medium text-gray-700">ID</label>
+                            <input type="text" id="form-id" value="r.oshiyama" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-line" class="block text-sm font-medium text-gray-700">担当ライン</label>
+                            <input type="text" id="form-line" value="B層ばねどめ" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="form-password" class="block text-sm font-medium text-gray-700">パスワード</label>
+                            <input type="password" id="form-password" value="******" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                             <label for="form-status" class="block text-sm font-medium text-gray-700">在籍状況</label>
+                             <select id="form-status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option>在籍中</option>
+                                <option>退職済</option>
+                             </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="form-notes" class="block text-sm font-medium text-gray-700">特記事項</label>
+                            <textarea id="form-notes" rows="3" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">とくになし</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-gray-50 rounded-b-xl flex justify-end space-x-4">
+                <button id="modal-cancel-button" class="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">キャンセル</button>
+                <button id="modal-save-button" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">保存</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- サンプルデータ ---
+        const initialEmployees = [
+            { id: '12345', name: '山田 太郎', department: '組立', role: 'リーダー', status: '在籍中', notes: 'フォークリフト免許保持', iconColor: '#a3a8e6' },
+            { id: '12346', name: '佐藤 花子', department: '塗装', role: 'スタッフ', status: '在籍中', notes: '色彩検定2級', iconColor: '#e6a3c8' },
+            { id: '12347', name: '鈴木 一郎', department: '検査', role: '主任', status: '在籍中', notes: '-', iconColor: '#a3e6c8' },
+            { id: '10001', name: '高橋 次郎', department: '管理', role: '部長', status: '在籍中', notes: '-', iconColor: '#e6dca3' },
+            { id: '12348', name: '田中 三郎', department: '組立', role: 'スタッフ', status: '退職済', notes: '2024/03/31付', iconColor: '#b0b0b0' },
+            { id: '12349', name: '渡辺 直美', department: '検査', role: 'スタッフ', status: '在籍中', notes: '新人研修中', iconColor: '#e6a3a3' },
+        ];
+
+        // --- DOM要素 ---
+        const employeeListContainer = document.getElementById('employee-list');
+        const searchInput = document.getElementById('search');
+        const departmentSelect = document.getElementById('department');
+        const statusSelect = document.getElementById('status');
+        const noResultsMessage = document.getElementById('no-results');
+        
+        // モーダル関連のDOM要素
+        const modal = document.getElementById('employee-modal');
+        const modalContent = document.getElementById('modal-content');
+        const openModalButton = document.getElementById('add-employee-button');
+        const closeModalButton = document.getElementById('modal-close-button');
+        const cancelButton = document.getElementById('modal-cancel-button');
+        
+        // モーダルフォームの要素
+        const iconPreview = document.getElementById('icon-preview');
+        const iconInitials = document.getElementById('icon-initials');
+        const previewName = document.getElementById('preview-name');
+        const previewId = document.getElementById('preview-id');
+        const colorPalette = document.getElementById('color-palette');
+        const formName = document.getElementById('form-name');
+        const formId = document.getElementById('form-id');
+
+        // --- 関数 ---
+
+        /** 従業員カードを生成して表示する */
+        function renderEmployeeCard(employee) {
+            const initials = employee.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            const isRetired = employee.status === '退職済';
+            const cardOpacity = isRetired ? 'opacity-60' : '';
+
+            return `
+                <div class="employee-card fade-in bg-white rounded-xl shadow-md p-5 flex flex-col relative" data-name="${employee.name}" data-department="${employee.department}" data-status="${employee.status}">
+                    <div class="absolute top-2 right-2">
+                        <button class="dropdown-button text-gray-400 hover:text-gray-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                            <ion-icon name="ellipsis-vertical-outline" class="text-xl"></ion-icon>
+                        </button>
+                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 ring-1 ring-black ring-opacity-5">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">編集</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">削除</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-4 ${cardOpacity}">
+                        <div class="h-16 w-16 rounded-full object-cover mr-4 flex-shrink-0 flex items-center justify-center text-white text-2xl font-bold" style="background-color: ${employee.iconColor};">
+                           ${initials}
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold ${isRetired ? 'text-gray-500' : 'text-gray-900'}">${employee.name}</h3>
+                            <p class="text-sm ${isRetired ? 'text-gray-400' : 'text-gray-500'}">ID: ${employee.id}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm flex-grow ${cardOpacity}">
+                        <p><strong class="w-16 inline-block">担当:</strong> <span class="font-medium ${isRetired ? 'text-gray-500' : 'text-indigo-700'}">${employee.department}</span></p>
+                        <p><strong class="w-16 inline-block">役職:</strong> ${employee.role}</p>
+                        <p><strong class="w-16 inline-block">在籍状況:</strong> <span class="font-semibold px-2 py-0.5 rounded-full ${isRetired ? 'bg-gray-200 text-gray-600' : 'bg-green-100 text-green-800'}">${employee.status}</span></p>
+                        <p><strong class="w-16 inline-block">備考:</strong> ${employee.notes}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        /** 全従業員をリスト表示し、フィルターを適用する */
+        function displayEmployees() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const departmentFilter = departmentSelect.value;
+            const statusFilter = statusSelect.value;
+            
+            employeeListContainer.innerHTML = '';
+            let visibleCount = 0;
+
+            initialEmployees.forEach(employee => {
+                const nameMatch = employee.name.toLowerCase().includes(searchTerm);
+                const departmentMatch = departmentFilter === 'all' || employee.department === departmentFilter;
+                const statusMatch = statusFilter === 'all' || employee.status === statusFilter;
+
+                if (nameMatch && departmentMatch && statusMatch) {
+                    employeeListContainer.innerHTML += renderEmployeeCard(employee);
+                    visibleCount++;
+                }
+            });
+
+            noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+            addDropdownEventListeners();
+        }
+
+        /** ドロップダウンメニューのイベントリスナーを追加 */
+        function addDropdownEventListeners() {
+            document.querySelectorAll('.dropdown-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const menu = this.nextElementSibling;
+                    // 他のメニューを閉じる
+                    document.querySelectorAll('.dropdown-menu').forEach(m => {
+                        if (m !== menu) m.classList.add('hidden');
+                    });
+                    menu.classList.toggle('hidden');
+                });
+            });
+        }
+        
+        /** モーダルを開く */
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+
+        /** モーダルを閉じる */
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        /** カラーパレットを生成 */
+        function setupColorPalette() {
+            const colors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e'];
+            colorPalette.innerHTML = colors.map(color => 
+                `<div class="h-6 w-6 rounded-full cursor-pointer" style="background-color: ${color};" data-color="${color}"></div>`
+            ).join('');
+        }
+
+        /** モーダルのプレビューを更新 */
+        function updatePreview() {
+            const name = formName.value;
+            const id = formId.value;
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            
+            iconInitials.textContent = initials || '？';
+            previewName.textContent = name || '氏名';
+            previewId.textContent = id || 'ID';
+        }
+
+        // --- イベントリスナー ---
+        
+        // フィルター
+        searchInput.addEventListener('input', displayEmployees);
+        departmentSelect.addEventListener('change', displayEmployees);
+        statusSelect.addEventListener('change', displayEmployees);
+
+        // モーダル
+        openModalButton.addEventListener('click', openModal);
+        closeModalButton.addEventListener('click', closeModal);
+        cancelButton.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // モーダル内プレビュー
+        formName.addEventListener('input', updatePreview);
+        formId.addEventListener('input', updatePreview);
+        colorPalette.addEventListener('click', (e) => {
+            if (e.target.dataset.color) {
+                iconPreview.style.backgroundColor = e.target.dataset.color;
+            }
+        });
+
+        // ドキュメント全体クリックでドロップダウンを閉じる
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        });
+
+        // --- 初期化 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            displayEmployees();
+            setupColorPalette();
+            updatePreview();
+        });
+
+    </script>
+
+</body>
+</html>

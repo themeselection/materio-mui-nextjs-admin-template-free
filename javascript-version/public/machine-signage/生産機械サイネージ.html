@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 5分ごとに自動リフレッシュ -->
+    <meta http-equiv="refresh" content="300" />
+    <title>工場ダッシュボード - サイネージ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+        rel="stylesheet" />
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+
+        .alert-bg {
+            background-image: repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 25px, #1f2937 25px, #1f2937 50px);
+        }
+
+        .alert-flash {
+            animation: flash 1s infinite;
+        }
+
+        @keyframes flash {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white h-screen flex flex-col">
+    <header class="p-4 md:p-6 flex-shrink-0">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <h1 class="text-5xl font-black tracking-wider">工場ダッシュボード</h1>
+                <div class="flex items-center space-x-2 pt-2">
+                    <button id="debug-error-btn"
+                        class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md">デバッグ: エラー発生</button>
+                    <button id="debug-warning-btn"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-black text-xs px-3 py-1 rounded-md">デバッグ:
+                        警告発生</button>
+                    <button id="debug-normal-btn"
+                        class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded-md">デバッグ:
+                        正常化</button>
+                </div>
+            </div>
+            <div id="clock" class="text-5xl font-bold text-right">
+                <p id="time" class="tracking-widest">--:--</p>
+                <p id="date" class="text-2xl mt-1">----/--/-- (--)</p>
+            </div>
+        </div>
+    </header>
+    <main class="flex-grow grid grid-cols-1 xl:grid-cols-2 gap-6 p-4 md:p-6 overflow-hidden">
+        <div class="flex flex-col overflow-hidden bg-gray-800 rounded-2xl p-6">
+            <h2 class="text-4xl font-bold mb-4 flex-shrink-0">機械状況</h2>
+            <div class="flex-grow flex flex-col space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 id="machine-name" class="text-3xl font-bold">自動表層バネどめ機</h3>
+                    <span id="machine-status"
+                        class="px-4 py-2 text-xl font-semibold rounded-full bg-green-500 text-green-900">正常</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">本日の稼働時間</p>
+                        <p id="today-uptime" class="text-5xl font-black">8<span class="text-3xl">h</span> 25<span
+                                class="text-3xl">m</span></p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">本日の生産数</p>
+                        <p id="today-production-count" class="text-5xl font-black">1,520</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">最終点検日</p>
+                        <p id="last-inspection-date" class="text-4xl font-bold">2024/06/15</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <p class="text-lg text-gray-400">次回点検日</p>
+                        <p id="next-inspection-date" class="text-4xl font-bold">2024/09/15</p>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col overflow-hidden">
+                    <h3 class="text-2xl font-bold mb-2">最新エラーログ</h3>
+                    <div id="error-log-list" class="space-y-2 text-lg overflow-y-auto">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-md">
+                            <div>
+                                <p class="font-semibold text-gray-300">I-001: 起動シーケンス完了</p>
+                            </div>
+                            <span class="text-sm text-gray-400 whitespace-nowrap">08:00:05</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col overflow-hidden bg-gray-800 rounded-2xl p-6">
+            <h2 class="text-4xl font-bold mb-4 flex-shrink-0">画像検査</h2>
+            <div class="flex-grow flex flex-col space-y-6">
+                <!-- 全体判定（PASS/FAIL） -->
+                <div class="text-center">
+                    <p id="inspection-status" class="text-5xl font-black text-green-400">PASS</p>
+                </div>
+
+                <!-- 4分割カメラ表示 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div id="cam1" class="bg-black rounded-lg aspect-video relative overflow-hidden">
+                        <span class="absolute top-3 left-4 text-lg font-semibold text-gray-300">B-spring01</span>
+                        <span id="cam1-badge" class="absolute top-3 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-green-500 text-green-900 text-sm font-bold">
+                            <ion-icon name="checkmark-circle" class="text-xl"></ion-icon>
+                            PASS
+                        </span>
+                    </div>
+                    <div id="cam2" class="bg-black rounded-lg aspect-video relative overflow-hidden">
+                        <span class="absolute top-3 left-4 text-lg font-semibold text-gray-300">B-spring02</span>
+                        <span id="cam2-badge" class="absolute top-3 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-green-500 text-green-900 text-sm font-bold">
+                            <ion-icon name="checkmark-circle" class="text-xl"></ion-icon>
+                            PASS
+                        </span>
+                    </div>
+                    <div id="cam3" class="bg-black rounded-lg aspect-video relative overflow-hidden">
+                        <span class="absolute top-3 left-4 text-lg font-semibold text-gray-300">B-spring03</span>
+                        <span id="cam3-badge" class="absolute top-3 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-green-500 text-green-900 text-sm font-bold">
+                            <ion-icon name="checkmark-circle" class="text-xl"></ion-icon>
+                            PASS
+                        </span>
+                    </div>
+                    <div id="cam4" class="bg-black rounded-lg aspect-video relative overflow-hidden">
+                        <span class="absolute top-3 left-4 text-lg font-semibold text-gray-300">B-spring04</span>
+                        <span id="cam4-badge" class="absolute top-3 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-green-500 text-green-900 text-sm font-bold">
+                            <ion-icon name="checkmark-circle" class="text-xl"></ion-icon>
+                            PASS
+                        </span>
+                    </div>
+                </div>
+
+                <!-- rot_id と 検査時間 -->
+                <div class="mt-2 bg-gray-900 p-4 rounded-lg grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <p class="text-lg text-gray-400">rot_id</p>
+                        <p id="rot-id" class="text-4xl font-bold">MAT-10025</p>
+                    </div>
+                    <div>
+                        <p class="text-lg text-gray-400">検査時間</p>
+                        <p id="inspection-time" class="text-4xl font-bold">--:--:--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="evangelion-alert" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="alert-bg w-full h-full absolute inset-0 opacity-20"></div>
+        <div class="text-center z-10">
+            <h2 class="text-9xl md:text-[12rem] font-black text-red-500 alert-flash tracking-widest"
+                style="line-height:1;">警告</h2>
+            <div class="mt-8 bg-black/80 p-6 rounded-lg border-4 border-yellow-400">
+                <p id="alert-error-code" class="text-6xl font-bold text-yellow-400">モータートルク異常</p>
+                <p id="alert-error-message" class="text-3xl mt-4 text-white">モーターの負荷が規定値を超えました。</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- API client (relative path to support basePath) -->
+    <script src="machine-api.js"></script>
+    <script src="signage.js"></script>
+</body>
+
+</html>

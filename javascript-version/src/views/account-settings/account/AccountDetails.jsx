@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
@@ -10,273 +10,468 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import Chip from '@mui/material/Chip'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import Avatar from '@mui/material/Avatar'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
-// Vars
-const initialData = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  organization: 'ThemeSelection',
-  phoneNumber: '+1 (917) 543-9876',
-  address: '123 Main St, New York, NY 10001',
-  state: 'New York',
-  zipCode: '634880',
-  country: 'usa',
-  language: 'arabic',
-  timezone: 'gmt-12',
-  currency: 'usd'
+// Hooks
+import useAuthMe from '@core/hooks/useAuthMe'
+import { invalidateMeCache } from '@/utils/auth/meClient'
+
+// パレット（employee-list と同一仕様）
+const basePalette = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e']
+const palette = Array.from(new Set([...basePalette, '#FF8800']))
+
+// 初期フォーム（employee-list に合わせる）
+const initialForm = {
+  employeeUserId: '',
+  lastName: '',
+  firstName: '',
+  password: '',
+  roleId: '',
+  lineId: '',
+  status: '在籍中',
+  specialNotes: '',
+  iconColor: '#FF8800'
 }
 
-const languageData = ['English', 'Arabic', 'French', 'German', 'Portuguese']
+// Avatar テキスト（姓優先で最大3文字）
+const getAvatarText = (ln, fn) => {
+  const base = String(ln || fn || '氏名').trim()
+  if (!base) return '氏名'
+  return base.slice(0, 3)
+}
+
+// 表示名（「姓 名」）
+const getDisplayName = (ln, fn) => {
+  const l = String(ln || '').trim()
+  const f = String(fn || '').trim()
+  if (!l && !f) return '氏名'
+  return f ? `${l} ${f}` : l
+}
+
+// #付きHEXへ正規化
+const ensureHash = v => {
+  const s = String(v || '').trim()
+  if (!s) return '#FF8800'
+  return s.startsWith('#') ? s : `#${s}`
+}
+
+// 認可ヘッダ（簡易版）
+const getAuthHeaders = () => {
+  try {
+    const token =
+      (typeof window !== 'undefined' && (window.localStorage.getItem('access_token') || window.sessionStorage.getItem('access_token'))) ||
+      ''
+    return token ? { Authorization: `Bearer ${token}` } : {}
+  } catch {
+    return {}
+  }
+}
 
 const AccountDetails = () => {
-  // States
-  const [formData, setFormData] = useState(initialData)
-  const [fileInput, setFileInput] = useState('')
-  const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
-  const [language, setLanguage] = useState(['English'])
+  const apiBase = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
-  const handleDelete = value => {
-    setLanguage(current => current.filter(item => item !== value))
-  }
+  // 認証ユーザーから初期値を反映
+  const { user } = useAuthMe()
 
-  const handleChange = event => {
-    setLanguage(event.target.value)
-  }
+  const [form, setForm] = useState(initialForm)
+  const [roles, setRoles] = useState([])
+  const [lines, setLines] = useState([])
+  const [loadingRoles, setLoadingRoles] = useState(true)
+  const [loadingLines, setLoadingLines] = useState(true)
+  const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [employeeInit, setEmployeeInit] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [snack, setSnack] = useState({ open: false, message: '', severity: 'success' })
 
-  const handleFormChange = (field, value) => {
-    setFormData({ ...formData, [field]: value })
-  }
+  // me から氏名とIDを流し込み（編集開始時の初期化）
+  useEffect(() => {
+    if (!user) return
+    const name = String(user?.employee_name || user?.name || '').trim()
+    // "姓 名" の想定で分割（最初の空白で区切る）
+    const [ln, ...rest] = name.split(/\s+/)
+    const fn = rest.join(' ')
 
-  const handleFileInputChange = file => {
-    const reader = new FileReader()
-    const { files } = file.target
+    setForm(prev => ({
+      ...prev,
+      employeeUserId: user?.employee_user_id || user?.id || '',
+      lastName: ln || '',
+      firstName: fn || '',
+      iconColor: user?.employee_color_code ? `#${String(user.employee_color_code).replace(/^#/, '')}` : prev.iconColor
+    }))
+  }, [user])
 
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
+  // 役割/ラインを取得（employee-list と同様のエンドポイント）
+  useEffect(() => {
+    const ac = new AbortController()
+    const headers = { ...getAuthHeaders() }
 
-      if (reader.result !== null) {
-        setFileInput(reader.result)
+    ;(async () => {
+      try {
+        setLoadingRoles(true)
+        const res = await fetch(`${apiBase}/api/roles`, { signal: ac.signal, headers })
+        if (res.ok) {
+          const data = await res.json()
+          const list = Array.isArray(data) ? data : (Array.isArray(data?.roles) ? data.roles : [])
+          setRoles(list)
+        } else {
+          setRoles([])
+        }
+      } catch {
+        setRoles([])
+      } finally {
+        setLoadingRoles(false)
       }
+    })()
+
+    ;(async () => {
+      try {
+        setLoadingLines(true)
+        const res = await fetch(`${apiBase}/api/lines`, { signal: ac.signal, headers })
+        if (res.ok) {
+          const data = await res.json()
+          const list = Array.isArray(data) ? data : (Array.isArray(data?.lines) ? data.lines : [])
+          setLines(list)
+        } else {
+          setLines([])
+        }
+      } catch {
+        setLines([])
+      } finally {
+        setLoadingLines(false)
+      }
+    })()
+
+    return () => ac.abort()
+  }, [apiBase])
+
+  const togglePasswordShown = () => setIsPasswordShown(s => !s)
+
+  const displayName = useMemo(() => getDisplayName(form.lastName, form.firstName), [form.lastName, form.firstName])
+  const avatarText = useMemo(() => getAvatarText(form.lastName, form.firstName), [form.lastName, form.firstName])
+
+  const handleFormChange = e => {
+    const { name, value } = e.target
+    if (name === 'roleId' || name === 'lineId') {
+      const v = value === '' ? '' : (typeof value === 'number' ? value : Number(value))
+      setForm(prev => ({ ...prev, [name]: v }))
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }))
     }
   }
 
-  const handleFileInputReset = () => {
-    setFileInput('')
-    setImgSrc('/images/avatars/1.png')
+  const handleReset = () => setForm(initialForm)
+
+  const buildPayload = () => {
+    const name = getDisplayName(form.lastName, form.firstName)
+    return {
+      employee_name: name,
+      employee_user_id: form.employeeUserId || '',
+      password: form.password ? form.password : null,
+      role_id: form.roleId === '' ? null : form.roleId,
+      line_id: form.lineId === '' ? null : form.lineId,
+      is_active: form.status === '在籍中',
+      color_code: String(form.iconColor || '#FF8800').replace(/^#/, ''),
+      special_notes: form.specialNotes || ''
+    }
   }
+
+  const handleSave = async e => {
+    e?.preventDefault?.()
+    if (!user?.employee_id) {
+      setSnack({ open: true, message: 'ユーザー情報が取得できませんでした。', severity: 'error' })
+      return
+    }
+
+    // 簡易バリデーション
+    if (!form.employeeUserId) {
+      setSnack({ open: true, message: 'ユーザーIDを入力してください。', severity: 'warning' })
+      return
+    }
+
+    setSaving(true)
+    try {
+      const headers = { 'Content-Type': 'application/json', ...getAuthHeaders() }
+      const res = await fetch(`${apiBase}/api/employees/${user.employee_id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(buildPayload())
+      })
+
+      if (!res.ok) {
+        let msg = `保存に失敗しました (HTTP ${res.status})`
+        try {
+          const data = await res.json()
+          if (data?.message) msg = data.message
+        } catch {}
+        setSnack({ open: true, message: msg, severity: 'error' })
+        return
+      }
+
+      invalidateMeCache()
+      setSnack({ open: true, message: '変更を保存しました。', severity: 'success' })
+      setForm(prev => ({ ...prev, password: '' }))
+    } catch (e) {
+      const isAbort = e && typeof e === 'object' && e.name === 'AbortError'
+      setSnack({ open: true, message: isAbort ? '通信がタイムアウトしました。' : 'ネットワークエラーが発生しました。', severity: 'error' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+
+  // 自分自身の従業員詳細を取得して初期値に反映
+  useEffect(() => {
+    if (!user?.employee_id) return
+    const ac = new AbortController()
+    const headers = { ...getAuthHeaders() }
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiBase}/api/employees/${user.employee_id}`, { signal: ac.signal, headers })
+        if (!res.ok) return
+        const data = await res.json()
+
+        // 例のレスポンスを想定
+        // {
+        //   employee_id, employee_name, employee_user_id, is_active, role_name, line_name, special_notes, color_code
+        // }
+        const name = String(data?.employee_name || '').trim()
+        const [ln, ...rest] = name.split(/\s+/)
+        const fn = rest.join(' ')
+
+        setForm(prev => ({
+          ...prev,
+          employeeUserId: data?.employee_user_id || prev.employeeUserId,
+          lastName: ln || prev.lastName,
+          firstName: fn || prev.firstName,
+          status: data?.is_active ? '在籍中' : '退職済',
+          specialNotes: data?.special_notes || '',
+          iconColor: data?.color_code ? ensureHash(data.color_code) : prev.iconColor
+        }))
+
+        setEmployeeInit({
+          role_name: data?.role_name || '',
+          line_name: data?.line_name || ''
+        })
+      } catch {
+        // ignore
+      }
+    })()
+
+    return () => ac.abort()
+  }, [apiBase, user?.employee_id])
+
+  // 役割/ラインの名称からIDを初期設定（一覧が取得できてから反映）
+  useEffect(() => {
+    if (!employeeInit) return
+
+    setForm(prev => {
+      let next = { ...prev }
+
+      if (!prev.roleId && employeeInit.role_name && roles?.length) {
+        const r = roles.find(r => r?.role_name === employeeInit.role_name)
+        if (r && (r.role_id || r.role_id === 0)) next.roleId = r.role_id
+      }
+
+      if ((prev.lineId === '' || prev.lineId == null) && employeeInit.line_name && lines?.length) {
+        const l = lines.find(l => l?.line_name === employeeInit.line_name)
+        if (l && (l.line_id || l.line_id === 0)) next.lineId = l.line_id
+      }
+
+      return next
+    })
+  }, [employeeInit, roles, lines])
 
   return (
     <Card>
       <CardContent className='mbe-5'>
         <div className='flex max-sm:flex-col items-center gap-6'>
-          <img height={100} width={100} className='rounded' src={imgSrc} alt='Profile' />
-          <div className='flex flex-grow flex-col gap-4'>
-            <div className='flex flex-col sm:flex-row gap-4'>
-              <Button component='label' size='small' variant='contained' htmlFor='account-settings-upload-image'>
-                Upload New Photo
-                <input
-                  hidden
-                  type='file'
-                  value={fileInput}
-                  accept='image/png, image/jpeg'
-                  onChange={handleFileInputChange}
-                  id='account-settings-upload-image'
-                />
-              </Button>
-              <Button size='small' variant='outlined' color='error' onClick={handleFileInputReset}>
-                Reset
-              </Button>
-            </div>
-            <Typography>Allowed JPG, GIF or PNG. Max size of 800K</Typography>
+          <Avatar
+            sx={{ width: 80, height: 80, bgcolor: form.iconColor, fontSize: 36, fontWeight: 700, color: '#fff' }}
+            alt={displayName}
+          >
+            {avatarText}
+          </Avatar>
+          <div className='flex flex-col'>
+            <Typography variant='h6' className='font-bold'>{displayName}</Typography>
+            <Typography variant='body2' color='text.secondary'>{form.employeeUserId || 'ユーザーID'}</Typography>
+          </div>
+        </div>
+        <div className='mti-0 mbs-5'>
+          <Typography variant='body2' sx={{ mb: 1 }}>色を選択</Typography>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+            {palette.map(color => (
+              <IconButton
+                key={color}
+                size='small'
+                onClick={() => setForm(prev => ({ ...prev, iconColor: color }))}
+                title={color}
+                sx={{
+                  width: 28,
+                  height: 28,
+                  padding: 0,
+                  borderRadius: '50%',
+                  border: form.iconColor === color ? '2px solid #6366f1' : '2px solid #fff',
+                  boxShadow: '0 0 0 1px rgba(0,0,0,0.08)',
+                  background: color,
+                  '&:hover': { background: color, opacity: 0.85 }
+                }}
+              />
+            ))}
           </div>
         </div>
       </CardContent>
       <CardContent>
-        <form onSubmit={e => e.preventDefault()}>
+  <form onSubmit={handleSave}>
           <Grid container spacing={5}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label='First Name'
-                value={formData.firstName}
-                placeholder='John'
-                onChange={e => handleFormChange('firstName', e.target.value)}
+                label='ユーザーID'
+                placeholder='hana.kato'
+                name='employeeUserId'
+                value={form.employeeUserId}
+                onChange={handleFormChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
               <TextField
                 fullWidth
-                label='Last Name'
-                value={formData.lastName}
-                placeholder='Doe'
-                onChange={e => handleFormChange('lastName', e.target.value)}
+                label='姓'
+                placeholder='加藤'
+                name='lastName'
+                value={form.lastName}
+                onChange={handleFormChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
               <TextField
                 fullWidth
-                label='Email'
-                value={formData.email}
-                placeholder='john.doe@gmail.com'
-                onChange={e => handleFormChange('email', e.target.value)}
+                label='名'
+                placeholder='花'
+                name='firstName'
+                value={form.firstName}
+                onChange={handleFormChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
-                label='Organization'
-                value={formData.organization}
-                placeholder='ThemeSelection'
-                onChange={e => handleFormChange('organization', e.target.value)}
+                label='パスワード（変更時のみ）'
+                type={isPasswordShown ? 'text' : 'password'}
+                name='password'
+                value={form.password}
+                onChange={handleFormChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton size='small' edge='end' onClick={togglePasswordShown} onMouseDown={e => e.preventDefault()}>
+                        <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
-                label='Phone Number'
-                value={formData.phoneNumber}
-                placeholder='+1 (234) 567-8901'
-                onChange={e => handleFormChange('phoneNumber', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label='Address'
-                value={formData.address}
-                placeholder='Address'
-                onChange={e => handleFormChange('address', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label='State'
-                value={formData.state}
-                placeholder='New York'
-                onChange={e => handleFormChange('state', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type='number'
-                label='Zip Code'
-                value={formData.zipCode}
-                placeholder='123456'
-                onChange={e => handleFormChange('zipCode', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Country</InputLabel>
-                <Select
-                  label='Country'
-                  value={formData.country}
-                  onChange={e => handleFormChange('country', e.target.value)}
-                >
-                  <MenuItem value='usa'>USA</MenuItem>
-                  <MenuItem value='uk'>UK</MenuItem>
-                  <MenuItem value='australia'>Australia</MenuItem>
-                  <MenuItem value='germany'>Germany</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Language</InputLabel>
-                <Select
-                  multiple
-                  label='Language'
-                  value={language}
-                  onChange={handleChange}
-                  renderValue={selected => (
-                    <div className='flex flex-wrap gap-2'>
-                      {selected.map(value => (
-                        <Chip
-                          key={value}
-                          clickable
-                          deleteIcon={
-                            <i className='ri-close-circle-fill' onMouseDown={event => event.stopPropagation()} />
-                          }
-                          size='small'
-                          label={value}
-                          onDelete={() => handleDelete(value)}
-                        />
-                      ))}
-                    </div>
-                  )}
-                >
-                  {languageData.map(name => (
-                    <MenuItem key={name} value={name}>
-                      {name}
+                select
+                label='役割'
+                name='roleId'
+                value={form.roleId === '' ? '' : form.roleId}
+                onChange={handleFormChange}
+                disabled={loadingRoles || roles.length === 0}
+                SelectProps={{ MenuProps: { disablePortal: true } }}
+              >
+                {loadingRoles ? (
+                  <MenuItem value='' disabled>読み込み中…</MenuItem>
+                ) : (
+                  roles.map(role => (
+                    <MenuItem key={role?.role_id ?? role?.role_name} value={role?.role_id}>
+                      {role?.role_name}{role?.is_admin ? '（管理者）' : ''}
                     </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  ))
+                )}
+              </TextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>TimeZone</InputLabel>
-                <Select
-                  label='TimeZone'
-                  value={formData.timezone}
-                  onChange={e => handleFormChange('timezone', e.target.value)}
-                  MenuProps={{ PaperProps: { style: { maxHeight: 250 } } }}
-                >
-                  <MenuItem value='gmt-12'>(GMT-12:00) International Date Line West</MenuItem>
-                  <MenuItem value='gmt-11'>(GMT-11:00) Midway Island, Samoa</MenuItem>
-                  <MenuItem value='gmt-10'>(GMT-10:00) Hawaii</MenuItem>
-                  <MenuItem value='gmt-09'>(GMT-09:00) Alaska</MenuItem>
-                  <MenuItem value='gmt-08'>(GMT-08:00) Pacific Time (US & Canada)</MenuItem>
-                  <MenuItem value='gmt-08-baja'>(GMT-08:00) Tijuana, Baja California</MenuItem>
-                  <MenuItem value='gmt-07'>(GMT-07:00) Chihuahua, La Paz, Mazatlan</MenuItem>
-                  <MenuItem value='gmt-07-mt'>(GMT-07:00) Mountain Time (US & Canada)</MenuItem>
-                  <MenuItem value='gmt-06'>(GMT-06:00) Central America</MenuItem>
-                  <MenuItem value='gmt-06-ct'>(GMT-06:00) Central Time (US & Canada)</MenuItem>
-                  <MenuItem value='gmt-06-mc'>(GMT-06:00) Guadalajara, Mexico City, Monterrey</MenuItem>
-                  <MenuItem value='gmt-06-sk'>(GMT-06:00) Saskatchewan</MenuItem>
-                  <MenuItem value='gmt-05'>(GMT-05:00) Bogota, Lima, Quito, Rio Branco</MenuItem>
-                  <MenuItem value='gmt-05-et'>(GMT-05:00) Eastern Time (US & Canada)</MenuItem>
-                  <MenuItem value='gmt-05-ind'>(GMT-05:00) Indiana (East)</MenuItem>
-                  <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
-                  <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                select
+                label='担当ライン'
+                name='lineId'
+                value={form.lineId === '' ? '' : form.lineId}
+                onChange={handleFormChange}
+                disabled={loadingLines}
+                SelectProps={{ MenuProps: { disablePortal: true } }}
+                helperText={(!loadingLines && lines.length === 0) ? 'ラインが未登録です。管理画面から追加してください。' : '　'}
+              >
+                <MenuItem value=''>未選択</MenuItem>
+                {loadingLines ? (
+                  <MenuItem value='' disabled>読み込み中…</MenuItem>
+                ) : (
+                  lines.map(line => (
+                    <MenuItem key={line?.line_id ?? line?.line_name} value={line?.line_id}>
+                      {line?.line_name}
+                    </MenuItem>
+                  ))
+                )}
+              </TextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Currency</InputLabel>
-                <Select
-                  label='Currency'
-                  value={formData.currency}
-                  onChange={e => handleFormChange('currency', e.target.value)}
-                >
-                  <MenuItem value='usd'>USD</MenuItem>
-                  <MenuItem value='euro'>EUR</MenuItem>
-                  <MenuItem value='pound'>Pound</MenuItem>
-                  <MenuItem value='bitcoin'>Bitcoin</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                select
+                label='在籍状況'
+                name='status'
+                value={form.status}
+                onChange={handleFormChange}
+                SelectProps={{ MenuProps: { disablePortal: true } }}
+              >
+                <MenuItem value='在籍中'>在籍中</MenuItem>
+                <MenuItem value='退職済'>退職済</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='特記事項'
+                placeholder='夜勤中心 など'
+                name='specialNotes'
+                value={form.specialNotes}
+                onChange={handleFormChange}
+                multiline
+                minRows={2}
+              />
             </Grid>
             <Grid item xs={12} className='flex gap-4 flex-wrap'>
-              <Button variant='contained' type='submit'>
-                Save Changes
-              </Button>
-              <Button variant='outlined' type='reset' color='secondary' onClick={() => setFormData(initialData)}>
-                Reset
+              <Button variant='contained' type='submit' disabled={saving}>
+                {saving ? '保存中…' : '変更を保存'}
               </Button>
             </Grid>
           </Grid>
         </form>
       </CardContent>
+      <Snackbar
+        open={snack.open}
+        autoHideDuration={3000}
+        onClose={() => setSnack(s => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnack(s => ({ ...s, open: false }))}
+          severity={snack.severity}
+          sx={{ width: '100%' }}
+        >
+          {snack.message}
+        </Alert>
+      </Snackbar>
     </Card>
   )
 }

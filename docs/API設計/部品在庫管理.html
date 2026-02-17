@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部品在庫管理API設計書 (改訂版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        .post {
+            background-color: #22c55e;
+        }
+
+        .put {
+            background-color: #f97316;
+        }
+
+        .delete {
+            background-color: #ef4444;
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+    /* Copy button */
+    .code-block-wrapper { position: relative; }
+    .copy-btn { position:absolute; top:4px; right:6px; background:rgba(51,65,85,.85); color:#f1f5f9; font-size:12px; font-weight:600; padding:6px 12px 6px 10px; border-radius:8px; cursor:pointer; line-height:1; display:flex; align-items:center; gap:6px; backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,.08); transition:transform .16s, box-shadow .22s, background-color .25s ease; box-shadow:0 2px 6px -2px rgba(15,23,42,.35);} .copy-btn svg{width:16px;height:16px;} .copy-btn:hover{background:rgba(71,85,105,.92); transform:translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45);} .copy-btn:active{transform:translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4);} .copy-btn.copied{background:linear-gradient(135deg,#16a34a 0%,#15803d 70%);} .copy-btn.copied svg{animation:pop .4s ease;} @keyframes pop{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+
+        section h2 {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            /* 2xl */
+            font-weight: 700;
+            /* bold */
+            border-bottom-width: 2px;
+            border-color: #6366f1;
+            /* indigo-500 */
+            padding-bottom: 0.5rem;
+            /* pb-2 */
+            margin-bottom: 1rem;
+            /* mb-4 */
+        }
+
+        section h2 ion-icon {
+            margin-right: 0.75rem;
+            /* mr-3 */
+            font-size: 1.8rem;
+            color: #6366f1;
+            /* indigo-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <ion-icon name="server-outline" class="w-12 h-12 text-indigo-600"></ion-icon>
+                    <h1 class="text-4xl font-bold text-slate-900">部品在庫管理API 設計書</h1>
+                </div>
+                <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    ← 管理画面に戻る
+                </a>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 部品在庫管理ページ</p>
+                <p class="text-sm mt-1">このドキュメントは、「部品在庫管理ページ」の機能を実装するためのAPI仕様を定義します。箱IDは廃止しています。</p>
+            </div>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- DB設計 -->
+            <section id="db-design">
+                <h2><ion-icon name="hardware-chip-outline"></ion-icon>1. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">DB 設計は以下のとおりです。シンプルな構成としています。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">racks (棚) テーブル</h4>
+                    <pre><code class="language-sql">CREATE TABLE racks (
+    -- 棚のID、自動で番号が振られる
+    rack_id SERIAL PRIMARY KEY,
+    -- 棚の名前 (例: スプリング・小物資材ラック)
+    rack_name VARCHAR(255) NOT NULL UNIQUE,
+    -- 棚の行数 (A, B, C...)
+    rows INT NOT NULL CHECK (rows > 0),
+    -- 棚の列数 (1, 2, 3...)
+    cols INT NOT NULL CHECK (cols > 0)
+);</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">slots (スロット/箱) テーブル</h4>
+                    <pre><code class="language-sql">CREATE TABLE slots (
+    -- スロットのID、これも自動
+    slot_id SERIAL PRIMARY KEY,
+    -- どの棚に属してるかのID
+    rack_id INT NOT NULL,
+    -- 場所を示す識別子 (例: 'A-1', 'C-4')
+    slot_identifier VARCHAR(10) NOT NULL,
+
+    -- ↓部品が入ってるときだけ値が入る↓
+    part_name VARCHAR(255),
+    part_model_number VARCHAR(100),
+    quantity INT CHECK (quantity >= 0),
+    color_code VARCHAR(7),
+
+    -- 同じ棚の同じ場所に2個は置けないようにする設定
+    UNIQUE (rack_id, slot_identifier),
+    -- 存在しない棚には部品を置けないようにする設定
+    FOREIGN KEY (rack_id) REFERENCES racks(rack_id) ON DELETE CASCADE
+);</code></pre>
+                </div>
+            </section>
+
+            <!-- 棚 (Rack) API -->
+            <section id="api-racks">
+                <h2><ion-icon name="grid-outline"></ion-icon>2. 棚 (Rack) API</h2>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">2.1. 棚一覧の取得</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/racks</span>
+                    </div>
+                    <p>登録されている棚の一覧を取得するAPIです。左側のラック一覧を表示する際に利用します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">[
+    {
+        "rack_id": 1,
+        "rack_name": "スプリング・小物資材ラック",
+        "rows": 3,
+        "cols": 4
+    },
+    {
+        "rack_id": 2,
+        "rack_name": "ウレタンフォーム保管棚",
+        "rows": 3,
+        "cols": 6
+    }
+]</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">2.2. 特定の棚の詳細取得</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/racks/{rack_id}</span>
+                    </div>
+                    <p>指定した棚の詳細情報を取得します。内部に格納されている部品（スロット）の情報もまとめて取得できます。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "rack_id": 1,
+    "rack_name": "スプリング・小物資材ラック",
+    "rows": 3,
+    "cols": 4,
+    "slots": {
+        "A-1": { "part_name": "ポケットコイル (シングル)", "part_model_number": "PC-S-H20", "quantity": 25, "color_code": "4A90E2" },
+        "A-2": { "part_name": "ポケットコイル (シングル)", "part_model_number": "PC-S-H20", "quantity": 25, "color_code": "4A90E2" },
+        "A-3": null,
+        "A-4": { "part_name": "ボンネルコイル (セミダブル)", "part_model_number": "BC-SD-H18", "quantity": 20, "color_code": "50E3C2" },
+        "B-1": { "part_name": "コーナーガード", "part_model_number": "CG-STD", "quantity": 500, "color_code": "9B9B9B" }
+        // ...以下続く
+    }
+}</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">2.3. 新規ラックの作成</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/racks</span>
+                    </div>
+                    <p>新しい棚（ラック）を追加するときのAPIです。名前とサイズを指定して POST します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "rack_name": "生地・充填材ラック",
+    "rows": 2,
+    "cols": 3
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h4>
+                    <pre><code class="language-json">{
+    "rack_id": 3,
+    "rack_name": "生地・充填材ラック",
+    "rows": 2,
+    "cols": 3,
+    "message": "新しいラックが作成されました。"
+}</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">2.4. ラックの削除</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge delete">DELETE</span>
+                        <span class="font-mono text-lg font-semibold">/api/racks/{rack_id}</span>
+                    </div>
+                    <p>不要になった棚を削除するAPIです。URL で ID を指定して実行します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "message": "ラック「スプリング・小物資材ラック」を削除しました。"
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 箱 (Box/Part) API -->
+            <section id="api-boxes">
+                <h2><ion-icon name="cube-outline"></ion-icon>3. 箱 (Box/Part) API</h2>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">3.1. 新規部品の格納</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span
+                            class="font-mono text-lg font-semibold">/api/racks/{rack_id}/slots/{slot_identifier}</span>
+                    </div>
+                    <p>空のスロットに新しい箱を格納するときに利用します。`slot_identifier` は `A-1` のような形式です。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "part_name": "ラテックスフォーム 40mm (D)",
+    "part_model_number": "LTX-T40-D",
+    "quantity": 20,
+    "color_code": "F8E71C"
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h4>
+                    <pre><code class="language-json">{
+    "message": "A-1に部品を格納しました。",
+    "slot": {
+        "slot_identifier": "A-1",
+        "part_name": "ラテックスフォーム 40mm (D)",
+        "part_model_number": "LTX-T40-D",
+        "quantity": 20,
+        "color_code": "F8E71C"
+    }
+}</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">3.2. 部品情報の編集</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span
+                            class="font-mono text-lg font-semibold">/api/racks/{rack_id}/slots/{slot_identifier}</span>
+                    </div>
+                    <p>既存箱の情報を編集するときは PUT を使用します。数量変更やカラー変更などに対応します。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "part_name": "【改】ラテックスフォーム 40mm (D)",
+    "part_model_number": "LTX-T40-D-rev2",
+    "quantity": 25,
+    "color_code": "4A90E2"
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "message": "A-1の部品情報を更新しました。",
+    "slot": {
+        "slot_identifier": "A-1",
+        "part_name": "【改】ラテックスフォーム 40mm (D)",
+        "part_model_number": "LTX-T40-D-rev2",
+        "quantity": 25,
+        "color_code": "4A90E2"
+    }
+}</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">3.3. 部品の削除</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge delete">DELETE</span>
+                        <span
+                            class="font-mono text-lg font-semibold">/api/racks/{rack_id}/slots/{slot_identifier}</span>
+                    </div>
+                    <p>棚から箱を削除する（＝スロットを空にする）ときに使うAPI。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "message": "A-1の部品を削除しました。"
+}</code></pre>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">3.4. 部品の移動</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/racks/move/</span>
+                    </div>
+                    <p>箱を別の場所に移動するAPI。移動元と移動先の情報を送る！</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "from_rack_id": 1,
+    "from_slot_identifier": "A-1",
+    "to_rack_id": 1,
+    "to_slot_identifier": "C-3"
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "message": "部品を A-1 から C-3 へ移動しました。"
+}</code></pre>
+                    <div
+                        class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg space-y-4">
+                        <div>
+                            <p class="text-sm">{rack_id}では、データのやり取りはしない。全てリクエストJSONで完結させるものとする。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-3 text-slate-700">3.5. 部品の使用</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span
+                            class="font-mono text-lg font-semibold">/api/racks/{rack_id}/slots/{slot_identifier}/use</span>
+                    </div>
+                    <p>部品を使用した際に在庫数を減らすためのAPIです。「何個使用したか」をサーバーへ伝えます。</p>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h4>
+                    <pre><code class="language-json">{
+    "quantity_to_use": 5
+}</code></pre>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h4>
+                    <pre><code class="language-json">{
+    "message": "部品を5個使用しました。",
+    "remaining_quantity": 20
+}</code></pre>
+                    <div class="mt-8 p-4 bg-sky-50 border-l-4 border-sky-500 text-sky-800 rounded-r-lg">
+                        <p class="text-sm">使用後の在庫が 0 個になった場合、サーバー側で自動的にそのスロットを空状態として扱います。</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- QRコード -->
+            <section id="qr-handling">
+                <h2><ion-icon name="qr-code-outline"></ion-icon>4. 棚QRコード仕様</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">QR コードは「棚 QR」の 1 種類とし、入庫と出庫の双方に対応します。</p>
+
+                    <h4 class="text-lg font-semibold mt-6 mb-2">棚QRコードのデータ構造</h4>
+                    <p class="text-sm mb-4">棚の各場所に貼る QR コードは、スキャンすると以下の JSON 文字列を取得できるようにします。</p>
+                    <pre><code class="language-json">{
+    "type": "rack_slot",
+    "rack_id": 1,
+    "slot_identifier": "A-1"
+}</code></pre>
+
+                    <div
+                        class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg space-y-4">
+                        <div>
+                            <h4 class="font-bold text-lg">【補足】QR入庫の流れ</h4>
+                            <ul class="mt-2 list-disc list-inside space-y-1 text-sm">
+                                <li>1. モーダルで新しい部品の情報を入力します。</li>
+                                <li>2. カメラで配置したい場所の「棚 QR コード」をスキャンします。</li>
+                                <li>3. スキャン結果から棚の位置（例: `rack_id: 1`, `slot_identifier: 'A-1'`）を取得します。</li>
+                                <li>4. API (`POST /api/racks/1/slots/A-1`) を呼び出し、入力した部品情報をサーバーへ送信して格納を完了します。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">【補足】QR出庫の流れ</h4>
+                            <ul class="mt-2 list-disc list-inside space-y-1 text-sm">
+                                <li>1. FAB メニューから「QR 出庫」を選択します。</li>
+                                <li>2. カメラで出庫対象の棚に貼付された「棚 QR コード」をスキャンします。</li>
+                                <li>3. スキャン結果を基にアプリが対象スロットの部品情報を表示します。</li>
+                                <li>4. 「部品を使用」モーダルで使用した数量を入力します。</li>
+                                <li>5. API (`POST /api/racks/1/slots/A-1/use`) を呼び出し、サーバー側の在庫数を更新して完了します。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function(){ const blocks=document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code=>{ const pre=code.parentElement; if(!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if(pre.querySelector('.copy-btn')) return; const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click',async()=>{ const raw=code.innerText.replace(/\n+$/,''); try{ await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(()=>{btn.classList.remove('copied'); btn.innerHTML=original;},1800);}catch(e){ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(()=>{btn.innerHTML='Copy';},2000);} }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

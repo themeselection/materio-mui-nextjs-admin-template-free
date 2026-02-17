@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日報一覧</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-enter {
+            animation: modal-enter-animation 0.3s ease-out forwards;
+        }
+        @keyframes modal-enter-animation {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* line-clamp for multiline text truncation */
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+        }
+        /* スピナーアニメーション */
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                           <ion-icon name="document-text-outline" class="text-white text-2xl"></ion-icon>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">日報一覧</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- 検索・フィルターバー -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="lg:col-span-2">
+                        <label for="search-user" class="block text-sm font-medium text-gray-700">担当者</label>
+                        <input type="text" id="search-user" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="山田 太郎">
+                    </div>
+                    <div>
+                        <label for="search-date" class="block text-sm font-medium text-gray-700">日付</label>
+                        <input type="date" id="search-date" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="search-product" class="block text-sm font-medium text-gray-700">製品名</label>
+                        <input type="text" id="search-product" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="製品A-102">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日報リスト -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <!-- サンプル日報 1 -->
+                <div class="fade-in bg-white rounded-xl shadow-md p-5 flex flex-col group hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center mb-4 pb-4 border-b">
+                        <div class="h-12 w-12 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold mr-4" style="background-color: #a3a8e6;">YT</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">山田 太郎</h3>
+                            <p class="text-sm text-gray-500">2024年7月8日 (月)</p>
+                        </div>
+                    </div>
+                    <div class="text-sm flex-grow space-y-3">
+                        <p><strong class="w-20 inline-block text-gray-500">製品名:</strong> <span class="font-semibold">製品A-102</span></p>
+                        <p><strong class="w-20 inline-block text-gray-500">生産実績:</strong> <span class="font-semibold">1,050 個</span></p>
+                        <div>
+                            <strong class="inline-block text-gray-500 mb-1">作業内容:</strong>
+                            <p class="text-gray-600 line-clamp-2">組立作業。途中、部品B-5の供給が遅れるトラブルがあったが、他ラインの協力により30分で復旧した。</p>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-sm font-bold text-indigo-600 text-right group-hover:underline">詳細を見る &rarr;</button>
+                </div>
+
+                <!-- サンプル日報 2 -->
+                <div class="fade-in bg-white rounded-xl shadow-md p-5 flex flex-col group hover:shadow-xl transition-shadow duration-300" style="animation-delay: 0.05s;">
+                    <div class="flex items-center mb-4 pb-4 border-b">
+                        <div class="h-12 w-12 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold mr-4" style="background-color: #e6a3c8;">SH</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">佐藤 花子</h3>
+                            <p class="text-sm text-gray-500">2024年7月8日 (月)</p>
+                        </div>
+                    </div>
+                    <div class="text-sm flex-grow space-y-3">
+                        <p><strong class="w-20 inline-block text-gray-500">製品名:</strong> <span class="font-semibold">製品C-301</span></p>
+                        <p><strong class="w-20 inline-block text-gray-500">生産実績:</strong> <span class="font-semibold">800 個</span></p>
+                        <div>
+                            <strong class="inline-block text-gray-500 mb-1">作業内容:</strong>
+                            <p class="text-gray-600 line-clamp-2">一次塗装を担当。塗料の粘度調整に時間を要したが、マニュアル通りの品質を確保。</p>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-sm font-bold text-indigo-600 text-right group-hover:underline">詳細を見る &rarr;</button>
+                </div>
+                
+                <!-- サンプル日報 3 -->
+                <div class="fade-in bg-white rounded-xl shadow-md p-5 flex flex-col group hover:shadow-xl transition-shadow duration-300" style="animation-delay: 0.1s;">
+                    <div class="flex items-center mb-4 pb-4 border-b">
+                        <div class="h-12 w-12 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold mr-4" style="background-color: #a3e6c8;">SI</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">鈴木 一郎</h3>
+                            <p class="text-sm text-gray-500">2024年7月8日 (月)</p>
+                        </div>
+                    </div>
+                     <div class="text-sm flex-grow space-y-3">
+                        <p><strong class="w-20 inline-block text-gray-500">製品名:</strong> <span class="font-semibold">製品A-102</span></p>
+                        <p><strong class="w-20 inline-block text-gray-500">生産実績:</strong> <span class="font-semibold">1,040 / 1,050 (良品/検査数)</span></p>
+                        <div>
+                            <strong class="inline-block text-gray-500 mb-1">作業内容:</strong>
+                            <p class="text-gray-600 line-clamp-2">検査機#1のエラー対応。センサーの汚れが原因と判明し、清掃後は正常に稼働。</p>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-sm font-bold text-indigo-600 text-right group-hover:underline">詳細を見る &rarr;</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="bg-white mt-8 py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2024 生産管理システム. All Rights Reserved.
+            </div>
+        </footer>
+
+        <!-- フローティング追加ボタン -->
+        <button id="add-report-button" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-10">
+            <ion-icon name="create-outline" class="text-3xl"></ion-icon>
+        </button>
+    </div>
+
+    <!-- 日報追加・編集モーダル -->
+    <div id="report-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-30 p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl modal-enter">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-xl font-bold">日報入力</h2>
+                <button id="modal-close-button" class="text-gray-400 hover:text-gray-600">
+                    <ion-icon name="close-outline" class="text-3xl"></ion-icon>
+                </button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="form-user" class="block text-sm font-medium text-gray-700">担当者</label>
+                        <input type="text" id="form-user" value="山田 太郎" class="mt-1 w-full bg-gray-100 border-gray-300 rounded-md shadow-sm" readonly>
+                    </div>
+                     <div>
+                        <label for="form-date" class="block text-sm font-medium text-gray-700">日付</label>
+                        <input type="date" id="form-date" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="form-product-name" class="block text-sm font-medium text-gray-700">製品名</label>
+                        <input type="text" id="form-product-name" placeholder="製品A-102" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="form-production-count" class="block text-sm font-medium text-gray-700">生産実績数</label>
+                        <input type="number" id="form-production-count" placeholder="1050" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="flex justify-between items-center">
+                            <label for="form-today-work" class="block text-sm font-medium text-gray-700">今日の作業内容</label>
+                            <button id="ai-format-work-button" class="text-sm text-indigo-600 font-semibold hover:text-indigo-800 flex items-center">
+                                <span class="mr-1">✨</span> AIで清書
+                                <ion-icon id="ai-work-spinner" name="sync-outline" class="hidden ml-2 spinner"></ion-icon>
+                            </button>
+                        </div>
+                        <textarea id="form-today-work" rows="5" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="箇条書きでOK！&#10;例：&#10;・製品A-102の組立&#10;・部品B-5の供給遅れ（30分ロス）&#10;・1050個完了"></textarea>
+                    </div>
+                     <div class="col-span-1 md:col-span-2">
+                        <div class="flex justify-between items-center">
+                            <label for="form-memo" class="block text-sm font-medium text-gray-700">メモ</label>
+                            <button id="ai-format-memo-button" class="text-sm text-indigo-600 font-semibold hover:text-indigo-800 flex items-center">
+                                <span class="mr-1">✨</span> AIで清書
+                                <ion-icon id="ai-memo-spinner" name="sync-outline" class="hidden ml-2 spinner"></ion-icon>
+                            </button>
+                        </div>
+                        <textarea id="form-memo" rows="3" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="気づいた点、改善提案など"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-gray-50 rounded-b-xl flex justify-end space-x-4">
+                <button id="modal-cancel-button" class="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">キャンセル</button>
+                <button id="modal-save-button" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // モーダル関連のロジック
+        const reportModal = document.getElementById('report-modal');
+        const openModalButton = document.getElementById('add-report-button');
+        const closeModalButton = document.getElementById('modal-close-button');
+        const cancelButton = document.getElementById('modal-cancel-button');
+
+        function openModal() {
+            reportModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            reportModal.classList.add('hidden');
+        }
+
+        openModalButton.addEventListener('click', openModal);
+        closeModalButton.addEventListener('click', closeModal);
+        cancelButton.addEventListener('click', closeModal);
+        reportModal.addEventListener('click', (e) => {
+            if (e.target === reportModal) {
+                closeModal();
+            }
+        });
+        
+        // 今日の日付をセット
+        document.getElementById('form-date').valueAsDate = new Date();
+
+        // --- Gemini API 連携 ---
+        const aiFormatWorkButton = document.getElementById('ai-format-work-button');
+        const aiFormatMemoButton = document.getElementById('ai-format-memo-button');
+        const workTextarea = document.getElementById('form-today-work');
+        const memoTextarea = document.getElementById('form-memo');
+        const workSpinner = document.getElementById('ai-work-spinner');
+        const memoSpinner = document.getElementById('ai-memo-spinner');
+
+        /**
+         * Gemini APIを呼び出してテキストを清書する
+         * @param {string} textToFormat - 清書する元のテキスト
+         * @param {HTMLTextAreaElement} targetTextarea - 結果を反映するテキストエリア
+         * @param {HTMLElement} spinner - ローディング表示用のスピナー要素
+         */
+        async function formatTextWithAI(textToFormat, targetTextarea, spinner) {
+            if (!textToFormat.trim()) {
+                alert('テキストが入力されていません。');
+                return;
+            }
+
+            // スピナーを表示し、ボタンを無効化
+            spinner.classList.remove('hidden');
+            targetTextarea.disabled = true;
+            aiFormatWorkButton.disabled = true;
+            aiFormatMemoButton.disabled = true;
+
+            const prompt = `あなたは工場の優秀なアシスタントです。以下の作業メモを、丁寧で分かりやすい日報の文章に清書してください。箇条書きは自然な文章にまとめ、専門用語は適切に使用してください。報告として簡潔かつ要点を押さえた文章を生成してください。\n\n--- 入力メモ ---\n${textToFormat}\n\n--- 清書後 ---\n`;
+            
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // APIキーはCanvas環境で自動的に提供されます
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`APIエラー: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const formattedText = result.candidates[0].content.parts[0].text;
+                    targetTextarea.value = formattedText;
+                } else {
+                    throw new Error('AIからの応答が予期した形式ではありません。');
+                }
+
+            } catch (error) {
+                console.error("AIによる清書中にエラーが発生しました:", error);
+                alert("AIによる清書に失敗しました。しばらくしてからもう一度お試しください。");
+            } finally {
+                // スピナーを非表示にし、ボタンを有効化
+                spinner.classList.add('hidden');
+                targetTextarea.disabled = false;
+                aiFormatWorkButton.disabled = false;
+                aiFormatMemoButton.disabled = false;
+            }
+        }
+
+        aiFormatWorkButton.addEventListener('click', () => {
+            formatTextWithAI(workTextarea.value, workTextarea, workSpinner);
+        });
+
+        aiFormatMemoButton.addEventListener('click', () => {
+            formatTextWithAI(memoTextarea.value, memoTextarea, memoSpinner);
+        });
+
+    </script>
+
+</body>
+</html>

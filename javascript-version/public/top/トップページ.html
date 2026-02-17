@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生産管理システム ダッシュボード</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+
+            <!-- リアルタイムモニタリング -->
+            <div class="mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 生産状況カード -->
+                    <a href="生産数管理ページ.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex flex-col justify-between"
+                        style="animation-delay: 0.1s;">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-lg font-bold">生産進捗</h4>
+                                <div class="bg-indigo-100 p-3 rounded-full">
+                                    <ion-icon name="trending-up-outline" class="text-indigo-500 text-2xl"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="flex items-end space-x-2">
+                                <span class="text-4xl font-bold text-indigo-600">1,250</span>
+                                <span class="text-lg text-gray-500">/ 2,000 個</span>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 62.5%"></div>
+                                </div>
+                                <p class="text-right text-sm mt-1 font-bold text-indigo-600">達成率: 62.5%</p>
+                            </div>
+                        </div>
+                        <div class="text-right mt-4 text-sm font-semibold text-indigo-600 group-hover:underline">
+                            詳細を見る &rarr;
+                        </div>
+                    </a>
+
+                    <!-- 機械稼働状況カード -->
+                    <a href="生産機械ステータス.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex flex-col justify-between"
+                        style="animation-delay: 0.2s;">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-lg font-bold">機械稼働ステータス</h4>
+                                <div class="bg-slate-100 p-3 rounded-full">
+                                    <ion-icon name="hardware-chip-outline" class="text-slate-500 text-2xl"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">プレス機
+                                        #1</span><span
+                                        class="font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-800">正常</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">組立ライン
+                                        #A</span><span
+                                        class="font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-800">正常</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">塗装ブース
+                                        #2</span><span
+                                        class="font-semibold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">待機中</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm"><span class="text-gray-600">検査機
+                                        #1</span><span
+                                        class="font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-800">エラー</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-4 text-sm font-semibold text-slate-600 group-hover:underline">
+                            詳細を見る &rarr;
+                        </div>
+                    </a>
+
+                    <!-- 画像検査状況カード -->
+                    <a href="画像検査ステータス.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex flex-col justify-between"
+                        style="animation-delay: 0.3s;">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-lg font-bold">画像検査ステータス</h4>
+                                <div class="bg-teal-100 p-3 rounded-full">
+                                    <ion-icon name="camera-outline" class="text-teal-500 text-2xl"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center space-x-6">
+                                <div class="relative w-24 h-24">
+                                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                                        <path class="text-gray-200"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-width="3" />
+                                        <path class="text-teal-500" stroke-dasharray="95, 100"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center"><span
+                                            class="text-2xl font-bold">95%</span><span class="text-xs">良品率</span></div>
+                                </div>
+                                <div class="text-sm space-y-1">
+                                    <p>検査総数: 1,280</p>
+                                    <p class="text-teal-600 font-semibold">良品: 1,216</p>
+                                    <p class="text-red-600 font-semibold">不良: 64</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-4 text-sm font-semibold text-teal-600 group-hover:underline">
+                            詳細を見る &rarr;
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 機能メニュー -->
+            <div class="mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 製造出荷指示 -->
+                    <a href="製造出荷指示周知ページ.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex items-center"
+                        style="animation-delay: 0.4s;">
+                        <div class="bg-orange-100 p-4 rounded-full mr-5"><ion-icon name="list-outline"
+                                class="text-orange-500 text-3xl"></ion-icon></div>
+                        <div>
+                            <h3 class="text-lg font-bold">製造出荷指示</h3>
+                            <p class="text-sm text-gray-500">本日の製造・出荷指示を確認</p>
+                        </div>
+                    </a>
+                    <!-- 日報入力 -->
+                    <a href="日報一覧ページ.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex items-center"
+                        style="animation-delay: 0.5s;">
+                        <div class="bg-sky-100 p-4 rounded-full mr-5"><ion-icon name="create-outline"
+                                class="text-sky-500 text-3xl"></ion-icon></div>
+                        <div>
+                            <h3 class="text-lg font-bold">日報システム</h3>
+                            <p class="text-sm text-gray-500">作業記録の入力・確認</p>
+                        </div>
+                    </a>
+                    <!-- 在庫管理 -->
+                    <a href="部品在庫管理.html"
+                        class="fade-in group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] p-6 flex items-center"
+                        style="animation-delay: 0.6s;">
+                        <div class="bg-green-100 p-4 rounded-full mr-5"><ion-icon name="cube-outline"
+                                class="text-green-500 text-3xl"></ion-icon></div>
+                        <div>
+                            <h3 class="text-lg font-bold">部品在庫管理</h3>
+                            <p class="text-sm text-gray-500">QRコードで入出庫</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 生産目標と管理者メニュー -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 生産目標（従業員向け） -->
+                <div class="fade-in bg-white rounded-xl shadow-lg p-6 lg:col-span-2" style="animation-delay: 0.7s;">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-bold">本日のタスク</h3>
+                        <a href="製造出荷指示周知ページ.html"
+                            class="text-sm font-semibold text-indigo-600 hover:underline">すべての指示を見る &rarr;</a>
+                    </div>
+                    <!-- 指示カードリスト -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- サンプル指示 1 -->
+                        <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-between">
+                            <div>
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-100 text-cyan-800">マット</span>
+                                <p class="font-bold mt-2">マット <span class="text-sm text-gray-600 font-normal">/
+                                        1200x1950x240</span></p>
+                                <p class="text-xs text-red-600 font-bold mt-1">至急対応</p>
+                            </div>
+                            <div class="text-right mt-2">
+                                <p class="text-gray-500 text-sm">数量</p>
+                                <p class="text-2xl font-bold text-indigo-600">1</p>
+                            </div>
+                        </div>
+                        <!-- サンプル指示 2 -->
+                        <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-between">
+                            <div>
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">ボトム</span>
+                                <p class="font-bold mt-2">サポート <span class="text-sm text-gray-600 font-normal">/
+                                        80巾</span></p>
+                                <p class="text-xs text-gray-500 mt-1">アマゾン直送便</p>
+                            </div>
+                            <div class="text-right mt-2">
+                                <p class="text-gray-500 text-sm">数量</p>
+                                <p class="text-2xl font-bold text-indigo-600">1</p>
+                            </div>
+                        </div>
+                        <!-- もし指示がない場合 -->
+                        <!-- <p class="md:col-span-2 text-center text-gray-500 py-4">現在、優先度の高い指示はありません。</p> -->
+                    </div>
+                </div>
+
+                <!-- 管理者向け機能 -->
+                <div class="fade-in bg-white rounded-xl shadow-lg p-6 lg:col-span-1" style="animation-delay: 0.8s;">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-gray-700 p-2 rounded-full mr-3"><ion-icon name="keypad-outline"
+                                class="text-white text-2xl"></ion-icon></div>
+                        <h3 class="text-lg font-bold">管理者メニュー</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="従業員名簿ページ.html"
+                            class="block w-full text-left bg-gray-100 hover:bg-gray-200 p-3 rounded-lg transition-all duration-200 hover:translate-x-1">従業員名簿の管理</a>
+                        <a href="生産機械サイネージ.html"
+                            class="block w-full text-left bg-gray-100 hover:bg-gray-200 p-3 rounded-lg transition-all duration-200 hover:translate-x-1">サイネージ用モニター</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+
+</html>

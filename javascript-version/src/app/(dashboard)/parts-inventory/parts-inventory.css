@@ -1,0 +1,81 @@
+/* フォント設定 */
+body, .pi-root {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* テーマブリッジ: MUI CssVars の値を参照してレガシーUIを配色 */
+.pi-root {
+  background-color: var(--mui-palette-background-default);
+  color: var(--mui-palette-text-primary);
+}
+
+.pi-root .pi-surface {
+  background-color: var(--mui-palette-background-paper);
+  color: var(--mui-palette-text-primary);
+}
+
+/* Tailwind の bg-white をダーク対応の paper に寄せる（Tailwindは #__next でスコープされるため同等以上の特異性で上書き） */
+#__next .pi-root .bg-white { background-color: var(--mui-palette-background-paper); }
+/* ライト系グレー背景の近似（アクションホバー相当） */
+#__next .pi-root .bg-gray-200 { background-color: rgb(var(--mui-mainColorChannels-light) / 0.06); }
+#__next .pi-root .hover\:bg-gray-300:hover { background-color: rgb(var(--mui-mainColorChannels-light) / 0.08); }
+/* 半透明グレー（スロット背景の薄色） */
+#__next .pi-root .bg-gray-300\/50 { background-color: rgb(var(--mui-mainColorChannels-light) / 0.08); }
+
+/* 主要ボタンの色を MUI の primary に寄せる */
+.pi-root .bg-indigo-600 { background-color: var(--mui-palette-primary-main); }
+.pi-root .hover\:bg-indigo-700:hover { background-color: var(--mui-palette-primary-dark); }
+/* テキスト/ボーダーの indigo も primary に寄せる */
+.pi-root .text-indigo-600 { color: var(--mui-palette-primary-main); }
+.pi-root .border-indigo-500 { border-color: var(--mui-palette-primary-main); }
+.pi-root .hover\:border-gray-300:hover { border-color: var(--mui-palette-divider); }
+
+/* テキストのグレー系をテーマのテキスト色へ */
+.pi-root .text-gray-400 { color: var(--mui-palette-text-disabled); }
+.pi-root .text-gray-500 { color: var(--mui-palette-text-secondary); }
+.pi-root .text-gray-700, .pi-root .text-gray-800 { color: var(--mui-palette-text-primary); }
+
+/* エラー系の色をテーマへ */
+.pi-root .hover\:bg-red-100:hover, .pi-root .bg-red-100 { background-color: var(--mui-palette-error-lighterOpacity); }
+.pi-root .hover\:bg-red-200:hover { background-color: rgba(var(--mui-palette-error-mainChannel) / 0.18); }
+.pi-root .hover\:text-red-600:hover, .pi-root .text-red-700 { color: var(--mui-palette-error-main); }
+
+/* 明度の高い薄い面色が欲しい場合（必要に応じて使用） */
+.pi-root .pi-surface-soft { background-color: var(--mui-palette-primary-lightOpacity); }
+
+/* スクロールバー（テーマ追従） */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--mui-palette-background-default); }
+::-webkit-scrollbar-thumb { background: var(--mui-palette-divider); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(var(--mui-mainColorChannels-light) / 0.4); }
+
+/* アニメーション */
+.fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.modal-enter { animation: modal-enter-animation 0.3s ease-out forwards; }
+@keyframes modal-enter-animation { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+/* スロット選択等（テーマ追従） */
+.selected-slot { outline: 4px solid var(--mui-palette-primary-main); transform: scale(1.02); }
+.highlight-slot { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(var(--mui-palette-primary-mainChannel) / 0.7); } 50% { box-shadow: 0 0 0 10px rgba(var(--mui-palette-primary-mainChannel) / 0); } }
+.move-mode-empty { background-color: var(--mui-palette-success-lightOpacity) !important; outline: 2px dashed var(--mui-palette-success-main); }
+.move-mode-origin { animation: pulse-red 1.5s infinite; }
+@keyframes pulse-red { 0%,100% { box-shadow: 0 0 0 0 rgba(var(--mui-palette-error-mainChannel) / 0.7); } 50% { box-shadow: 0 0 0 10px rgba(var(--mui-palette-error-mainChannel) / 0); } }
+
+/* QRスキャナー */
+.scanner-line { animation: scan 2s linear infinite; }
+@keyframes scan { 0%,100% { top: 0; } 50% { top: 100%; } }
+
+/* FAB */
+.fab-item { transform: scale(0); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* 見出しハイライト（テーマ追従） */
+.header-highlight { background-color: var(--mui-palette-primary-lighterOpacity); color: var(--mui-palette-primary-dark); }
+
+/* ラックタブ（テーマ追従） */
+.pi-root .rack-tab-item { color: var(--mui-palette-text-secondary); border-bottom-color: transparent; }
+.pi-root .rack-tab-item:hover { color: var(--mui-palette-text-primary); border-bottom-color: rgb(var(--mui-mainColorChannels-light) / 0.2); }
+.pi-root .rack-tab-item.active { color: var(--mui-palette-primary-main); border-bottom-color: var(--mui-palette-primary-main); }

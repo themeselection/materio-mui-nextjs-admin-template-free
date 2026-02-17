@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日報管理API設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <script src="../sidebar.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        .method-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.2em 0.6em;
+            border-radius: 0.25rem;
+            color: white;
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .get {
+            background-color: #3b82f6;
+        }
+
+        .post {
+            background-color: #22c55e;
+        }
+
+        .put {
+            background-color: #f97316;
+        }
+
+        .delete {
+            background-color: #ef4444;
+        }
+
+        /* highlight.js用のスタイルを調整 */
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        /* Copy button (お手本のHTMLから流用) */
+        .code-block-wrapper { position: relative; }
+        .copy-btn { position:absolute; top:4px; right:6px; background:rgba(51,65,85,.85); color:#f1f5f9; font-size:12px; font-weight:600; padding:6px 12px 6px 10px; border-radius:8px; cursor:pointer; line-height:1; display:flex; align-items:center; gap:6px; backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,.08); transition:transform .16s, box-shadow .22s, background-color .25s; box-shadow:0 2px 6px -2px rgba(15,23,42,.35);} .copy-btn svg{width:16px;height:16px;} .copy-btn:hover{background:rgba(71,85,105,.92); transform:translateY(-2px); box-shadow:0 6px 14px -4px rgba(15,23,42,.45);} .copy-btn:active{transform:translateY(0); box-shadow:0 3px 8px -4px rgba(15,23,42,.4);} .copy-btn.copied{background:linear-gradient(135deg,#16a34a 0%,#15803d 70%);} .copy-btn.copied svg{animation:pop .4s ease;} @keyframes pop{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    <h1 class="text-4xl font-bold text-slate-900">日報管理API 設計書</h1>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 rounded-r-lg">
+                <p class="font-bold">対象ページ: 日報一覧ページ、日報入力ページ</p>
+                <p class="text-sm mt-1">このドキュメントは、従業員の日報を管理（CRUD）するためのAPI仕様を定義します。</p>
+            </div>
+            <p class="mt-4 text-lg text-slate-600">これベースで開発ヨロ！</p>
+        </header>
+
+        <div class="space-y-12">
+
+            <section id="db-design">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">0. DB設計</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">日報データは、`employees` テーブルと `production_lines` テーブルを参照します。</p>
+
+                    <h3 class="text-lg font-semibold mt-4 mb-2">daily_reports（日報テーブル）</h3>
+                    <pre><code class="language-sql">CREATE TABLE daily_reports (
+    report_id SERIAL PRIMARY KEY,                   -- 日報ID (自動採番)
+    employee_id INT NOT NULL,                     -- 従業員ID (FK)
+    line_id INT NOT NULL,                         -- ラインID (FK)
+    report_date DATE NOT NULL,                      -- 報告日 (例: '2025-11-05')
+    notes TEXT,                                   -- 備考・特記事項 (日記内容)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 作成日時
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 更新日時
+
+    FOREIGN KEY (employee_id) REFERENCES employees (employee_id),
+    FOREIGN KEY (line_id) REFERENCES production_lines (line_id)
+);</code></pre>
+                </div>
+            </section>
+
+            <section id="get-reports">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">1. 日報一覧取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/reports</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">日報のリストをまとめて取得するAPI。検索フィルターも使えるようにします。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">クエリパラメータ (絞り込み検索)</h3>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 p-2">パラメータ</th>
+                                <th class="border-b-2 p-2">説明</th>
+                                <th class="border-b-2 p-2">例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border-b p-2 font-mono">employee_name</td>
+                                <td class="border-b p-2">従業員名（部分一致）で絞り込み。</td>
+                                <td class="border-b p-2 font-mono">?employee_name=山田</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">line_name</td>
+                                <td class="border-b p-2">ライン名（部分一致）で絞り込み。</td>
+                                <td class="border-b p-2 font-mono">?line_name=組立</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">start_date</td>
+                                <td class="border-b p-2">期間検索（開始日）。 `report_date` がこの日以降。</td>
+                                <td class="border-b p-2 font-mono">?start_date=2025-11-01</td>
+                            </tr>
+                            <tr>
+                                <td class="border-b p-2 font-mono">end_date</td>
+                                <td class="border-b p-2">期間検索（終了日）。 `report_date` がこの日以前。</td>
+                                <td class="border-b p-2 font-mono">?end_date=2025-11-30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <p class="text-sm mb-2">※従業員名(employee_name)とライン名(line_name)は、API側でJOINして返します。</p>
+                    <pre><code class="language-json">[
+    {
+        "report_id": 1,
+        "employee_id": 12,
+        "employee_name": "山田 太郎",
+        "line_id": 1,
+        "line_name": "組立ラインA",
+        "report_date": "2025-11-05",
+        "notes": "材料Aの供給が一時停止したため、午後から別作業。",
+        "updated_at": "2025-11-05T17:30:00+09:00"
+    },
+    {
+        "report_id": 2,
+        "employee_id": 15,
+        "employee_name": "佐藤 花子",
+        "line_id": 2,
+        "line_name": "塗装ラインB",
+        "report_date": "2025-11-05",
+        "notes": "塗料ノズルの定期清掃実施。特に問題なし。",
+        "updated_at": "2025-11-05T17:35:00+09:00"
+    }
+]</code></pre>
+                </div>
+            </section>
+
+            <section id="get-report-by-id">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">2. 特定の日報取得</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge get">GET</span>
+                        <span class="font-mono text-lg font-semibold">/api/reports/{id}</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">IDを指定して、特定の日報1件の詳細情報をGETする。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "report_id": 1,
+    "employee_id": 12,
+    "employee_name": "山田 太郎",
+    "line_id": 1,
+    "line_name": "組立ラインA",
+    "report_date": "2025-11-05",
+    "notes": "材料Aの供給が一時停止したため、午後から別作業。",
+    "updated_at": "2025-11-05T17:30:00+09:00"
+}</code></pre>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">エラーレスポンス (404 Not Found)</h3>
+                    <pre><code class="language-json">{
+    "message": "日報が見つかりません"
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="create-report">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">3. 日報追加</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge post">POST</span>
+                        <span class="font-mono text-lg font-semibold">/api/reports</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: S</span>
+                    </div>
+                    <p class="mb-4">新しい日報を登録するためのAPIです。データは JSON 形式で送信します。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <pre><code class="language-json">{
+    "employee_id": 12,
+    "line_id": 1,
+    "report_date": "2025-11-06",
+    "notes": "本日は通常通り作業完了。"
+}</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (201 Created)</h3>
+                    <p class="text-sm mb-2">登録が成功すると、ID が付与された日報データ（JOIN 済み）が返却されます。</p>
+                    <pre><code class="language-json">{
+    "report_id": 3,
+    "employee_id": 12,
+    "employee_name": "山田 太郎",
+    "line_id": 1,
+    "line_name": "組立ラインA",
+    "report_date": "2025-11-06",
+    "notes": "本日は通常通り作業完了。",
+    "updated_at": "2025-11-06T17:31:00+09:00"
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="update-report">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">4. 日報情報更新</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge put">PUT</span>
+                        <span class="font-mono text-lg font-semibold">/api/reports/{id}</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">ID で指定した日報の情報を全件更新します。</p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">リクエストボディ</h3>
+                    <pre><code class="language-json">{
+    "employee_id": 12,
+    "line_id": 1,
+    "report_date": "2025-11-06",
+    "notes": "本日は通常通り作業完了。\n追記：B部品の在庫確認実施。"
+}</code></pre>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (200 OK)</h3>
+                    <pre><code class="language-json">{
+    "report_id": 3,
+    "employee_id": 12,
+    "employee_name": "山田 太郎",
+    "line_id": 1,
+    "line_name": "組立ラインA",
+    "report_date": "2025-11-06",
+    "notes": "本日は通常通り作業完了。\n追記：B部品の在庫確認実施。",
+    "updated_at": "2025-11-06T18:00:00+09:00"
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="delete-report">
+                <h2 class="text-2xl font-bold border-b-2 border-indigo-500 pb-2 mb-4">5. 日報削除</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="method-badge delete">DELETE</span>
+                        <span class="font-mono text-lg font-semibold">/api/reports/{id}</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">優先度: A</span>
+                    </div>
+                    <p class="mb-4">
+                        IDで指定した日報を削除する。従業員APIと同様、物理削除で設計。
+                    </p>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-2">成功レスポンス (204 No Content)</h3>
+                    <p>削除が成功したら、ボディには何も返ってこない。</p>
+                </div>
+            </section>
+
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        // ページ内のすべてのコードにハイライトを適用
+        hljs.highlightAll();
+    </script>
+    <script>
+        (function(){ const blocks=document.querySelectorAll('pre code.language-json, pre code.language-http, pre code.language-sql'); blocks.forEach(code=>{ const pre=code.parentElement; if(!pre.classList.contains('code-block-wrapper')) pre.classList.add('code-block-wrapper'); if(pre.querySelector('.copy-btn')) return; const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'; btn.addEventListener('click',async()=>{ const raw=code.innerText.replace(/\n+$/,''); try{ await navigator.clipboard.writeText(raw); btn.classList.add('copied'); const original=btn.innerHTML; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Copied!</span>'; setTimeout(()=>{btn.classList.remove('copied'); btn.innerHTML=original;},1800);}catch(e){ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#fee2e2">Failed</span>'; setTimeout(()=>{btn.innerHTML='Copy';},2000);} }); pre.appendChild(btn); }); })();
+    </script>
+</body>
+
+</html>

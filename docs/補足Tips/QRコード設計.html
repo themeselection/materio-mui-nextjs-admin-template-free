@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRコードデータ設計書</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        pre code.hljs {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-black text-slate-900 tracking-wide">QRコード設計、これでカンペキ！</h1>
+            <p class="mt-2 text-lg text-slate-600">部品と棚のQRコードの中身、どうすりゃイケてるか全部まとめといたよん！</p>
+        </header>
+
+        <div class="space-y-12">
+
+            <!-- 1. QRコード設計の考え方 -->
+            <section id="concept">
+                <h2 class="text-2xl font-bold border-b-2 border-pink-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="bulb-outline" class="mr-3 text-2xl text-pink-500"></ion-icon>
+                    QRコード設計の考え方 ✨
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">QRコードの中身はただの文字列！だから、後からサーバーで「これ、なんのQRだっけ？」ってならないように、分かりやすいルールで作っとくのがマジ大事！そこで最強なのが…
+                    </p>
+                    <div class="p-4 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 rounded-r-lg">
+                        <h3 class="font-bold text-lg">JSON形式でデータを入れる！</h3>
+                        <p class="mt-2">なんでJSONがいいかって？</p>
+                        <ul class="mt-2 list-disc list-inside space-y-1 text-sm">
+                            <li><span class="font-semibold">自己紹介してくれる！</span> データに`"type":
+                                "part_box"`みたいに名前を付けておけるから、サーバー側で「あ、これは部品のQRね！」って一発でわかる！</li>
+                            <li><span class="font-semibold">将来の拡張に強い！</span>
+                                もし後から「ロット番号も入れたい！」ってなっても、JSONに項目を追加するだけでOK！ちょー柔軟！</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 部品QRコード -->
+            <section id="part-qr">
+                <h2 class="text-2xl font-bold border-b-2 border-cyan-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="cube-outline" class="mr-3 text-2xl text-cyan-500"></ion-icon>
+                    【部品QRコード】の具体的な中身
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">部品の箱に貼るQRコードは、こんな感じのJSONデータにしとくのがおすすめ！</p>
+                    <pre><code class="language-json">{
+  "type": "part_box",
+  "box_id": "BOX-101",
+  "part_model_number": "SP-A-001",
+  "part_name": "スプリング A"
+}</code></pre>
+                    <div class="mt-4 space-y-3">
+                        <p><strong class="font-mono text-purple-600">"type":
+                                "part_box"</strong><br>これは「部品の箱」のQRコードだよ！ってことを示すおまじない。棚のQRと区別するために必須！</p>
+                        <p><strong class="font-mono text-purple-600">"box_id": "BOX-101"</strong><br><span
+                                class="font-bold text-red-500">これが一番大事！</span>
+                            世界に一つだけの、その箱のID！サーバーはこれをキーにして、在庫数とか詳しい情報を探すよ。</p>
+                        <p><strong class="font-mono text-purple-600">"part_model_number",
+                                "part_name"</strong><br>これはオマケだけど、入れとくと神！もし現場でスマホのカメラでQR読んだとき、IDだけじゃなく品名も表示されたら、分かりやすさ爆上がりじゃない？
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. BOX IDのルール -->
+            <section id="box-id-rule">
+                <h2 class="text-2xl font-bold border-b-2 border-red-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="shield-checkmark-outline" class="mr-3 text-2xl text-red-500"></ion-icon>
+                    【BOX ID】の新しい神ルール！
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">`box_id`は世界で一つだけのIDにしなきゃだけど、部品型番は任意入力…。そんなときの最強ルールがこれ！</p>
+                    <div class="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-r-lg">
+                        <h3 class="font-bold text-lg">BOX - [データベースの自動採番ID]</h3>
+                    </div>
+                    <p class="mt-4">どゆこと？って感じだよね！これは、サーバー側でこーゆー動きをするってこと！👇</p>
+                    <ol class="mt-4 list-decimal list-inside space-y-2">
+                        <li>新しい部品を登録するとき、まずサーバーのデータベースに部品情報を保存する。</li>
+                        <li>そんとき、データベースが自動で「101番」「102番」みたいに、<span class="font-bold">絶対にかぶらない番号（自動採番ID）</span>を振ってくれる。
+                        </li>
+                        <li>その番号を使って、BOX IDを<code class="bg-gray-200 px-2 py-1 rounded">BOX-101</code>みたいに作る！</li>
+                    </ol>
+                    <p class="mt-4 font-bold text-green-600">
+                        このやり方なら、部品型番を入力しなくても、IDが絶対にかぶらないし、IDも短くて分かりやすいから、マジで最強！ちょーおすすめ！</p>
+                </div>
+            </section>
+
+            <!-- 4. 棚QRコード -->
+            <section id="rack-qr">
+                <h2 class="text-2xl font-bold border-b-2 border-green-500 pb-2 mb-4 flex items-center">
+                    <ion-icon name="grid-outline" class="mr-3 text-2xl text-green-500"></ion-icon>
+                    【棚QRコード】の具体的な中身
+                </h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="mb-4">棚の各スロット（場所）に貼るQRコードは、こっちは前と同じでOK！</p>
+                    <pre><code class="language-json">{
+  "type": "rack_slot",
+  "rack_id": 1,
+  "slot_id": "A-1"
+}</code></pre>
+                    <div class="mt-4 space-y-3">
+                        <p><strong class="font-mono text-purple-600">"type":
+                                "rack_slot"</strong><br>これは「棚の場所」のQRコードだよ！って示すおまじない。</p>
+                        <p><strong class="font-mono text-purple-600">"rack_id": 1</strong><br>どの棚（ラック全体）かを示すID。</p>
+                        <p><strong class="font-mono text-purple-600">"slot_id": "A-1"</strong><br>その棚の中の、どの場所かを示すID。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="text-center text-slate-500 mt-12 py-4">
+            &copy; 2024 API Design by Gemini. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</body>
+
+</html>

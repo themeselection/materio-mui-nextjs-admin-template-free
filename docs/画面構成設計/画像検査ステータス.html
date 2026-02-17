@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像検査ステータス</title>
+    <!-- Tailwind CSSを読み込む -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) を読み込む -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Ioniconsを読み込む -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* スクロールバーのスタイル（任意） */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* アクティブなタブのスタイル */
+        .active-tab {
+            border-color: #4f46e5; /* indigo-600 */
+            background-color: #eef2ff; /* indigo-50 */
+            color: #4338ca; /* indigo-700 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+
+        <!-- ヘッダー -->
+        <header class="bg-white shadow-md sticky top-0 z-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                           <ion-icon name="camera-outline" class="text-white text-2xl"></ion-icon>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">画像検査ステータス</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="トップページ.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">&larr; ダッシュボードに戻る</a>
+                        <button class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <ion-icon name="log-out-outline" class="mr-2 text-xl"></ion-icon>
+                            ログアウト
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- タブナビゲーション -->
+            <div class="mb-6">
+                <div class="border-b border-gray-200">
+                    <nav id="tabs" class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button data-tab="tab-all" class="tab-button active-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">全体表示</button>
+                        <button data-tab="tab-spring" class="tab-button text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">バネ留め検査</button>
+                        <button data-tab="tab-alayer" class="tab-button text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">A層検査</button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- タブコンテンツ -->
+            <div id="tab-contents">
+                <!-- 全体表示タブ -->
+                <div id="tab-all" class="tab-panel">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- バネ留め検査 -->
+                        <div class="bg-white rounded-xl shadow-md p-6 fade-in">
+                            <h2 class="text-xl font-bold mb-4">リアルタイム監視: バネ留め検査</h2>
+                            <div class="bg-black rounded-lg aspect-video flex items-center justify-center mb-4">
+                                <p class="text-gray-500 text-lg">SPRING FASTENER - LIVE FEED</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h3 class="text-lg font-bold text-gray-600 mb-2">最新の検査結果</h3>
+                                <div id="latest-result-spring-all" class="bg-gray-50 rounded-lg p-4 flex items-center justify-between"></div>
+                            </div>
+                        </div>
+                        <!-- A層検査 -->
+                        <div class="bg-white rounded-xl shadow-md p-6 fade-in" style="animation-delay: 0.1s;">
+                            <h2 class="text-xl font-bold mb-4">リアルタイム監視: A層検査</h2>
+                            <div class="bg-black rounded-lg aspect-video flex items-center justify-center mb-4">
+                                <p class="text-gray-500 text-lg">A-LAYER - LIVE FEED</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h3 class="text-lg font-bold text-gray-600 mb-2">最新の検査結果</h3>
+                                <div id="latest-result-alayer-all" class="bg-gray-50 rounded-lg p-4 flex items-center justify-between"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- バネ留め検査タブ -->
+                <div id="tab-spring" class="tab-panel hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                        <div class="lg:col-span-3 bg-white rounded-xl shadow-md p-6">
+                            <h2 class="text-xl font-bold mb-4">リアルタイム監視: バネ留め検査</h2>
+                            <div class="bg-black rounded-lg aspect-video flex items-center justify-center mb-4"><p class="text-gray-500 text-lg">SPRING FASTENER - LIVE FEED</p></div>
+                            <div class="border-t pt-4"><h3 class="text-lg font-bold text-gray-600 mb-2">最新の検査結果</h3><div id="latest-result-spring-tab" class="bg-gray-50 rounded-lg p-4 flex items-center justify-between"></div></div>
+                        </div>
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 space-y-6">
+                            <div>
+                                <h2 class="text-xl font-bold mb-2">本日のサマリー</h2>
+                                <div class="flex justify-center mb-4"><div id="chart-spring" class="relative w-40 h-40"></div></div>
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">検査総数</p><p id="total-spring" class="text-2xl font-bold">0</p></div>
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">良品</p><p id="pass-spring" class="text-2xl font-bold text-green-600">0</p></div>
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">不良品</p><p id="fail-spring" class="text-2xl font-bold text-red-600">0</p></div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h3 class="text-lg font-bold mb-2">不良原因</h3>
+                                <div id="fail-reasons-spring" class="space-y-3 text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-white rounded-xl shadow-md p-6">
+                         <h2 class="text-xl font-bold mb-4">バネ留め検査 ログ</h2>
+                         <div class="overflow-x-auto max-h-[40vh]"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0"><tr><th class="px-6 py-3">日時</th><th class="px-6 py-3">製品ID</th><th class="px-6 py-3">結果</th><th class="px-6 py-3">詳細</th></tr></thead><tbody id="log-table-spring"></tbody></table></div>
+                    </div>
+                </div>
+
+                <!-- A層検査タブ -->
+                <div id="tab-alayer" class="tab-panel hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                        <div class="lg:col-span-3 bg-white rounded-xl shadow-md p-6">
+                            <h2 class="text-xl font-bold mb-4">リアルタイム監視: A層検査</h2>
+                            <div class="bg-black rounded-lg aspect-video flex items-center justify-center mb-4"><p class="text-gray-500 text-lg">A-LAYER - LIVE FEED</p></div>
+                            <div class="border-t pt-4"><h3 class="text-lg font-bold text-gray-600 mb-2">最新の検査結果</h3><div id="latest-result-alayer-tab" class="bg-gray-50 rounded-lg p-4 flex items-center justify-between"></div></div>
+                        </div>
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 space-y-6">
+                             <div>
+                                <h2 class="text-xl font-bold mb-2">本日のサマリー</h2>
+                                <div class="flex justify-center mb-4"><div id="chart-alayer" class="relative w-40 h-40"></div></div>
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">検査総数</p><p id="total-alayer" class="text-2xl font-bold">0</p></div>
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">良品</p><p id="pass-alayer" class="text-2xl font-bold text-green-600">0</p></div>
+                                    <div class="bg-gray-50 p-3 rounded-lg"><p class="text-sm text-gray-500">不良品</p><p id="fail-alayer" class="text-2xl font-bold text-red-600">0</p></div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h3 class="text-lg font-bold mb-2">不良原因</h3>
+                                <div id="fail-reasons-alayer" class="space-y-3 text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-white rounded-xl shadow-md p-6">
+                         <h2 class="text-xl font-bold mb-4">A層検査 ログ</h2>
+                         <div class="overflow-x-auto max-h-[40vh]"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0"><tr><th class="px-6 py-3">日時</th><th class="px-6 py-3">製品ID</th><th class="px-6 py-3">結果</th><th class="px-6 py-3">詳細</th></tr></thead><tbody id="log-table-alayer"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sampleLogs = [
+                { time: '10:18:12', camera: 'バネ留め', id: 'SPRING-001', status: 'PASS', details: '-', date: '2024-07-15' },
+                { time: '10:18:08', camera: 'A層', id: 'A-102-1249', status: 'PASS', details: '-', date: '2024-07-15' },
+                { time: '10:18:04', camera: 'A層', id: 'A-102-1248', status: 'FAIL', details: '傷あり', date: '2024-07-15' },
+                { time: '10:17:59', camera: 'バネ留め', id: 'SPRING-002', status: 'PASS', details: '-', date: '2024-07-15' },
+                { time: '10:17:51', camera: 'A層', id: 'B-201-0015', status: 'PASS', details: '-', date: '2024-07-15' },
+                { time: '10:17:48', camera: 'バネ留め', id: 'SPRING-003', status: 'FAIL', details: '位置ずれ', date: '2024-07-15' },
+                { time: '10:16:55', camera: 'A層', id: 'C-301-0512', status: 'FAIL', details: '異物混入', date: '2024-07-15' },
+                { time: '10:16:51', camera: 'バネ留め', id: 'SPRING-004', status: 'PASS', details: '-', date: '2024-07-15' },
+                { time: '10:15:48', camera: 'バネ留め', id: 'SPRING-005', status: 'FAIL', details: '位置ずれ', date: '2024-07-15' },
+                { time: '10:15:04', camera: 'A層', id: 'A-102-1247', status: 'FAIL', details: '傷あり', date: '2024-07-15' },
+            ];
+
+            function createLogHtml(log) {
+                const statusClass = log.status === 'PASS' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                return `
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4">${log.time}</td>
+                        <td class="px-6 py-4 font-medium">${log.id}</td>
+                        <td class="px-6 py-4"><span class="font-semibold px-2 py-1 rounded-full ${statusClass}">${log.status}</span></td>
+                        <td class="px-6 py-4">${log.details}</td>
+                    </tr>
+                `;
+            }
+
+            function populateLogTables() {
+                const springLogBody = document.getElementById('log-table-spring');
+                const alayerLogBody = document.getElementById('log-table-alayer');
+                springLogBody.innerHTML = sampleLogs.filter(log => log.camera === 'バネ留め').map(createLogHtml).join('');
+                alayerLogBody.innerHTML = sampleLogs.filter(log => log.camera === 'A層').map(createLogHtml).join('');
+            }
+            
+            function updateLatestResult(cameraType, containerId) {
+                const latestResultContainer = document.getElementById(containerId);
+                const latestLog = sampleLogs.find(log => log.camera === cameraType);
+                
+                if (!latestLog) {
+                    latestResultContainer.innerHTML = `<p class="text-gray-500">本日の検査データはありません。</p>`;
+                    return;
+                }
+
+                const { time, id, status, details } = latestLog;
+                let statusColorClass = status === 'PASS' ? 'text-green-600' : 'text-red-600';
+                let statusIcon = status === 'PASS' ? 'checkmark-circle' : 'close-circle';
+
+                latestResultContainer.innerHTML = `
+                    <div class="flex-grow">
+                        <p class="text-sm text-gray-500">${time}</p>
+                        <p class="text-2xl font-bold">${id}</p>
+                        ${details !== '-' ? `<p class="text-sm text-red-600 mt-1">${details}</p>` : ''}
+                    </div>
+                    <div class="text-right">
+                        <p class="text-4xl font-bold ${statusColorClass} flex items-center">
+                            <ion-icon name="${statusIcon}" class="mr-2"></ion-icon>
+                            ${status}
+                        </p>
+                    </div>
+                `;
+            }
+            
+            function createDonutChart(containerId, percentage) {
+                const container = document.getElementById(containerId);
+                const strokeDasharray = `${percentage}, 100`;
+                container.innerHTML = `
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path class="text-red-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" />
+                        <path class="text-green-500" stroke-dasharray="${strokeDasharray}" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-4xl font-bold">${percentage}%</span>
+                        <span class="text-sm text-gray-500">良品率</span>
+                    </div>
+                `;
+            }
+
+            function updateFailReasons(cameraType, containerId) {
+                const container = document.getElementById(containerId);
+                const failLogs = sampleLogs.filter(log => log.camera === cameraType && log.status === 'FAIL');
+                if (failLogs.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500">本日の不良品はありません。</p>`;
+                    return;
+                }
+                
+                const reasonCounts = failLogs.reduce((acc, log) => {
+                    acc[log.details] = (acc[log.details] || 0) + 1;
+                    return acc;
+                }, {});
+
+                const sortedReasons = Object.entries(reasonCounts).sort(([,a],[,b]) => b-a);
+                
+                container.innerHTML = sortedReasons.map(([reason, count]) => {
+                    const percentage = ((count / failLogs.length) * 100).toFixed(0);
+                    return `
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium text-gray-700">${reason}</span>
+                                <span class="text-gray-500">${count}件</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-red-500 h-2.5 rounded-full" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function updateSummaries() {
+                const cameraTypes = ['spring', 'alayer'];
+                cameraTypes.forEach(type => {
+                    const cameraName = type === 'spring' ? 'バネ留め' : 'A層';
+                    const logs = sampleLogs.filter(log => log.camera === cameraName);
+                    const total = logs.length;
+                    const fail = logs.filter(l => l.status === 'FAIL').length;
+                    const pass = total - fail;
+                    const passRate = total > 0 ? ((pass / total) * 100).toFixed(1) : 100;
+                    
+                    document.getElementById(`total-${type}`).textContent = total;
+                    document.getElementById(`pass-${type}`).textContent = pass;
+                    document.getElementById(`fail-${type}`).textContent = fail;
+                    createDonutChart(`chart-${type}`, passRate);
+                    updateFailReasons(cameraName, `fail-reasons-${type}`);
+                });
+            }
+
+            // タブ切り替えのロジック
+            const tabsContainer = document.getElementById('tabs');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            tabsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-button')) {
+                    tabsContainer.querySelectorAll('.tab-button').forEach(button => {
+                        button.classList.remove('active-tab');
+                        button.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    });
+                    e.target.classList.add('active-tab');
+                    e.target.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    tabPanels.forEach(panel => panel.classList.add('hidden'));
+                    document.getElementById(e.target.dataset.tab).classList.remove('hidden');
+                }
+            });
+
+            // 初期表示
+            populateLogTables();
+            updateLatestResult('バネ留め', 'latest-result-spring-all');
+            updateLatestResult('A層', 'latest-result-alayer-all');
+            updateLatestResult('バネ留め', 'latest-result-spring-tab');
+            updateLatestResult('A層', 'latest-result-alayer-tab');
+            updateSummaries();
+        });
+    </script>
+
+</body>
+</html>

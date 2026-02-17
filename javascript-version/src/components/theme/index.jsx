@@ -19,6 +19,7 @@ import ModeChanger from './ModeChanger'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
+import paletteOverrides from '@configs/paletteOverrides'
 import primaryColorConfig from '@configs/primaryColorConfig'
 
 // Hook Imports
@@ -44,7 +45,10 @@ const ThemeProvider = props => {
               main: primaryColorConfig[0].main,
               light: lighten(primaryColorConfig[0].main, 0.2),
               dark: darken(primaryColorConfig[0].main, 0.1)
-            }
+            },
+            // Optional background/surface overrides
+            ...(paletteOverrides?.light?.background ? { background: paletteOverrides.light.background } : {}),
+            ...(paletteOverrides?.light?.customColors ? { customColors: paletteOverrides.light.customColors } : {})
           }
         },
         dark: {
@@ -53,7 +57,10 @@ const ThemeProvider = props => {
               main: primaryColorConfig[0].main,
               light: lighten(primaryColorConfig[0].main, 0.2),
               dark: darken(primaryColorConfig[0].main, 0.1)
-            }
+            },
+            // Optional background/surface overrides
+            ...(paletteOverrides?.dark?.background ? { background: paletteOverrides.dark.background } : {}),
+            ...(paletteOverrides?.dark?.customColors ? { customColors: paletteOverrides.dark.customColors } : {})
           }
         }
       }
